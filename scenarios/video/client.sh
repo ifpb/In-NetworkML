@@ -1,28 +1,19 @@
 #!/usr/bin/env bash
 
-# Video Client with Packet Capture
-# Save as video_client.sh and make executable: chmod +x video_client.sh
+# Test scenario duration in seconds, default = 60s
+if [ -z "${DURATION}" ]; then
+  DURATION=60
+else
+  DURATION=${DURATION}
+fi
 
-# Configuration
-SERVER_IP="127.0.0.1" # Replace with your server VM IP
-VIDEO_URL_HTTP="http://$SERVER_IP:8080/sample.mp4"
+SERVER_IP="192.168.56.102"
 VIDEO_URL_RTMP="rtmp://$SERVER_IP:1935/live/stream"
-CAPTURE_FILE="video_stream.pcap"
-INTERFACE="lo" # Change to your network interface
+INTERFACE="eth1"
 
-# # Check if tcpdump is installed
-# if ! command -v tcpdump &>/dev/null; then
-#   echo "tcpdump not found. Installing..."
-#   sudo apt update
-#   sudo apt install -y tcpdump
-# fi
-#
-# # Check if ffmpeg is installed
-# if ! command -v ffmpeg &>/dev/null; then
-#   echo "ffmpeg not found. Installing..."
-#   sudo apt update
-#   sudo apt install -y ffmpeg
-# fi
+CAP_FILE="video_$(date +%s).pcap"
+PCAP_DIR="/vagrant/pcap"
+CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
 # Function to get client IP
 get_client_ip() {
@@ -32,107 +23,53 @@ get_client_ip() {
 # Function to start packet capture
 start_capture() {
   echo "Starting packet capture on interface $INTERFACE..."
-  echo "Capturing to file: $CAPTURE_FILE"
-  # sudo tcpdump -i $INTERFACE -w "$CAPTURE_FILE" host "$SERVER_IP" &
-  # TCPDUMP_PID=$!
+  echo "Capturing to file: $CAP_FILE_PATH"
+  sudo tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" host "$SERVER_IP" &
+  TCPDUMP_PID=$!
   sleep 2
 }
 
 # Function to stop packet capture
 stop_capture() {
   echo "Stopping packet capture..."
-  # sudo kill $TCPDUMP_PID
+  sudo kill $TCPDUMP_PID
   sleep 2
-  echo "Packet capture saved to $CAPTURE_FILE"
+  echo "Packet capture saved to $CAP_FILE_PATH"
 
-  # # Show capture statistics
-  # if [ -f "$CAPTURE_FILE" ]; then
-  #   echo "Capture file info:"
-  #   tcpdump -r "$CAPTURE_FILE" -q | head -10
-  # fi
+  # Show capture statistics
+  if [ -f "$CAP_FILE_PATH" ]; then
+    echo "Capture file info:"
+    tcpdump -r "$CAP_FILE_PATH" -q | head -10
+  fi
 }
 
-# Function to test HTTP streaming
-test_http_stream() {
-  echo "Testing HTTP video stream..."
-  start_capture
-
-  # Stream video using ffmpeg (without displaying)
-  timeout 30 ffmpeg -i "$VIDEO_URL_HTTP" -f null - &
-  FFMPEG_PID=$!
-
-  wait $FFMPEG_PID
-  stop_capture
-}
-
-# Function to test RTMP streaming
-test_rtmp_stream() {
-  echo "Testing RTMP video stream..."
-  start_capture
-
-  # Stream video using ffmpeg
-  timeout 30 ffmpeg -i "$VIDEO_URL_RTMP" -f null - &
-  FFMPEG_PID=$!
-
-  wait $FFMPEG_PID
-  stop_capture
-}
-
-# Function for continuous testing
-continuous_test() {
-  echo "Starting continuous video streaming test..."
-  echo "Server IP: $SERVER_IP"
-  echo "Client IP: $(get_client_ip)"
-  echo "Press Ctrl+C to stop"
-
-  start_capture
-
-  # Continuous while loop to request video
-  COUNTER=0
+run_client() {
   while true; do
-    COUNTER=$((COUNTER + 1))
-    echo "Streaming attempt #$COUNTER - $(date)"
-
-    # Try HTTP first, then RTMP if HTTP fails
-    timeout 30 ffmpeg -i "$VIDEO_URL_HTTP" -t 10 -f null - 2>/dev/null
-    if [ $? -ne 0 ]; then
-      echo "HTTP failed, trying RTMP..."
-      timeout 30 ffmpeg -i "$VIDEO_URL_RTMP" -t 10 -f null - 2>/dev/null
-    fi
-
-    sleep 5
+    ffmpeg -i "$VIDEO_URL_RTMP" -t 10 -f null - 2>/dev/null
+    sleep 0.5
   done
 }
 
-# Main menu
-echo "Video Streaming Client with Packet Capture"
-echo "=========================================="
-echo "1) Test HTTP streaming (30 seconds)"
-echo "2) Test RTMP streaming (30 seconds)"
-echo "3) Continuous streaming test"
-echo "4) Quit"
+clean_up() {
+  if [[ ! -z "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
+    echo "Stopping client (PID: $CLIENT_PID)"
+    kill $CLIENT_PID
+    wait $CLIENT_PID 2>/dev/null
+  fi
 
-read -p "Select option [1-4]: " choice
+  if [[ ! -z "$TCPDUMP_PID" ]] && kill -0 $TCPDUMP_PID 2>/dev/null; then
+    echo "Stopping tcpdump (PID: $TCPDUMP_PID)"
+    kill $TCPDUMP_PID
+    wait $TCPDUMP_PID 2>/dev/null
+    echo "Packets saved to: ${CAP_FILE_PATH}"
+  fi
+}
 
-case $choice in
-1)
-  test_http_stream
-  ;;
-2)
-  test_rtmp_stream
-  ;;
-3)
-  continuous_test
-  ;;
-4)
-  echo "Exiting..."
-  exit 0
-  ;;
-*)
-  echo "Invalid option"
-  exit 1
-  ;;
-esac
+trap clean_up EXIT INT TERM
 
-# Cleanup on exit
-trap 'stop_capture; exit' INT
+start_capture
+
+run_client &
+CLIENT_PID=$!
+
+sleep $DURATION

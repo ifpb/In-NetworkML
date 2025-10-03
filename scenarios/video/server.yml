@@ -10,6 +10,7 @@
         state: present
       loop:
         - nginx
+        - libnginx-mod-rtmp
 
     - name: Start nginx
       service:
