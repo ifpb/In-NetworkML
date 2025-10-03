@@ -2,13 +2,10 @@
 
 # Test scenario duration in seconds, default = 60s
 if [ -z "${DURATION}" ]; then
-	DURATION=60
+  DURATION=60
 else
-	DURATION=${DURATION}
+  DURATION=${DURATION}
 fi
-
-echo $DURATION
-exit 0
 
 SERVER_IP="192.168.56.102"
 INTERFACE="eth1"
