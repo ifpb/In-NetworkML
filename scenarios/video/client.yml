@@ -5,17 +5,17 @@
     DURATION: "{{ DURATION }}"
 
   tasks:
-    - name: Install curl and tcpdump
+    - name: Install ffmpeg and tcpdump
       apt:
         name: "{{ item }}"
         update_cache: yes
         state: present
       loop:
-        - curl
+        - ffmpeg
         - tcpdump
 
-    - name: Run client
-      script: ./runner.sh
+    - name: Run client script
+      script: ./client.sh
       register: client
 
     - name: Print output

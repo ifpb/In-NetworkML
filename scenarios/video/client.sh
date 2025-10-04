@@ -44,6 +44,7 @@ stop_capture() {
 }
 
 run_client() {
+  echo "Starting client"
   while true; do
     ffmpeg -i "$VIDEO_URL_RTMP" -t 10 -f null - 2>/dev/null
     sleep 0.5

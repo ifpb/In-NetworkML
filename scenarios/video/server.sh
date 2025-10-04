@@ -14,7 +14,13 @@ echo "Starting video server on $SERVER_IP"
 
 # Start RTMP server
 echo "Starting RTMP server on port 1935..."
-sudo ffmpeg -re -stream_loop -1 -i "$VIDEO_FILE" -c copy -f flv rtmp://localhost:1935/live/stream &
+run_server() {
+  while [[ true ]]; do
+    ffmpeg -re -stream_loop -1 -i "$VIDEO_FILE" -listen 1 -c copy -f flv rtmp://localhost/live/stream
+  done
+}
+
+run_server &
 RTMP_PID=$!
 
 # Wait for user to stop

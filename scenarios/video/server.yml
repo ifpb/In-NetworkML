@@ -3,17 +3,15 @@
   become: yes
 
   tasks:
-    - name: Install nginx
+    - name: Install ffmpeg
       apt:
         name: "{{ item }}"
         update_cache: yes
         state: present
       loop:
-        - nginx
-        - libnginx-mod-rtmp
+        - ffmpeg
 
-    - name: Start nginx
-      service:
-        name: nginx
-        state: started
-        enabled: yes
+    - name: Execute Server script
+      script: ./server.sh
+      async: 1000
+      poll: 5
