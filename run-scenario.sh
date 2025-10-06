@@ -1,27 +1,35 @@
 saida() {
-	echo "Usage: ./run-scenario.sh [ scenario | duration ]"
-	echo "Available scenarios:"
-	ls scenarios
-	exit 1	
+  echo "Usage: ./run-scenario.sh [ scenario | duration ]"
+  echo "Available scenarios:"
+  ls scenarios
+  exit 1
 }
 
 if [ -z $1 ] || [ ! -d scenarios/$1 ]; then
-	saida 
+  saida
 fi
 
 if [[ -z $2 ]]; then
-	DURATION=60
+  DURATION=60
 elif [[ $2 =~ ^[0-9]+$ ]]; then
-	DURATION=$2
+  DURATION=$2
 else
-	echo "Duration must be a positive number"
-	exit 1
+  echo "Duration must be a positive number"
+  exit 1
 fi
 
 echo "Rodando cenário $1 com duração de $DURATION"
 
 vagrant up --provision
-vagrant ssh-config > ssh_config
+vagrant ssh-config >ssh_config
 
 ansible-playbook scenarios/$1/server.yml
 ansible-playbook -e "DURATION=$DURATION" scenarios/$1/client.yml
+
+if [[ -e ./scenarios/$1/server.sh ]]; then
+  ssh -F ./ssh_config h1 "bash -s" <./scenarios/$1/server.sh &
+fi
+
+if [[ -e ./scenarios/$1/client.sh ]]; then
+  ssh -F ./ssh_config h1 "bash -s" <./scenarios/$1/client.sh
+fi

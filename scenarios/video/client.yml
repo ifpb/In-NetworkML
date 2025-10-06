@@ -1,8 +1,6 @@
 - name: Configure web client
   hosts: client
   become: yes
-  environment:
-    DURATION: "{{ DURATION }}"
 
   tasks:
     - name: Install ffmpeg and tcpdump
@@ -14,10 +12,10 @@
         - ffmpeg
         - tcpdump
 
-    - name: Run client script
-      script: ./client.sh
-      register: client
-
-    - name: Print output
-      debug:
-        var: client.stdout_lines
+    # - name: Run client script
+    #   script: ./client.sh
+    #   register: client
+    #
+    # - name: Print output
+    #   debug:
+    #     var: client.stdout_lines

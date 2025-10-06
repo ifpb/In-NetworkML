@@ -11,7 +11,7 @@
       loop:
         - ffmpeg
 
-    - name: Execute Server script
-      script: ./server.sh
-      async: 1000
-      poll: 5
+    # - name: Execute Server script
+    #   script: ./server.sh
+    #   async: 1000
+    #   poll: 5
