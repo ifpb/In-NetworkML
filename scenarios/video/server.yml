@@ -3,15 +3,30 @@
   become: yes
 
   tasks:
-    - name: Install ffmpeg
+    - name: Install dependencies
       apt:
         name: "{{ item }}"
         update_cache: yes
         state: present
       loop:
         - ffmpeg
+        - nginx
+        - libnginx-mod-rtmp
 
-    # - name: Execute Server script
-    #   script: ./server.sh
-    #   async: 1000
-    #   poll: 5
+    - name: Ensure dir "/etc/nginx" is created
+      file:
+        path: "/etc/nginx"
+        state: directory
+        mode: '0755'
+
+    - name: Configure nginx
+      copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+        mode: '644'
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
