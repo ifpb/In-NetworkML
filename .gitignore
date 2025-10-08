@@ -5,3 +5,4 @@
 .bmv
 ssh_config
 *.mp4
+logs/

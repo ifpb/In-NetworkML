@@ -24,6 +24,7 @@ get_client_ip() {
 start_capture() {
   echo "Starting packet capture on interface $INTERFACE..."
   echo "Capturing to file: $CAP_FILE_PATH"
+  mkdir -p /vagrant/pcap
   sudo tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" host "$SERVER_IP" &
   TCPDUMP_PID=$!
   sleep 2
