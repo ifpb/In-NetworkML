@@ -34,10 +34,15 @@ mkdir -p ${LOGS_DIR}
 vagrant up --provision
 vagrant ssh-config >"${SCRIPT_DIR}/ssh_config"
 
-echo "Rodando playbook do servidor"
-ansible-playbook "${SCENARIO_DIR}/server.yml"
-echo "Rodando playbook do servidor"
-ansible-playbook "${SCENARIO_DIR}/client.yml"
+if [[ -f "${SCENARIO_DIR}/server.yml" ]]; then
+  echo "Rodando playbook do servidor"
+  ansible-playbook "${SCENARIO_DIR}/server.yml"
+fi
+
+if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
+  echo "Rodando playbook do cliente"
+  ansible-playbook "${SCENARIO_DIR}/client.yml"
+fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   echo "Rodando script do servidor"
