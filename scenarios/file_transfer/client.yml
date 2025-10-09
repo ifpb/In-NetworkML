@@ -1,0 +1,21 @@
+- name: Configure web client
+  hosts: client
+  become: yes
+
+  tasks:
+    - name: Install curl and tcpdump
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+        state: present
+      loop:
+        - curl
+        - tcpdump
+    #
+    # - name: Run client
+    #   script: ./runner.sh
+    #   register: client
+    #
+    # - name: Print output
+    #   debug:
+    #     var: client.stdout_lines
