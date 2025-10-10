@@ -7,7 +7,7 @@ readonly SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Default configuration
-readonly DEFAULT_TEST_DIR="${SCRIPT_DIR}/test_files"
+readonly DEFAULT_TEST_DIR="/tmp/test_files"
 readonly DEFAULT_FILE_SIZES="1M 10M 50M 100M" # 1MB, 10MB, 50MB, 100MB
 
 # Colors for output
@@ -166,31 +166,11 @@ generate_test_files() {
     # Create text file with pattern
     if [[ ! -f "$text_file" ]]; then
       log_info "Creating text file: $(basename "$text_file")"
-      if ! dd if=/dev/urandom bs=$(size_to_bytes "$size") count=1 2>/dev/null >"$text_file.tmp" 2>/dev/null; then
-        log_warning "Failed to create initial text pattern, using fallback method"
-        echo "TEST_FILE_${size}_PATTERN" >"$text_file.tmp"
+      if dd if=/dev/urandom of="$text_file" bs="$size" count=1 2>/dev/null; then
+	((files_created++)) || true
+	else
+	  log_error "Failed to create text file: $(basename "$text_file")"
       fi
-
-      # Expand to desired size
-      local current_size=$(stat -c%s "$text_file.tmp" 2>/dev/null || echo 0)
-      local target_bytes=$(size_to_bytes "$size")
-
-      # if [[ $target_bytes -gt $current_size ]]; then
-      #   local multiplier=$(((target_bytes / current_size) + 1))
-      #   for ((i = 1; i < multiplier; i++)); do
-      #     cat "$text_file.tmp" >>"$text_file.tmp2"
-      #     mv "$text_file.tmp2" "$text_file.tmp" 2>/dev/null || true
-      #   done
-      # fi
-
-      # Trim to exact size
-      dd if="$text_file.tmp" of="$text_file" bs=1 count="$target_bytes" 2>/dev/null || {
-        # Fallback: use head to trim
-        head -c "$target_bytes" "$text_file.tmp" >"$text_file"
-      }
-
-      rm -f "$text_file.tmp" "$text_file.tmp2"
-      ((files_created++)) || true
     else
       log_info "Text file already exists: $(basename "$text_file")"
     fi
@@ -240,7 +220,7 @@ verify_test_files() {
           log_error "File size mismatch: $(basename "$file") (expected: $target_bytes, actual: $actual_size)"
           ((errors++))
         elif [[ "${VERBOSE:-false}" == "true" ]]; then
-          log_info "✓ $(basename "$file"): $actual_bytes bytes"
+          log_info "$(basename "$file"): $actual_bytes bytes"
         fi
       else
         log_error "File not found: $(basename "$file")"

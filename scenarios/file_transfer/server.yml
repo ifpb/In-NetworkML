@@ -1,0 +1,22 @@
+- name: Configure Server
+  hosts: server
+  become: yes
+  tasks:
+    - name: Configure SSH settings using template
+      template:
+        src: sshd_config
+        dest: /etc/ssh/sshd_config
+        backup: yes
+      tags: ssh_config
+
+    - name: Set empty password for vagrant user
+      user:
+        name: vagrant
+        password: ""
+      tags: user_config
+
+    - name: Restart SSH service
+      systemd:
+        name: ssh
+        state: restarted
+      tags: service_restart

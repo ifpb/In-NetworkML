@@ -1,50 +1,133 @@
 #!/usr/bin/env bash
 
-# Test scenario duration in seconds, default = 60s
-if [ -z "${DURATION}" ]; then
-  DURATION=60
-else
-  DURATION=${DURATION}
-fi
+set -euo pipefail
 
-SERVER_IP="192.168.56.102"
 INTERFACE="eth1"
-CAP_FILE="web_$(date +%s).pcap"
-
 PCAP_DIR="/vagrant/pcap"
+CAP_FILE="scp_$(date +%s).pcap"
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
-run_client() {
-  local counter=0
-  while true; do
-    echo "Iteration $counter"
-    curl -s $SERVER_IP >/dev/null 2>&1
-    ((counter++))
-    sleep 0.5
+REMOTE_USER="vagrant"
+REMOTE_HOST="192.168.56.102"
+SSH_OPTS="-o StrictHostKeyChecking=no"
+
+TEST_DIR="/tmp/test_files"
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Logging functions
+log() {
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+}
+
+log_info() {
+  echo -e "${BLUE}[INFO]${NC} $*"
+}
+
+log_success() {
+  echo -e "${GREEN}[SUCCESS]${NC} $*"
+}
+
+log_warning() {
+  echo -e "${YELLOW}[WARNING]${NC} $*"
+}
+
+log_error() {
+  echo -e "${RED}[ERROR]${NC} $*" >&2
+}
+
+start_packet_capture() {
+
+  log_info "Starting packet capture..."
+
+  mkdir -p $PCAP_DIR >/dev/null 2>&1
+  # Start packet capture in background
+  if tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} >/dev/null 2>&1 & then
+    local capture_pid=$!
+    log_success "Packet capture started with PID: $capture_pid"
+    echo "$capture_pid" >"/tmp/scp_test_capture.pid"
+
+    # Wait a moment for capture to initialize
+    sleep 2
+    return 0
+  else
+    log_error "Failed to start packet capture script"
+    return 1
+  fi
+}
+
+# Stop packet capture
+stop_packet_capture() {
+  local pid_file="/tmp/scp_test_capture.pid"
+
+  if [[ -f "$pid_file" ]]; then
+    local capture_pid=$(cat "$pid_file")
+    if kill -0 "$capture_pid" 2>/dev/null; then
+      log_info "Stopping packet capture (PID: $capture_pid)"
+      kill "$capture_pid" 2>/dev/null
+      wait "$capture_pid" 2>/dev/null || true
+      rm -f "$pid_file"
+      log_success "Packet capture stopped"
+    fi
+  fi
+}
+
+# Transfer files via SCP
+transfer_files() {
+  log_info "Starting SCP file from to ${REMOTE_USER}@${REMOTE_HOST}:${TEST_DIR}"
+
+  local transfer_errors=0
+  local files_transferred=0
+
+  mkdir "${TEST_DIR}" 2>/dev/null
+
+  # Transfer each file individually to capture separate SCP sessions
+  for category in text binary archive; do
+    local category_dir="$TEST_DIR/$category"
+
+    for file in $(ssh ${SSH_OPTS} ${REMOTE_USER}@${REMOTE_HOST} "ls ${category_dir}"); do
+      local filename=$(basename "$file")
+      log_info "Transferring: $filename"
+
+      if scp "${REMOTE_USER}@${REMOTE_HOST}:${category_dir}/$filename" ${TEST_DIR}; then
+        ((files_transferred++))
+        log_success "Transferred: $filename"
+      else
+        ((transfer_errors++))
+        log_error "Failed to transfer: $filename"
+      fi
+
+      # delay
+      sleep 0.5
+    done
   done
-}
 
-mkdir -p $PCAP_DIR >/dev/null 2>&1
-tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} >/dev/null 2>&1 &
-TCPDUMP_PID=$!
-
-run_client &
-CLIENT_PID=$!
-
-clean_up() {
-  if [[ ! -z "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
-    echo "Stopping client (PID: $CLIENT_PID)"
-    kill $CLIENT_PID
-    wait $CLIENT_PID 2>/dev/null
-  fi
-
-  if [[ ! -z "$TCPDUMP_PID" ]] && kill -0 $TCPDUMP_PID 2>/dev/null; then
-    echo "Stopping tcpdump (PID: $TCPDUMP_PID)"
-    kill $TCPDUMP_PID
-    wait $TCPDUMP_PID 2>/dev/null
-    echo "Packets saved to: ${CAP_FILE_PATH}"
+  if [[ $transfer_errors -eq 0 ]]; then
+    log_success "All files transferred successfully ($files_transferred files)"
+  else
+    log_error "Failed to transfer $transfer_errors files"
+    return 1
   fi
 }
-trap clean_up EXIT INT TERM
 
-sleep $DURATION
+# Start packet capture
+if ! start_packet_capture; then
+  exit 1
+fi
+
+# Transfer files
+if ! transfer_files; then
+  log_error "File transfer failed"
+  stop_packet_capture
+  exit 1
+fi
+
+# Stop packet capture
+stop_packet_capture
+
+log_success "SCP test completed successfully"
