@@ -53,7 +53,7 @@ fi
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   echo "Rodando script do client com duração de ${DURATION}s"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp
-  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh > /vagrant/logs/client.log 2>/vagrant/logs/client.err"
+  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh | tee /vagrant/logs/client.log 2>/vagrant/logs/client.err"
 fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
