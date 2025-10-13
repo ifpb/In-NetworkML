@@ -11,6 +11,13 @@ REMOTE_USER="vagrant"
 REMOTE_HOST="192.168.56.102"
 SSH_OPTS="-o StrictHostKeyChecking=no"
 
+# Test scenario duration in seconds, default = 60s
+if [ -z "${DURATION}" ]; then
+  DURATION=60
+else
+  DURATION=${DURATION}
+fi
+
 TEST_DIR="/tmp/test_files"
 
 # Colors for output
@@ -121,13 +128,23 @@ if ! start_packet_capture; then
 fi
 
 # Transfer files
-if ! transfer_files; then
-  log_error "File transfer failed"
+{ while true; do
+	transfer_files
+done; } &
+
+CLIENT_PID=$!
+
+cleanup() {
+  if [[ ! -z "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
+    echo "Stopping client (PID: $CLIENT_PID)"
+    kill $CLIENT_PID
+    wait $CLIENT_PID 2>/dev/null
+  fi
+
   stop_packet_capture
-  exit 1
-fi
+}
 
-# Stop packet capture
-stop_packet_capture
+trap cleanup EXIT INT TERM KILL
 
-log_success "SCP test completed successfully"
+sleep $DURATION
+
