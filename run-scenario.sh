@@ -4,6 +4,47 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCENARIOS_DIR="${SCRIPT_DIR}/scenarios"
 LOGS_DIR="${SCRIPT_DIR}/logs"
 
+START_TIME=$(date +%s)
+
+# Colors for output
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# Logging functions
+log() {
+  echo -e "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
+}
+
+log_info() {
+  echo -e "${BLUE}[INFO]${NC} $*"
+}
+
+log_success() {
+  echo -e "${GREEN}[SUCCESS]${NC} $*"
+}
+
+log_warning() {
+  echo -e "${YELLOW}[WARNING]${NC} $*"
+}
+
+log_error() {
+  echo -e "${RED}[ERROR]${NC} $*" >&2
+}
+
+elapsed_time() {
+  local now=$1
+  local elapsed_time="$((now - START_TIME))"
+
+  local hours=$((elapsed_time / 3600))
+  local minutes=$(((elapsed_time % 3600) / 60))
+  local seconds=$((elapsed_time % 60))
+
+  printf "%02d:%02d:%02d" "$hours" "$minutes" "$seconds"
+}
+
 saida() {
   echo "Uso: ./run-scenario.sh [ cenário | duração ]"
   echo "Cenários disponíveis:"
@@ -58,5 +99,5 @@ fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   echo "Desligando servidor"
-  ssh -F "${SCRIPT_DIR}/ssh_config" h2 'kill $(cat /tmp/server.pid)'
+  ssh -F "${SCRIPT_DIR}/ssh_config" h2 'kill $(cat /tmp/server.pid)' >/dev/null 2>&1
 fi
