@@ -15,11 +15,10 @@ PCAP_DIR="/vagrant/pcap"
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
 run_client() {
-  local counter=0
   while true; do
-    echo "Iteration $counter"
     curl -s $SERVER_IP >/dev/null 2>&1
-    ((counter++))
+
+    # Delay
     sleep 0.5
   done
 }

@@ -252,6 +252,9 @@ main() {
   create_test_directory
   generate_test_files
   verify_test_files
+
+  # Server is ready
+  touch /vagrant/server_ready
 }
 
 main $@

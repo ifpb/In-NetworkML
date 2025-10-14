@@ -88,38 +88,32 @@ stop_packet_capture() {
 transfer_files() {
   log_info "Starting SCP file from to ${REMOTE_USER}@${REMOTE_HOST}:${TEST_DIR}"
 
-  local transfer_errors=0
-  local files_transferred=0
-
-  mkdir "${TEST_DIR}" 2>/dev/null
+  mkdir "${TEST_DIR}" 2>/dev/null || true
 
   # Transfer each file individually to capture separate SCP sessions
   for category in text binary archive; do
     local category_dir="$TEST_DIR/$category"
 
-    for file in $(ssh ${SSH_OPTS} ${REMOTE_USER}@${REMOTE_HOST} "ls ${category_dir}"); do
+    for file in $(ssh ${SSH_OPTS} ${REMOTE_USER}@${REMOTE_HOST} "ls ${category_dir}" 2>/dev/null); do
       local filename=$(basename "$file")
       log_info "Transferring: $filename"
 
-      if scp "${REMOTE_USER}@${REMOTE_HOST}:${category_dir}/$filename" ${TEST_DIR}; then
-        ((files_transferred++))
-        log_success "Transferred: $filename"
-      else
-        ((transfer_errors++))
-        log_error "Failed to transfer: $filename"
-      fi
+      scp "${REMOTE_USER}@${REMOTE_HOST}:${category_dir}/$filename" ${TEST_DIR} &
+      echo $! > /tmp/scp.pid
+
+
+      wait $(cat /tmp/scp.pid)
 
       # delay
       sleep 0.5
     done
   done
+}
 
-  if [[ $transfer_errors -eq 0 ]]; then
-    log_success "All files transferred successfully ($files_transferred files)"
-  else
-    log_error "Failed to transfer $transfer_errors files"
-    return 1
-  fi
+run_client() {
+	while true; do
+		transfer_files
+	done
 }
 
 # Start packet capture
@@ -128,13 +122,17 @@ if ! start_packet_capture; then
 fi
 
 # Transfer files
-{ while true; do
-	transfer_files
-done; } &
-
+run_client &
 CLIENT_PID=$!
 
 cleanup() {
+  SCP_PID=$(cat /tmp/scp.pid)
+  if [[ ! -z "$SCP_PID" ]] && kill -0 $SCP_PID 2>/dev/null; then
+    echo "Stopping client (PID: $SCP_PID)"
+    kill $SCP_PID
+    wait $SCP_PID 2>/dev/null
+  fi
+
   if [[ ! -z "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
     echo "Stopping client (PID: $CLIENT_PID)"
     kill $CLIENT_PID

@@ -14,5 +14,8 @@ echo "Starting RTMP server on port 1935..."
 ffmpeg -re -stream_loop -1 -i "$VIDEO_FILE" -c copy -f flv rtmp://localhost/live/stream &
 RTMP_PID=$!
 
+# Server is Ready
+touch /vagrant/server_ready
+
 trap 'echo "Stopping server..."; kill $RTMP_PID 2>/dev/null || true; exit 0' INT TERM KILL EXIT
 wait $RTMP_PID

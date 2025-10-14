@@ -34,15 +34,21 @@ log_error() {
   echo -e "${RED}[ERROR]${NC} $*" >&2
 }
 
-elapsed_time() {
-  local now=$1
-  local elapsed_time="$((now - START_TIME))"
+total_to_kms() {
+  local total="$1"
 
-  local hours=$((elapsed_time / 3600))
-  local minutes=$(((elapsed_time % 3600) / 60))
-  local seconds=$((elapsed_time % 60))
+  local hours=$((total / 3600))
+  local minutes=$(((total % 3600) / 60))
+  local seconds=$((total % 60))
 
   printf "%02d:%02d:%02d" "$hours" "$minutes" "$seconds"
+}
+
+elapsed_time() {
+  local now=$(date +%s)
+  local elapsed_time="$((now - START_TIME))"
+
+  echo $(total_to_kms $elapsed_time)
 }
 
 saida() {
@@ -64,11 +70,17 @@ if [[ -z $2 ]]; then
 elif [[ $2 =~ ^[0-9]+$ ]]; then
   DURATION=$2
 else
-  echo "Duração deve ser um inteiro positivo"
+  log_error "Duração deve ser um inteiro positivo"
   exit 1
 fi
 
-echo "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
+cleanup() {
+	rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
+}
+
+trap cleanup INT TERM EXIT
+
+log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
 
 mkdir -p ${LOGS_DIR}
 
@@ -76,28 +88,45 @@ vagrant up --provision
 vagrant ssh-config >"${SCRIPT_DIR}/ssh_config"
 
 if [[ -f "${SCENARIO_DIR}/server.yml" ]]; then
-  echo "Rodando playbook do servidor"
+  log_info "Rodando playbook do servidor"
   ansible-playbook "${SCENARIO_DIR}/server.yml"
 fi
 
 if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
-  echo "Rodando playbook do cliente"
+  log_info "Rodando playbook do cliente"
   ansible-playbook "${SCENARIO_DIR}/client.yml"
 fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
-  echo "Rodando script do servidor"
-  scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/server.sh" h2:/tmp
-  ssh -F "${SCRIPT_DIR}/ssh_config" h2 'sudo nohup bash /tmp/server.sh >/vagrant/logs/server.log 2>/vagrant/logs/server.err & echo $! > /tmp/server.pid' &
+  log_info "Rodando script do servidor"
+  scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/server.sh" h2:/tmp >/dev/null
+  ssh -F "${SCRIPT_DIR}/ssh_config" h2 'sudo bash /tmp/server.sh 2>/vagrant/logs/server.err | tee /vagrant/logs/server.log' &
+  SERVER_PID=$!
+
+  log_info "Esperando o servidor estar pronto"
+  while [[ ! -f "${SCRIPT_DIR}/server_ready" ]]; do
+	  #log_warning "Not ready $(elapsed_time)" >&2
+	  sleep 1
+  done
 fi
 
+START_TIME=$(date +%s)
+
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
-  echo "Rodando script do client com duração de ${DURATION}s"
-  scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp
-  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh | tee /vagrant/logs/client.log 2>/vagrant/logs/client.err"
+  log_info "Rodando script do client com duração de ${DURATION}s"
+  scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp >/dev/null
+  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
+  CLIENT_PID=$!
+  while [[ ! -f "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; do
+	  log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"
+	  sleep 1
+  done
 fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
-  echo "Desligando servidor"
-  ssh -F "${SCRIPT_DIR}/ssh_config" h2 'kill $(cat /tmp/server.pid)' >/dev/null 2>&1
+  if [[ ! -z "$SERVER_PID" ]] && kill -0 $SERVER_PID 2>/dev/null; then
+    log_info  "Desligando servidor (PID: $SERVER_PID)"
+    kill $SERVER_PID
+    wait $SERVER_PID 2>/dev/null
+  fi
 fi
