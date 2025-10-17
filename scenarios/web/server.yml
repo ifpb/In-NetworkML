@@ -3,16 +3,20 @@
   become: yes
 
   tasks:
-    - name: Install nginx and tcpdump
+    - name: Install git
       apt:
         name: "{{ item }}"
         update_cache: yes
         state: present
       loop:
-        - nginx
+        - git
 
-    - name: Start nginx
-      service:
-        name: nginx
-        state: started
-        enabled: yes
+    - name: Clone web server repo
+      become: no
+      git:
+        repo: 'https://gitlab.com/icaroo/web-rand'
+        dest: /tmp/web-server
+        version: main
+        clone: yes
+        update: yes 
+

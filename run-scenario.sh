@@ -105,7 +105,7 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
 
   log_info "Esperando o servidor estar pronto"
   while [[ ! -f "${SCRIPT_DIR}/server_ready" ]]; do
-	  #log_warning "Not ready $(elapsed_time)" >&2
+	  log_warning "Not ready $(elapsed_time)" >&2
 	  sleep 1
   done
 fi

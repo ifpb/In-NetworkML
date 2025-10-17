@@ -11,11 +11,9 @@
       loop:
         - curl
         - tcpdump
-    #
-    # - name: Run client
-    #   script: ./runner.sh
-    #   register: client
-    #
-    # - name: Print output
-    #   debug:
-    #     var: client.stdout_lines
+
+    - name: Copy bot script
+      copy:
+        src: ./bot.sh
+        dest: /tmp/
+        mode: '755'

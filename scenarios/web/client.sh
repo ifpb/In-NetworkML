@@ -13,13 +13,12 @@ CAP_FILE="web_$(date +%s).pcap"
 
 PCAP_DIR="/vagrant/pcap"
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_client() {
   while true; do
-    curl -s $SERVER_IP >/dev/null 2>&1
+    ${SCRIPT_DIR}/bot.sh $SERVER_IP
 
-    # Delay
-    sleep 0.5
   done
 }
 
