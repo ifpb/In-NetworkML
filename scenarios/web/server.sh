@@ -17,3 +17,4 @@ PID=$!
 # Server is ready
 touch /vagrant/server_ready
 
+wait $PID
