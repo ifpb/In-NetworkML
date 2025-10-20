@@ -30,7 +30,14 @@
         in
         {
           default = pkgs.mkShell {
-            packages = with pkgs; [ python ];
+            packages = with pkgs; [
+              python
+
+              pyright
+              ruff
+              isort
+              black
+            ];
 
             env = {
               VENV_DIR = "./.venv";
