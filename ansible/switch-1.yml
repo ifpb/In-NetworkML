@@ -15,6 +15,6 @@
       async: 1000
       poll: 5
       become: yes
-    # - name: Insert entries in switch table by control plane
-    #   shell: cat /vagrant/code/table1.txt | simple_switch_CLI
-    #   become: yes
+    - name: Insert entries in switch table by control plane
+      shell: cat /vagrant/code/table1.txt | simple_switch_CLI
+      become: yes
