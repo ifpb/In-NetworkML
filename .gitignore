@@ -2,7 +2,7 @@
 .vagrant
 .venv
 .python-version
-.bmv
+*.bmv2
 ssh_config
 *.mp4
 logs/
