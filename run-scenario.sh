@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -75,7 +77,7 @@ else
 fi
 
 cleanup() {
-	rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
+  rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
 }
 
 trap cleanup INT TERM EXIT
@@ -105,8 +107,8 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
 
   log_info "Esperando o servidor estar pronto"
   while [[ ! -f "${SCRIPT_DIR}/server_ready" ]]; do
-	  log_warning "Not ready $(elapsed_time)" >&2
-	  sleep 1
+    log_warning "Not ready $(elapsed_time)" >&2
+    sleep 1
   done
 fi
 
@@ -118,14 +120,14 @@ if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
   CLIENT_PID=$!
   while [[ ! -f "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; do
-	  log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"
-	  sleep 1
+    log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"
+    sleep 1
   done
 fi
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   if [[ ! -z "$SERVER_PID" ]] && kill -0 $SERVER_PID 2>/dev/null; then
-    log_info  "Desligando servidor (PID: $SERVER_PID)"
+    log_info "Desligando servidor (PID: $SERVER_PID)"
     kill $SERVER_PID
     wait $SERVER_PID 2>/dev/null
   fi
