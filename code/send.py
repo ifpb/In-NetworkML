@@ -69,10 +69,15 @@ def main():
     # sendp(pkt, iface=iface)
     # pkt.show2()
 
-    while True:
-        sendp(pkt, iface=iface)
-        pkt.show2()
-        sleep(0.2)
+    qtd = 0
+    try:
+        while True:
+            sendp(pkt, iface=iface, verbose=False)
+            qtd += 1
+            # pkt.show2()
+            # sleep(0.2)
+    finally:
+        print("Packets sent:", qtd)
 
 
 if __name__ == "__main__":
