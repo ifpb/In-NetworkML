@@ -17,7 +17,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_client() {
   while true; do
-    ${SCRIPT_DIR}/bot.sh $SERVER_IP
+    ./bot.sh $SERVER_IP
 
   done
 }

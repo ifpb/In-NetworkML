@@ -15,5 +15,5 @@
     - name: Copy bot script
       copy:
         src: ./bot.sh
-        dest: /tmp/
+        dest: /home/vagrant/
         mode: '755'

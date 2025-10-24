@@ -3,20 +3,31 @@
   become: yes
 
   tasks:
-    - name: Install git
+    - name: Update apt package cache
       apt:
-        name: "{{ item }}"
         update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
         state: present
-      loop:
-        - git
 
-    - name: Clone web server repo
-      become: no
-      git:
-        repo: 'https://gitlab.com/icaroo/web-rand'
-        dest: /tmp/web-server
-        version: main
-        clone: yes
-        update: yes 
+    - name: Assert nginx instance
+      service:
+        name: nginx
+        state: started
+        enabled: true
 
+    - name: Copy HTML files
+      copy:
+        src: ./web-server/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
