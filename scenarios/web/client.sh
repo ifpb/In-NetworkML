@@ -17,8 +17,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_client() {
   while true; do
-    ./bot.sh $SERVER_IP
-
+    ./bot.sh $SERVER_IP &
+    echo $! > /tmp/bot.pid
+    wait $(cat /tmp/bot.pid)
   done
 }
 
@@ -30,6 +31,13 @@ run_client &
 CLIENT_PID=$!
 
 clean_up() {
+  BOT_PID=$(cat /tmp/bot.pid)
+  if [[ ! -z "$BOT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
+    echo "Stopping bot (PID: $BOT_PID)"
+    kill $BOT_PID
+    wait $BOT_PID 2>/dev/null
+  fi
+
   if [[ ! -z "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
     echo "Stopping client (PID: $CLIENT_PID)"
     kill $CLIENT_PID
