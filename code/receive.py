@@ -107,7 +107,12 @@ def main():
         writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
         writer.writeheader()
 
-        sniff(filter="ip proto 253", iface=iface, prn=lambda x: handle_pkt(x, writer))
+        try:
+            sniff(
+                filter="ip proto 253", iface=iface, prn=lambda x: handle_pkt(x, writer)
+            )
+        except KeyboardInterrupt:
+            pass
 
 
 if __name__ == "__main__":

@@ -76,6 +76,8 @@ def main():
             qtd += 1
             # pkt.show2()
             # sleep(0.2)
+    except KeyboardInterrupt:
+        pass
     finally:
         print("Packets sent:", qtd)
 
