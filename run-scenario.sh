@@ -112,6 +112,13 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   done
 fi
 
+# Start Telemetry and iperf
+${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
+INT_PID=$!
+
+${SCRIPT_DIR}/run-iperf.sh &
+IPERF_PID=$!
+
 START_TIME=$(date +%s)
 
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
@@ -132,3 +139,9 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
     wait $SERVER_PID 2>/dev/null
   fi
 fi
+
+kill $INT_PID
+kill $IPERF_PID
+
+wait $INT_PID
+wait $IPERF_PID
