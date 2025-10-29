@@ -99,6 +99,13 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   ansible-playbook "${SCENARIO_DIR}/client.yml"
 fi
 
+# Start Telemetry and iperf
+${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
+INT_PID=$!
+
+${SCRIPT_DIR}/run-iperf.sh &
+IPERF_PID=$!
+
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   log_info "Rodando script do servidor"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/server.sh" h2:/tmp >/dev/null
@@ -111,13 +118,6 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
     sleep 1
   done
 fi
-
-# Start Telemetry and iperf
-${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
-INT_PID=$!
-
-${SCRIPT_DIR}/run-iperf.sh &
-IPERF_PID=$!
 
 START_TIME=$(date +%s)
 
