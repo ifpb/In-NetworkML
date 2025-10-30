@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 run_client() {
   while true; do
     ./bot.sh $SERVER_IP &
-    echo $! > /tmp/bot.pid
+    echo $! >/tmp/bot.pid
     wait $(cat /tmp/bot.pid)
   done
 }

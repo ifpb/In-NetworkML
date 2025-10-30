@@ -8,6 +8,9 @@ LOGS_DIR="${SCRIPT_DIR}/logs"
 
 START_TIME=$(date +%s)
 
+# Generate timestamp
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+
 # Colors for output
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
@@ -99,6 +102,10 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   ansible-playbook "${SCENARIO_DIR}/client.yml"
 fi
 
+export OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
+PCAP_DIR="${OUTPUT_DIR}"
+CAP_FILE="packets.pcap"
+
 # Start Telemetry and iperf
 ${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
 INT_PID=$!
@@ -124,7 +131,7 @@ START_TIME=$(date +%s)
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp >/dev/null
-  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo PCAP_DIR=${OUTPUT_DIR} CAP_FILE='packets.pcap' DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
   CLIENT_PID=$!
   while [[ ! -f "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; do
     log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"
