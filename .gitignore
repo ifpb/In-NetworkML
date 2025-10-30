@@ -4,5 +4,4 @@
 .python-version
 *.bmv2
 ssh_config
-*.mp4
 logs/

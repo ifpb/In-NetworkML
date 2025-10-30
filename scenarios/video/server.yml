@@ -17,16 +17,22 @@
       file:
         path: "/etc/nginx"
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Configure nginx
       copy:
         src: ./nginx.conf
         dest: /etc/nginx/nginx.conf
-        mode: '644'
+        mode: "644"
 
     - name: Restart nginx
       service:
         name: nginx
         state: restarted
         enabled: yes
+
+    - name: Copy test video file
+      copy:
+        src: ./sample.mp4
+        dest: /tmp
+        mode: "644"
