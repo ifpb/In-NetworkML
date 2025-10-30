@@ -2,21 +2,17 @@
 
 set -euo pipefail
 
-INTERFACE="eth1"
-PCAP_DIR="/vagrant/pcap"
-CAP_FILE="scp_$(date +%s).pcap"
+# Test scenario duration in seconds, default = 60s
+DURATION="${DURATION:-60}"
+CAP_FILE="${CAP_FILE:-web_$(date +%s).pcap}"
+PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
+
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
+INTERFACE="eth1"
 REMOTE_USER="vagrant"
 REMOTE_HOST="192.168.56.102"
 SSH_OPTS="-o StrictHostKeyChecking=no"
-
-# Test scenario duration in seconds, default = 60s
-if [ -z "${DURATION}" ]; then
-  DURATION=60
-else
-  DURATION=${DURATION}
-fi
 
 TEST_DIR="/tmp/test_files"
 

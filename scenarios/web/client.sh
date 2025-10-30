@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 
 # Test scenario duration in seconds, default = 60s
-if [ -z "${DURATION}" ]; then
-  DURATION=60
-else
-  DURATION=${DURATION}
-fi
+DURATION="${DURATION:-60}"
+CAP_FILE="${CAP_FILE:-web_$(date +%s).pcap}"
+PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
+
+CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
 SERVER_IP="192.168.56.102"
 INTERFACE="eth1"
-CAP_FILE="web_$(date +%s).pcap"
 
-PCAP_DIR="/vagrant/pcap"
-CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_client() {
