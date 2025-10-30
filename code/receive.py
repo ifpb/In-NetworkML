@@ -100,16 +100,31 @@ FIELDNAMES = [
 
 
 def main():
-    output_file = "/vagrant/metrics/telemetry.csv"
-    iface = "eth1"
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="/vagrant/metrics/telemetry.csv",
+        help="Output CSV file path (default: /vagrant/metrics/telemetry.csv)",
+    )
+
+    parser.add_argument(
+        "-i", "--interface", default="eth1", help="Network interface to sniff"
+    )
+
+    args = parser.parse_args()
+
     bind_layers(IP, nodeCount, proto=253)
-    with open(output_file, "w", newline="") as f:
+    with open(args.output, "w+", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDNAMES)
         writer.writeheader()
 
         try:
             sniff(
-                filter="ip proto 253", iface=iface, prn=lambda x: handle_pkt(x, writer)
+                filter="ip proto 253",
+                iface=args.interface,
+                prn=lambda x: handle_pkt(x, writer),
             )
         except KeyboardInterrupt:
             pass

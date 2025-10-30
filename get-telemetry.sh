@@ -3,12 +3,12 @@
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-METRICS_DIR="${SCRIPT_DIR}/metrics"
+OUTPUT_DIR="${OUTPUT_DIR:-/vagrant/metrics}"
 H2_IP="192.168.56.102"
 
-mkdir "${METRICS_DIR}" 2>/dev/null
+ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 
-ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo /vagrant/code/receive.py" &
+ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo /vagrant/code/receive.py -o ${OUTPUT_DIR}/telemetry.csv" &
 RECEIVER_PID=$!
 
 ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo /vagrant/code/send.py ${H2_IP} 2>/dev/null" &

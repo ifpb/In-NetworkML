@@ -3,11 +3,11 @@
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-METRICS_DIR="${SCRIPT_DIR}/metrics"
-OUTPUT_FILE="/vagrant/metrics/iperf.json"
+OUTPUT_DIR="${OUTPUT_DIR:-/vagrant/metrics}"
+OUTPUT_FILE="${OUTPUT_DIR}/iperf.json"
 H2_IP="192.168.56.102"
 
-mkdir "${METRICS_DIR}" 2>/dev/null
+ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 
 ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo iperf3 -s -J > ${OUTPUT_FILE}" &
 RECEIVER_PID=$!
