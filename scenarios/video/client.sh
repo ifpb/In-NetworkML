@@ -43,7 +43,7 @@ stop_capture() {
 run_client() {
   echo "Starting client"
   while true; do
-    ffmpeg -i "$VIDEO_URL_RTMP" -t 10 -f null - 2>/dev/null &
+    ffmpeg -i "$VIDEO_URL_RTMP" -loglevel info -stats -progress pipe:1 -f null - 2>/dev/null &
     echo $! > /tmp/ffmpeg.pid
     wait $(cat /tmp/ffmpeg.pid)
     sleep 0.5
@@ -53,7 +53,7 @@ run_client() {
 clean_up() {
   FFMPEG_PID=$(cat /tmp/ffmpeg.pid)
   if [[ ! -z "$FFMPEG_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; then
-    echo "Stopping client (PID: $FFMPEG_PID)"
+    echo "Stopping ffmpeg (PID: $FFMPEG_PID)"
     kill $FFMPEG_PID
     wait $FFMPEG_PID 2>/dev/null
   fi
