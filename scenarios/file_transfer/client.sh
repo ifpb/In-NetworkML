@@ -8,6 +8,7 @@ CAP_FILE="${CAP_FILE:-web_$(date +%s).pcap}"
 PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
 
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
+CSV_FILE="${PCAP_DIR}/flow_completion_time.csv"
 
 INTERFACE="eth1"
 REMOTE_USER="vagrant"
@@ -94,11 +95,18 @@ transfer_files() {
       local filename=$(basename "$file")
       log_info "Transferring: $filename"
 
+      start_time=$(date +%s.%N)
       scp "${REMOTE_USER}@${REMOTE_HOST}:${category_dir}/$filename" ${TEST_DIR} &
-      echo $! > /tmp/scp.pid
-
+      echo $! >/tmp/scp.pid
 
       wait $(cat /tmp/scp.pid)
+
+      end_time=$(date +%s.%N)
+
+      timestamp=$(date +%s%3N)
+      fct=$(echo "$end_time - $start_time" | bc)
+
+      echo "${timestamp},${filename},${fct}" >>${CSV_FILE}
 
       # delay
       sleep 0.5
@@ -107,15 +115,18 @@ transfer_files() {
 }
 
 run_client() {
-	while true; do
-		transfer_files
-	done
+  while true; do
+    transfer_files
+  done
 }
 
 # Start packet capture
 if ! start_packet_capture; then
   exit 1
 fi
+
+# CSV headers
+echo "timestamp,filename,flow_completion_time" >${CSV_FILE}
 
 # Transfer files
 run_client &
@@ -124,7 +135,7 @@ CLIENT_PID=$!
 cleanup() {
   SCP_PID=$(cat /tmp/scp.pid)
   if [[ ! -z "$SCP_PID" ]] && kill -0 $SCP_PID 2>/dev/null; then
-    echo "Stopping client (PID: $SCP_PID)"
+    echo "Stopping scp (PID: $SCP_PID)"
     kill $SCP_PID
     wait $SCP_PID 2>/dev/null
   fi
@@ -141,4 +152,3 @@ cleanup() {
 trap cleanup EXIT INT TERM KILL
 
 sleep $DURATION
-

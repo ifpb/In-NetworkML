@@ -11,6 +11,7 @@
       loop:
         - curl
         - tcpdump
+        - bc
     #
     # - name: Run client
     #   script: ./runner.sh
