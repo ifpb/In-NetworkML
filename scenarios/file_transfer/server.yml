@@ -20,3 +20,9 @@
         name: ssh
         state: restarted
       tags: service_restart
+
+    - name: Copy test files
+      copy:
+        src: ./test_files
+        dest: /tmp
+        mode: "755"

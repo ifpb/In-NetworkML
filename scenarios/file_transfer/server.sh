@@ -7,8 +7,9 @@ readonly SCRIPT_NAME="$(basename "$0")"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Default configuration
-readonly DEFAULT_TEST_DIR="/tmp/test_files"
-readonly DEFAULT_FILE_SIZES="1M 10M 50M 100M" # 1MB, 10MB, 50MB, 100MB
+# readonly DEFAULT_TEST_DIR="/tmp/test_files"
+readonly DEFAULT_TEST_DIR="./test_files"
+readonly DEFAULT_FILE_SIZES="1M 10M 20M"
 
 # Colors for output
 readonly RED='\033[0;31m'
@@ -167,9 +168,9 @@ generate_test_files() {
     if [[ ! -f "$text_file" ]]; then
       log_info "Creating text file: $(basename "$text_file")"
       if dd if=/dev/urandom of="$text_file" bs="$size" count=1 2>/dev/null; then
-	((files_created++)) || true
-	else
-	  log_error "Failed to create text file: $(basename "$text_file")"
+        ((files_created++)) || true
+      else
+        log_error "Failed to create text file: $(basename "$text_file")"
       fi
     else
       log_info "Text file already exists: $(basename "$text_file")"
@@ -239,19 +240,19 @@ verify_test_files() {
 
 # Main execution function
 main() {
-  log_info "Starting SCP test file generator"
-
-  parse_arguments "$@"
-
-  if ! validate_environment; then
-    log_error "Environment validation failed"
-    exit 1
-  fi
-
-  # Create test files
-  create_test_directory
-  generate_test_files
-  verify_test_files
+  # log_info "Starting SCP test file generator"
+  #
+  # parse_arguments "$@"
+  #
+  # if ! validate_environment; then
+  #   log_error "Environment validation failed"
+  #   exit 1
+  # fi
+  #
+  # # Create test files
+  # create_test_directory
+  # generate_test_files
+  # verify_test_files
 
   # Server is ready
   touch /vagrant/server_ready
