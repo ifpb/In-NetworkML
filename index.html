@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#08C" />
+    <title>Arch Linux</title>
+    <link rel="stylesheet" type="text/css" href="/static/archweb.css" media="screen" />
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
+    <link rel="apple-touch-icon" href="/static/logos/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/logos/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/logos/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/logos/apple-touch-icon-144x144.png" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch/packages/" title="Arch Linux Packages" />
+    
+<link rel="alternate" type="application/rss+xml" title="Arch Linux News Updates" href="/feeds/news/" />
+<link rel="alternate" type="application/rss+xml" title="Arch Linux Package Updates" href="/feeds/packages/" />
+<script type="text/javascript" src="/static/homepage.js" defer></script>
+<link rel="me" href="https://fosstodon.org/@archlinux" title="Arch Linux Mastodon" />
+
+</head>
+<body class="">
+    <div id="archnavbar" class="anb-home">
+        <div id="archnavbarlogo"><h1><a href="/" title="Return to the main page">Arch Linux</a></h1></div>
+        <div id="archnavbarmenu">
+            <ul id="archnavbarlist">
+                <li id="anb-home"><a href="/" title="Arch news, packages, projects and more">Home</a></li>
+                <li id="anb-packages"><a href="/packages/" title="Arch Package Database">Packages</a></li>
+                <li id="anb-forums"><a href="https://bbs.archlinux.org/" title="Community forums">Forums</a></li>
+                <li id="anb-wiki"><a href="https://wiki.archlinux.org/" title="Community documentation">Wiki</a></li>
+                <li id="anb-gitlab"><a href="https://gitlab.archlinux.org/archlinux" title="GitLab">GitLab</a></li>
+                <li id="anb-security"><a href="https://security.archlinux.org/" title="Arch Linux Security Tracker">Security</a></li>
+                <li id="anb-aur"><a href="https://aur.archlinux.org/" title="Arch Linux User Repository">AUR</a></li>
+                <li id="anb-download"><a href="/download/" title="Get Arch Linux">Download</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="content">
+        <div id="archdev-navbar">
+            
+        </div>
+        
+        
+            <div id="content-left-wrapper">
+                <div id="content-left">
+                    
+
+<div id="intro" class="box">
+    <h2>A simple, lightweight distribution</h2>
+
+    <p>You've reached the website for <strong>Arch Linux</strong>, a
+    lightweight and flexible Linux® distribution that tries to Keep It
+    Simple.</p>
+
+    <p>Currently we have official packages optimized for the x86-64
+    architecture. We complement our official package sets with a
+    <a href="https://aur.archlinux.org/" title="Arch User Repository (AUR)">
+        community-operated package repository</a> that grows in size and
+    quality each and every day.</p>
+
+    <p>Our strong community is diverse and helpful, and we pride ourselves
+    on the range of skillsets and uses for Arch that stem from it. Please
+    check out our <a href="https://bbs.archlinux.org/" title="Arch Forums">forums</a>
+    and <a href="https://lists.archlinux.org/" title="Arch Mailing Lists">mailing lists</a>
+    to get your feet wet. Also glance through our <a href="https://wiki.archlinux.org/"
+        title="Arch Wiki">wiki</a>
+    if you want to learn more about Arch.</p>
+
+    <p class="readmore"><a href="/about/"
+        title="Learn more about Arch Linux">Learn more...</a></p>
+</div>
+
+<div id="news">
+    <h3>
+        <a href="/news/" title="Browse the news archives">Latest News</a>
+        <span class="arrow"></span>
+    </h3>
+
+    <a href="/feeds/news/" title="Arch News RSS Feed"
+        class="rss-icon"><img src="/static/rss.svg" alt="RSS Feed" /></a>
+
+    
+    <h4>
+        <a href="/news/recent-services-outages/"
+            title="View full article: Recent service outages">Recent service outages</a>
+    </h4>
+    <p class="timestamp">2025-08-21</p>
+    <div class="article-content">
+        <p>We want to provide an update on the recent <a href="https://lists.archlinux.org/archives/list/arch-general@lists.archlinux.org/thread/EU4NXRX6DDJAACOWIRZNU4S5KVXEUI72/">service outages</a> affecting our infrastructure. The Arch Linux Project is currently experiencing an ongoing denial of service attack that primarily impacts our main webpage, the Arch User Repository (AUR), and the Forums.</p>
+<p>We are aware of the problems that this creates for our end users and will continue to actively work with our hosting provider to mitigate the attack. We are also evaluating DDoS protection providers while carefully considering factors including cost, security, and ethical standards.</p>
+<p>To improve the communication around this issue we will provide regular updates on our <a href="https://status.archlinux.org">service status page</a> going forward.</p>
+<p>As a volunteer-driven project, we appreciate the community&#x27;s patience as our DevOps team works to resolve these issues. Please bear with us and thank you for all the support you have shown so far.</p>
+<h2>Workarounds during service disruption</h2>
+<ul>
+<li>In the case of downtime for archlinux.org:<ul>
+<li><strong>Mirrors</strong>: The mirror list endpoint used in tools like <code>reflector</code> is hosted on this site. Please default to the mirrors listed in the <code>pacman-mirrorlist</code> package during an outage.</li>
+<li><strong>ISO</strong>: Our installation image is available on a lot of the mirrors, for example the DevOps administered <a href="https://geo.mirror.pkgbuild.com/iso/">geomirrors</a>. Please always verify its integrity as <a href="https://wiki.archlinux.org/title/Installation_guide#Verify_signature">described on the wiki</a> and confirm it is signed by <code>0x3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C</code> (or other trusted keys that may be used in the future).</li>
+</ul>
+</li>
+<li>In the case of downtime for aur.archlinux.org:<ul>
+<li><strong>Packages</strong>: We maintain a <a href="https://github.com/archlinux/aur">mirror of AUR packages</a> on GitHub. You can retrieve a package using:
+  <code>$ git clone --branch &lt;package_name&gt; --single-branch https://github.com/archlinux/aur.git &lt;package_name&gt;</code></li>
+</ul>
+</li>
+<li>In the case of downtime for wiki.archlinux.org:<ul>
+<li><strong>Docs</strong>: The <code>arch-wiki-docs</code> and <code>arch-wiki-lite</code> contain recent snapshots of the articles as hosted on the Arch Linux wiki.</li> …</ul></li></ul>
+        
+    </div>
+    
+    <h4>
+        <a href="/news/zabbix-741-2-may-requires-manual-intervention/"
+            title="View full article: zabbix &gt;= 7.4.1-2 may require manual intervention">zabbix &gt;= 7.4.1-2 may require manual intervention</a>
+    </h4>
+    <p class="timestamp">2025-08-04</p>
+    <div class="article-content">
+        <p>Starting with <code>7.4.1-2</code>, the following Zabbix system user accounts (previously shipped by their related packages) will no longer be used. Instead, all Zabbix components will now rely on a shared <code>zabbix</code> user account (as originally <a href="https://www.zabbix.com/documentation/current/en/manual/installation/install#create-user-account">intended by upstream</a> and done by other distributions):</p>
+<ul>
+<li>zabbix-server</li>
+<li>zabbix-proxy</li>
+<li>zabbix-agent <em>(also used by the <code>zabbix-agent2</code> package)</em></li>
+<li>zabbix-web-service</li>
+</ul>
+<p>This shared <code>zabbix</code> user account is provided by the newly introduced <code>zabbix-common</code> <em>split</em> package, which is now a dependency for all relevant <code>zabbix-*</code> packages.</p>
+<p>The switch to the new user account is handled automatically for the corresponding …</p>
+    </div>
+    
+    <h4>
+        <a href="/news/linux-firmware-2025061312fe085f-5-upgrade-requires-manual-intervention/"
+            title="View full article: linux-firmware &gt;= 20250613.12fe085f-5 upgrade requires manual intervention">linux-firmware &gt;= 20250613.12fe085f-5 upgrade requires manual intervention</a>
+    </h4>
+    <p class="timestamp">2025-06-21</p>
+    <div class="article-content">
+        <p>With <code>20250613.12fe085f-5</code>, we split our firmware into several vendor-focused packages. <code>linux-firmware</code> is now an empty package depending on our default set of firmware.</p>
+<p>Unfortunately, this coincided with upstream reorganizing the symlink layout of the NVIDIA firmware, resulting in a situation that Pacman cannot handle. When attempting to upgrade from <code>20250508.788aadc8-2</code> or earlier, you will see the following errors:</p>
+<pre><code>linux-firmware-nvidia: /usr/lib/firmware/nvidia/ad103 exists in filesystem linux-firmware-nvidia: /usr/lib/firmware/nvidia/ad104 exists in filesystem linux-firmware-nvidia: /usr/lib/firmware/nvidia/ad106 exists in filesystem linux-firmware-nvidia: /usr/lib/firmware/nvidia/ad107 exists in filesystem
+</code></pre>
+<p>To progress with the system upgrade, first remove <code>linux-firmware</code>, then reinstall it as part of the upgrade:</p> …
+    </div>
+    
+    <h4>
+        <a href="/news/plasma-640-will-need-manual-intervention-if-you-are-on-x11/"
+            title="View full article: Plasma 6.4.0 will need manual intervention if you are on X11">Plasma 6.4.0 will need manual intervention if you are on X11</a>
+    </h4>
+    <p class="timestamp">2025-06-20</p>
+    <div class="article-content">
+        <p>On Plasma 6.4 the wayland session will be the only one installed when the users does not manually specify kwin-x11.</p>
+<p>With the recent split of kwin into kwin-wayland and kwin-x11, users running the old X11 session needs to manually install plasma-x11-session, or they will not be able to login. Currently pacman is not able to figure out your personal setup, and it wouldn&#x27;t be ok to install plasma-x11-session and kwin-x11 for every one using Plasma.</p>
+<h3>tldr: Install plasma-x11-session if you are still using x11</h3>
+    </div>
+    
+    <h4>
+        <a href="/news/transition-to-the-new-wow64-wine-and-wine-staging/"
+            title="View full article: Transition to the new WoW64 wine and wine-staging">Transition to the new WoW64 wine and wine-staging</a>
+    </h4>
+    <p class="timestamp">2025-06-16</p>
+    <div class="article-content">
+        <p>We are transitioning the wine and wine-staging package to a pure <a href="https://gitlab.winehq.org/wine/wine/-/releases/wine-9.0#wow64">wow64</a> build. This change removes the dependency on the multilib repository for wine and wine-staging.</p>
+<p>The main reason for this is to align with upstream Wine development, which simplifies packaging and the dependency chain.</p>
+<p>Potential Issues:</p>
+<ul>
+<li>OpenGL Performance: A known limitation of the new WoW64 mode is reduced performance for 32-bit applications that use OpenGL directly</li>
+<li>Breaking Changes: Existing 32-bit prefixes needs to be recreated</li>
+</ul>
+<p>If you are facing issues with 32 bit prefixes, please recreate these and reinstall the application.</p>
+    </div>
+    
+    <h3>
+        <a href="/news/"
+            title="Browse the news archives">Older News</a>
+        <span class="arrow"></span>
+    </h3>
+    <dl class="newslist">
+    
+        <dt>2025-04-17</dt>
+        <dd>
+            <a href="/news/valkey-to-replace-redis-in-the-extra-repository/"
+                title="View full article: Valkey to replace Redis in the [extra] Repository">Valkey to replace Redis in the [extra] Repository</a>
+        </dd>
+    
+    
+        <dt>2025-02-17</dt>
+        <dd>
+            <a href="/news/cleaning-up-old-repositories/"
+                title="View full article: Cleaning up old repositories">Cleaning up old repositories</a>
+        </dd>
+    
+    
+        <dt>2025-02-03</dt>
+        <dd>
+            <a href="/news/glibc-241-corrupting-discord-installation/"
+                title="View full article: Glibc 2.41 corrupting Discord installation">Glibc 2.41 corrupting Discord installation</a>
+        </dd>
+    
+    
+        <dt>2025-01-16</dt>
+        <dd>
+            <a href="/news/critical-rsync-security-release-340/"
+                title="View full article: Critical rsync security release 3.4.0">Critical rsync security release 3.4.0</a>
+        </dd>
+    
+    
+        <dt>2024-11-19</dt>
+        <dd>
+            <a href="/news/providing-a-license-for-package-sources/"
+                title="View full article: Providing a license for package sources">Providing a license for package sources</a>
+        </dd>
+    
+    
+        <dt>2024-09-14</dt>
+        <dd>
+            <a href="/news/manual-intervention-for-pacman-700-and-local-repositories-required/"
+                title="View full article: Manual intervention for pacman 7.0.0 and local repositories required">Manual intervention for pacman 7.0.0 and local repositories required</a>
+        </dd>
+    
+    
+        <dt>2024-07-01</dt>
+        <dd>
+            <a href="/news/the-sshd-service-needs-to-be-restarted-after-upgrading-to-openssh-98p1/"
+                title="View full article: The sshd service needs to be restarted after upgrading to openssh-9.8p1">The sshd service needs to be restarted after upgrading to openssh-9.8p1</a>
+        </dd>
+    
+    
+        <dt>2024-04-15</dt>
+        <dd>
+            <a href="/news/arch-linux-2024-leader-election-results/"
+                title="View full article: Arch Linux 2024 Leader Election Results">Arch Linux 2024 Leader Election Results</a>
+        </dd>
+    
+    
+        <dt>2024-04-07</dt>
+        <dd>
+            <a href="/news/increasing-the-default-vmmax_map_count-value/"
+                title="View full article: Increasing the default vm.max_map_count value">Increasing the default vm.max_map_count value</a>
+        </dd>
+    
+    
+        <dt>2024-03-29</dt>
+        <dd>
+            <a href="/news/the-xz-package-has-been-backdoored/"
+                title="View full article: The xz package has been backdoored">The xz package has been backdoored</a>
+        </dd>
+    </dl>
+    
+</div>
+
+
+                </div>
+            </div>
+            <div id="content-right">
+                
+
+<div id="pkgsearch" class="widget">
+    <form id="pkgsearch-form" method="get" action="/packages/">
+        <fieldset>
+            <label for="pkgsearch-field">Package Search:</label>
+            <input id="pkgsearch-field" type="text" name="q" size="18" maxlength="200" autocomplete="off" />
+        </fieldset>
+    </form>
+</div>
+
+<div id="pkg-updates" class="widget box">
+    <h3>Recent Updates <span class="more">(<a href="/packages/?sort=-last_update"
+            title="Browse all of the latest packages">more</a>)</span></h3>
+
+    <a href="/feeds/packages/" title="Arch Package Updates RSS Feed"
+        class="rss-icon"><img src="/static/rss.svg" alt="RSS Feed" /></a>
+
+    <table>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">alpm-lint 0.1.0-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/alpm-lint/"
+                    title="Details for alpm-lint [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="core">archlinux-keyring 20251027-3</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/core/any/archlinux-keyring/"
+                    title="Details for archlinux-keyring [core]">any</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">haxe 4.3.7-3</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/haxe/"
+                    title="Details for haxe [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">perl-crypt-openssl-rsa 0.37-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/perl-crypt-openssl-rsa/"
+                    title="Details for perl-crypt-openssl-rsa [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">nextcloud-app-contacts 8.0.5-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/any/nextcloud-app-contacts/"
+                    title="Details for nextcloud-app-contacts [extra]">any</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">plymouth 24.004.60-12</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/plymouth/"
+                    title="Details for plymouth [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">alpm-srcinfo 0.5.0-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/alpm-srcinfo/"
+                    title="Details for alpm-srcinfo [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">cargo-nextest 0.9.109-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/cargo-nextest/"
+                    title="Details for cargo-nextest [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">cargo-dist 0.30.1-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/cargo-dist/"
+                    title="Details for cargo-dist [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="testing extra-testing">ruby-pdf-reader 2.15.0-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra-testing/any/ruby-pdf-reader/"
+                    title="Details for ruby-pdf-reader [extra-testing]">any</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">esp-generate 1.0.0-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/esp-generate/"
+                    title="Details for esp-generate [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="testing extra-testing">ruby-fakefs 3.0.4-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra-testing/any/ruby-fakefs/"
+                    title="Details for ruby-fakefs [extra-testing]">any</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="testing extra-testing">ruby-maxitest 6.0.1-2</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra-testing/any/ruby-maxitest/"
+                    title="Details for ruby-maxitest [extra-testing]">any</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="extra">ducker 0.5.4-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra/x86_64/ducker/"
+                    title="Details for ducker [extra]">x86_64</a>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="pkg-name"><span class="testing extra-testing">python-internetarchive 5.7.1-1</span></td>
+            <td class="pkg-arch">
+                <a href="/packages/extra-testing/any/python-internetarchive/"
+                    title="Details for python-internetarchive [extra-testing]">any</a>
+            </td>
+        </tr>
+        
+    </table>
+</div>
+
+
+
+<div id="nav-sidebar" class="widget">
+    <h4>Documentation</h4>
+    <ul>
+        <li><a href="https://wiki.archlinux.org/"
+            title="Community documentation">Wiki</a></li>
+        <li><a href="https://man.archlinux.org/"
+            title="All manpages from Arch packages">Manual Pages</a></li>
+        <li><a href="https://wiki.archlinux.org/title/Installation_guide"
+            title="Installation guide">Installation Guide</a></li>
+    </ul>
+
+    <h4>Community</h4>
+    <ul>
+        <li><a href="https://lists.archlinux.org/"
+            title="Community and developer mailing lists">Mailing Lists</a></li>
+        <li><a href="https://wiki.archlinux.org/title/IRC_channels"
+            title="Official and regional IRC communities">IRC Channels</a></li>
+        <li><a href="https://planet.archlinux.org/"
+            title="Arch in the blogosphere">Planet Arch</a></li>
+        <li><a href="https://wiki.archlinux.org/title/International_communities"
+            title="Arch communities in your native language">International Communities</a></li>
+    </ul>
+
+    <h4>Support</h4>
+    <ul>
+        <li><a href="/donate/" title="Help support Arch Linux">Donate</a></li>
+        <li><a href="https://www.freewear.org/?page=list_items&amp;org=Archlinux"
+            title="T-shirts">T-shirts via Freewear</a></li>
+        <li><a href="https://www.hellotux.com/arch"
+            title="T-shirts">T-shirts via HELLOTUX</a></li>
+    </ul>
+
+    <h4>Tools</h4>
+    <ul>
+        <li><a href="/mirrorlist/"
+            title="Get a custom mirrorlist from our database">Mirrorlist Updater</a></li>
+        <li><a href="/mirrors/"
+            title="See a listing of all available mirrors">Mirror List</a></li>
+        <li><a href="/mirrors/status/"
+            title="Check the status of all known mirrors">Mirror Status</a></li>
+    </ul>
+
+    <h4>Development</h4>
+    <ul>
+        <li><a href="https://wiki.archlinux.org/title/Getting_involved"
+            title="Getting involved">Getting involved</a></li>
+        <li><a href="https://devblog.archlinux.page" title="Dev Blog">Dev Blog</a></li>
+        <li><a href="https://gitlab.archlinux.org/archlinux/"
+            title="Official Arch projects (git)">Projects in Git</a></li>
+        <li><a href="https://wiki.archlinux.org/title/DeveloperWiki"
+            title="Developer Wiki articles">Developer Wiki</a></li>
+        <li><a href="/groups/"
+            title="View the available package groups">Package Groups</a></li>
+        <li><a href="/todo/"
+            title="Developer Todo Lists">Todo Lists</a></li>
+        <li><a href="/releng/releases/"
+            title="Release Engineering ISO listing">ISO Release List</a></li>
+        <li><a href="/visualize/"
+            title="View visualizations">Visualizations</a></li>
+        <li><a href="/packages/differences/"
+            title="See differences in packages between available architectures">Differences Reports</a></li>
+    </ul>
+
+    <h4>People</h4>
+    <ul>
+        
+        <li><a href="/people/developers/" title="More info about Developers">Developers</a></li>
+        
+        <li><a href="/people/package-maintainers/" title="More info about Package Maintainers">Package Maintainers</a></li>
+        
+        <li><a href="/people/support-staff/" title="More info about Support Staff">Support Staff</a></li>
+        
+        <li><a href="/people/developer-fellows/" title="More info about Developer Fellows">Developer Fellows</a></li>
+        
+        <li><a href="/people/package-maintainer-fellows/" title="More info about Package Maintainer Fellows">Package Maintainer Fellows</a></li>
+        
+        <li><a href="/people/support-staff-fellows/" title="More info about Support Staff Fellows">Support Staff Fellows</a></li>
+        
+        <li><a href="/master-keys/"
+            title="Package/Database signing master keys">Signing Master Keys</a></li>
+    </ul>
+
+    <h4>More Resources</h4>
+    <ul>
+        <li><a href="https://wiki.archlinux.org/title/Arch_Linux_press_coverage"
+            title="Arch Linux in the media">Press Coverage</a></li>
+        <li><a href="/art/" title="Arch logos and other artwork for promotional use">Logos &amp; Artwork</a></li>
+        <li><a href="/news/" title="News Archives">News Archives</a></li>
+        <li><a href="/feeds/" title="Various RSS Feeds">RSS Feeds</a></li>
+    </ul>
+</div>
+
+<div id="home-donate-button" class="widget">
+    <a href="https://co.clickandpledge.com/Default.aspx?WID=47294">
+        <img src="/static/click_and_pledge.png" alt="Donate via Click&amp;Pledge to Arch Linux" title="Donate via Click&amp;Pledge to Arch Linux"/>
+    </a>
+</div>
+
+<div class="widget">
+    <a href="https://www.hetzner.com" title="Dedicated Root Server, VPS &amp; Hosting - Hetzner Online GmbH">
+        <img src="/static/hetzner_logo.png"
+            title="" alt="Hetzner logo"/>
+    </a>
+
+    <a href="https://icons8.com/" title="Icons8">
+        <img src="/static/icons8_logo.png"
+            title="" alt="Icons8 logo"/>
+    </a>
+</div>
+
+
+            </div>
+        
+        <div id="footer">
+            <p>Copyright © 2002-2025 <a href="mailto:jvinet@zeroflux.org"
+                title="Contact Judd Vinet">Judd Vinet</a>, <a href="mailto:aaron@archlinux.org"
+                title="Contact Aaron Griffin">Aaron Griffin</a> and
+                <a href="mailto:anthraxx@archlinux.org" title="Contact Levente Polyák">Levente Polyák</a>.</p>
+
+            <p>The Arch Linux name and logo are recognized
+            <a href="https://terms.archlinux.org/docs/trademark-policy/"
+                title="Arch Linux Trademark Policy">trademarks</a>. Some rights reserved.</p>
+
+            <p>The registered trademark Linux® is used pursuant to a sublicense from LMI,
+            the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis.</p>
+        </div>
+    </div>
+    <script type="application/ld+json">
+    {
+       "@context": "http://schema.org",
+       "@type": "WebSite",
+       "url": "https://archlinux.org/",
+       "potentialAction": {
+         "@type": "SearchAction",
+         "target": "https://archlinux.org/packages/?q={search_term}",
+         "query-input": "required name=search_term"
+       }
+    }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,64 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0 26285    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0100 26285  100 26285    0     0  13523      0  0:00:01  0:00:01 --:--:-- 13521
+
+     Time Details:
+     -------------
+     Name Lookup:    0.266356s
+     Connect:        0.460151s
+     Pre-transfer:   0.658083s
+     Start-transfer: 0.851091s
+     Total:          1.943678s
+
+     Size Details:
+     -------------
+     Download:       26285 bytes
+     Header Size:    466 bytes
+
+     HTTP Code:      200
+     
+     Time Details:
+     -------------
+     Name Lookup:    0.316409s
+     Connect:        0.512320s
+     Pre-transfer:   0.717108s
+     Start-transfer: 1.115935s
+     Total:          2.108782s
+
+     Size Details:
+     -------------
+     Download:       26285 bytes
+     Header Size:    466 bytes
+
+     HTTP Code:      200
+     
+     Time Details:
+     -------------
+     Name Lookup:    0.259094s
+     Connect:        0.435833s
+     Pre-transfer:   3.670837s
+     Start-transfer: 4.020086s
+     Total:          5.111919s
+
+     Size Details:
+     -------------
+     Download:       26285 bytes
+     Header Size:    466 bytes
+
+     HTTP Code:      200
+     
+     Time Details:
+     -------------
+     Name Lookup:    0.058030s
+     Connect:        0.245141s
+     Pre-transfer:   0.422018s
+     Start-transfer: 0.787126s
+     Total:          1.599907s
+
+     Size Details:
+     -------------
+     Download:       26285 bytes
+     Header Size:    466 bytes
+
+     HTTP Code:      200
+     
