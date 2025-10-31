@@ -15,27 +15,9 @@ check() {
 get_file() {
 	file=$1
 	[ -z $file ] && file="index.html"
-	echo "-----SOS-----" >> snapshots
-	echo "Visiting $link/$file" >> snapshots
-	echo "TIMESTAMP=$(date +%s%3N)" >> snapshots
-	curl -w "
-Time Details:
--------------
-Name Lookup:    %{time_namelookup}s
-Connect:        %{time_connect}s
-Pre-transfer:   %{time_pretransfer}s
-Start-transfer: %{time_starttransfer}s
-Total:          %{time_total}s
-
-Size Details:
--------------
-Download:       %{size_download} bytes
-Header Size:    %{size_header} bytes
-
-HTTP Code:      %{http_code}
-	" -o $file "$link/$1" >> snapshots
-	echo "-----EOS------
-"	>> snapshots
+	echo -n "$(date +%s%3N)," >> snapshots
+	curl -w "%{time_namelookup},%{time_connect},%{time_pretransfer},%{time_starttransfer},%{time_total},%{size_download},%{size_header},%{http_code}" -o $file "$link/$1" >> snapshots
+	echo "" >> snapshots
 }
 
 dfs() {
@@ -54,8 +36,8 @@ if [ -z $1 ]; then
 	echo "Usage: ./bot.sh [ IP ADDRESS ]"
 fi
 
+echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > snapshots
 echo "" > visited
-echo "" > snapshots
 link="http://"$1
 dfs
 clean
