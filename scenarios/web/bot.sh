@@ -1,4 +1,8 @@
 #!/bin/bash
+
+PCAP_DIR=$2
+METRICS_FILE="$PCAP_DIR""/http_metrics.csv"
+
 clean() {
 	rm $(ls -l | grep .html | awk '{print $9}')
 }
@@ -15,9 +19,9 @@ check() {
 get_file() {
 	file=$1
 	[ -z $file ] && file="index.html"
-	echo -n "$(date +%s%3N)," >> snapshots
-	curl -w "%{time_namelookup},%{time_connect},%{time_pretransfer},%{time_starttransfer},%{time_total},%{size_download},%{size_header},%{http_code}" -o $file "$link/$1" >> snapshots
-	echo "" >> snapshots
+	echo -n "$(date +%s%3N)," >> $METRICS_FILE
+	curl -w "%{time_namelookup},%{time_connect},%{time_pretransfer},%{time_starttransfer},%{time_total},%{size_download},%{size_header},%{http_code}" -o $file "$link/$1" >> $METRICS_FILE
+	echo "" >> $METRICS_FILE
 }
 
 dfs() {
@@ -36,7 +40,8 @@ if [ -z $1 ]; then
 	echo "Usage: ./bot.sh [ IP ADDRESS ]"
 fi
 
-echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > snapshots
+
+echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > $METRICS_FILE
 echo "" > visited
 link="http://"$1
 dfs
