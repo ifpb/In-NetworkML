@@ -6,6 +6,7 @@ CAP_FILE="${CAP_FILE:-video_$(date +%s).pcap}"
 PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
 
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
+CSV_FILE="${PCAP_DIR}/video_metrics.csv"
 
 SERVER_IP="192.168.56.102"
 VIDEO_URL_RTMP="rtmp://$SERVER_IP:1935/live/stream"
@@ -43,8 +44,8 @@ stop_capture() {
 run_client() {
   echo "Starting client"
   while true; do
-    ffmpeg -i "$VIDEO_URL_RTMP" -loglevel info -stats -progress pipe:1 -f null - 2>/dev/null &
-    echo $! > /tmp/ffmpeg.pid
+    ffmpeg -i "$VIDEO_URL_RTMP" -loglevel info -stats -progress pipe:1 -f null - >${CSV_FILE} 2>/dev/null &
+    echo $! >/tmp/ffmpeg.pid
     wait $(cat /tmp/ffmpeg.pid)
     sleep 0.5
   done
@@ -70,6 +71,9 @@ clean_up() {
     wait $TCPDUMP_PID 2>/dev/null
     echo "Packets saved to: ${CAP_FILE_PATH}"
   fi
+
+  cat ${CSV_FILE} | tr '\n' ',' | sed 's/,progress=\(continue\|end\),/\n/g' >/tmp/tmp.csv
+  mv /tmp/tmp.csv ${CSV_FILE}
 }
 
 trap clean_up EXIT INT TERM
