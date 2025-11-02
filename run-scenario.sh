@@ -128,6 +128,13 @@ fi
 
 START_TIME=$(date +%s)
 
+if [[ -f "system_resource_metrics.sh" ]]; then
+	echo "Rodando script de coleta de métricas de sistema do switch"
+	scp -F "${SCRIPT_DIR}/ssh_config" "system_resource_metrics.sh" s1:/tmp
+	ssh -F "${SCRIPT_DIR}/ssh_config" s1 "FILE_PATH=${OUTPUT_DIR}/system-metrics.csv /tmp/system_resource_metrics.sh" &
+	SWITCH_PID=$!
+fi
+
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp >/dev/null
@@ -149,6 +156,8 @@ fi
 
 kill $INT_PID
 kill $IPERF_PID
+kill $SWITCH_PID
 
 wait $INT_PID
 wait $IPERF_PID
+wait $SWITCH_PID
