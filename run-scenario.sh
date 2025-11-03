@@ -128,7 +128,7 @@ fi
 
 START_TIME=$(date +%s)
 
-if [[ -f "system_resource_metrics.sh" ]]; then
+if [[ -f "switch_resource_metrics.sh" ]]; then
 	echo "Rodando script de coleta de métricas de sistema do switch"
 	scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp
 	ssh -F "${SCRIPT_DIR}/ssh_config" s1 "FILE_PATH=${OUTPUT_DIR}/switch-resources.csv /tmp/switch_resource_metrics.sh" &
