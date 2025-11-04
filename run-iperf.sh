@@ -12,7 +12,7 @@ ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo iperf3 -s -J > ${OUTPUT_FILE}" &
 RECEIVER_PID=$!
 
-sleep .2
+sleep 1
 
 ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo iperf3 -t 0 -c ${H2_IP} >/dev/null 2>&1" &
 SENDER_PID=$!
