@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCENARIOS_DIR="${SCRIPT_DIR}/scenarios"
@@ -67,16 +67,38 @@ if [ -z $1 ] || [ ! -d scenarios/$1 ]; then
   saida
 fi
 
+
+time_convert() {
+    input="$1"
+    total=0
+    temp="$input"
+    
+    while [[ $temp =~ ([0-9]+)([hms]) ]]; do
+        val="${BASH_REMATCH[1]}"
+        unit="${BASH_REMATCH[2]}"
+        
+        case "$unit" in
+            h) total=$((total + val * 3600)) ;;
+            m) total=$((total + val * 60)) ;;
+            s) total=$((total + val)) ;;
+        esac
+
+        temp="${temp#*${BASH_REMATCH[0]}}"
+    done
+    echo "$total"
+}
+
 SCENARIO="$1"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
-if [[ -z $2 ]]; then
-  DURATION=60
-elif [[ $2 =~ ^[0-9]+$ ]]; then
-  DURATION=$2
+if [[ -z "$2" ]]; then
+	log_info "Usando valor de tempo padrão: 60 segundos"
+	DURATION=60
+elif [[ $2 =~ ^([0-9]+h)?([0-9]+m)?([0-9]+s)?$ ]] && [[ -n "$2" ]]; then
+	DURATION=$(time_convert $2)
 else
-  log_error "Duração deve ser um inteiro positivo"
-  exit 1
+	log_error "Formato de tempo inválido (XhYmZx)"
+	exit 1
 fi
 
 cleanup() {
