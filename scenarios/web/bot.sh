@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PCAP_DIR=$2
-METRICS_FILE="$PCAP_DIR""/http_metrics.csv"
+PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
+METRICS_FILE="${METRICS_FILE:-$PCAP_DIR/http_metrics.csv}"
 
 clean() {
 	rm $(ls -l | grep .html | awk '{print $9}')
@@ -41,7 +41,7 @@ if [ -z $1 ]; then
 fi
 
 
-echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > $METRICS_FILE
+# echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > $METRICS_FILE
 echo "" > visited
 link="http://"$1
 dfs

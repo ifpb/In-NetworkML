@@ -4,6 +4,7 @@
 DURATION="${DURATION:-60}"
 CAP_FILE="${CAP_FILE:-web_$(date +%s).pcap}"
 PCAP_DIR="${PCAP_DIR:-/vagrant/pcap}"
+METRICS_FILE="$PCAP_DIR""/http_metrics.csv"
 
 CAP_FILE_PATH="${PCAP_DIR}/${CAP_FILE}"
 
@@ -14,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_client() {
   while true; do
-    ./bot.sh $SERVER_IP $PCAP_DIR &
+    PCAP_DIR=$PCAP_DIR METRICS_FILE=$METRICS_FILE ./bot.sh $SERVER_IP &
     echo $! >/tmp/bot.pid
     wait $(cat /tmp/bot.pid)
   done
@@ -24,6 +25,8 @@ mkdir -p $PCAP_DIR >/dev/null 2>&1
 tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} >/dev/null 2>&1 &
 TCPDUMP_PID=$!
 
+
+echo "timestamp,time_namelookup,time_connect,time_pretransfer,time_starttransfer,time_total,size_download,size_header,http_code" > "$METRICS_FILE"
 run_client &
 CLIENT_PID=$!
 
