@@ -12,11 +12,23 @@
         name: nginx
         state: present
 
-    - name: Assert nginx instance
+    - name: Ensure dir "/etc/nginx" is created
+      file:
+        path: "/etc/nginx"
+        state: directory
+        mode: "0755"
+
+    - name: Configure nginx
+      copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+        mode: "644"
+
+    - name: Restart nginx
       service:
         name: nginx
-        state: started
-        enabled: true
+        state: restarted
+        enabled: yes
 
     - name: Copy HTML files
       copy:
@@ -25,9 +37,3 @@
         owner: www-data
         group: www-data
         mode: '0644'
-
-  handlers:
-    - name: Restart Nginx
-      service:
-        name: nginx
-        state: restarted
