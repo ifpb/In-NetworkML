@@ -51,7 +51,7 @@ start_packet_capture() {
 
   mkdir -p $PCAP_DIR >/dev/null 2>&1
   # Start packet capture in background
-  if tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} >/dev/null 2>&1 & then
+  if tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} not tcp port 5201 and not ip proto 253 >/dev/null 2>&1 & then
     local capture_pid=$!
     log_success "Packet capture started with PID: $capture_pid"
     echo "$capture_pid" >"/tmp/scp_test_capture.pid"

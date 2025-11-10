@@ -22,16 +22,15 @@ start_capture() {
   echo "Starting packet capture on interface $INTERFACE..."
   echo "Capturing to file: $CAP_FILE_PATH"
   mkdir -p /vagrant/pcap
-  sudo tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" host "$SERVER_IP" &
+  tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" host "$SERVER_IP" and not tcp port 5201 and not ip proto 253 &
   TCPDUMP_PID=$!
-  sleep 2
 }
 
 # Function to stop packet capture
 stop_capture() {
   echo "Stopping packet capture..."
-  sudo kill $TCPDUMP_PID
-  sleep 2
+  kill $TCPDUMP_PID
+  wait $TCPDUMP_PID
   echo "Packet capture saved to $CAP_FILE_PATH"
 
   # Show capture statistics

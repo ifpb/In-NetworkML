@@ -22,7 +22,7 @@ run_client() {
 }
 
 mkdir -p $PCAP_DIR >/dev/null 2>&1
-tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} >/dev/null 2>&1 &
+tcpdump -i $INTERFACE -w ${CAP_FILE_PATH} not tcp port 5201 and not ip proto 253 >/dev/null 2>&1 &
 TCPDUMP_PID=$!
 
 
