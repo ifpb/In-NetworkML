@@ -135,6 +135,11 @@ INT_PID=$!
 ${SCRIPT_DIR}/run-iperf.sh &
 IPERF_PID=$!
 
+log_info "Rodando script de coleta de métricas de sistema do switch"
+scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp >/dev/null
+ssh -F "${SCRIPT_DIR}/ssh_config" s1 "FILE_PATH=${OUTPUT_DIR}/switch-resources.csv /tmp/switch_resource_metrics.sh" &
+SWITCH_PID=$!
+
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   log_info "Rodando script do servidor"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/server.sh" h2:/tmp >/dev/null
@@ -149,13 +154,6 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
 fi
 
 START_TIME=$(date +%s)
-
-if [[ -f "switch_resource_metrics.sh" ]]; then
-	echo "Rodando script de coleta de métricas de sistema do switch"
-	scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp
-	ssh -F "${SCRIPT_DIR}/ssh_config" s1 "FILE_PATH=${OUTPUT_DIR}/switch-resources.csv /tmp/switch_resource_metrics.sh" &
-	SWITCH_PID=$!
-fi
 
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
@@ -178,6 +176,7 @@ fi
 
 kill $INT_PID
 kill $IPERF_PID
+ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f /tmp/switch_resource_metrics.sh"
 kill $SWITCH_PID
 
 wait $INT_PID
