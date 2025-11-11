@@ -73,6 +73,7 @@ clean_up() {
 
   cat ${CSV_FILE} | tr '\n' ',' | sed 's/,progress=\(continue\|end\),/\n/g' >/tmp/tmp.csv
   mv /tmp/tmp.csv ${CSV_FILE}
+  /vagrant/scenarios/video/format_to_csv.py -i ${CSV_FILE} -o ${CSV_FILE}
 }
 
 trap clean_up EXIT INT TERM
