@@ -5,3 +5,5 @@
 *.bmv2
 ssh_config
 logs/
+metrics/
+pcap/
