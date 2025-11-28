@@ -48,6 +48,20 @@ header ipv4_h {
     ip4Addr_v dstAddr;
 }
 
+header tcp_h {
+    bit<16> srcPort;
+    bit<16> dstPort;
+    bit<32> seqNo;
+    bit<32> ackNo;
+    bit<4>  dataOffset;
+    bit<3>  res;
+    bit<3>  ecn;
+    bit<6>  ctrl;
+    bit<16> window;
+    bit<16> checksum;
+    bit<16> urgentPtr;
+}
+
 header nodeCount_h{
     bit<16>  count;
 }
@@ -81,6 +95,7 @@ struct metadata {
 struct headers {
     ethernet_h         ethernet;
     ipv4_h             ipv4;
+    tcp_h              tcp;
     nodeCount_h        nodeCount;
     InBandNetworkTelemetry_h[MAX_HOPS] INT;
 }
@@ -109,9 +124,15 @@ parser MyParser(packet_in packet,
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition select(hdr.ipv4.protocol){
+            6: parse_tcp;
             IP_PROTO: parse_count;
             default: accept;
         }
+    }
+
+    state parse_tcp {
+        packet.extract(hdr.tcp);
+        transition accept;
     }
 
     state parse_count{
