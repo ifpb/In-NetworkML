@@ -3,7 +3,9 @@
 #include <v1model.p4>
 
 const bit<16> TYPE_IPV4 = 0x800;
-const bit<8> IP_PROTO = 253;
+
+const bit<8> PROTO_INT = 253;
+const bit<8> PROTO_TCP = 6;
 
 #define MAX_HOPS 10
 
@@ -15,6 +17,10 @@ const bit<8> IP_PROTO = 253;
 
 typedef bit<48> macAddr_v;
 typedef bit<32> ip4Addr_v;
+
+typedef bit<16> flowID_t;
+typedef bit<32> int_t;
+typedef bit<48> timestamp_t;
 
 typedef bit<31> switchID_v;
 typedef bit<9> ingress_port_v;
@@ -90,6 +96,12 @@ struct parser_metadata_t {
 struct metadata {
     ingress_metadata_t   ingress_metadata;
     parser_metadata_t   parser_metadata;
+    flowID_t flowID;
+    timestamp_t ipi;
+    bit<14> action_select1;
+    bit<14> action_select2;
+    bit<14> action_select3;
+    bit<14> action_select4;
 }
 
 struct headers {
@@ -124,8 +136,8 @@ parser MyParser(packet_in packet,
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
         transition select(hdr.ipv4.protocol){
-            6: parse_tcp;
-            IP_PROTO: parse_count;
+            PROTO_TCP: parse_tcp;
+            PROTO_INT: parse_count;
             default: accept;
         }
     }
@@ -169,8 +181,69 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
+    register<bit<3>>(0xffff) flow_queue;
+    register<bit<48>>(0xffff) ipi_register;
+
+    register<bit<48>>(0xffff) lpt_register;
+
+    register<bit<3>>(6) results_reg;
+
     action drop() {
         mark_to_drop(standard_metadata);
+    }
+
+    action find_flowID_ipv4() {
+      bit<1> base = 0;
+      bit<16> max = 0xffff;
+      bit<16> hash_result;
+      bit<48> IP_Port = hdr.ipv4.dstAddr ++ hdr.tcp.dstPort;
+
+      hash(
+        hash_result,
+        HashAlgorithm.crc16,
+        base,
+        {
+          IP_Port
+        },
+        max
+      )
+
+      meta.flowID = hash_result;
+    }
+
+    action extract_features() {
+      timestamp_t ipi = 0;
+      int<48> diff_ts = 0;
+
+      timestamp_t inter_packet_interval = 0;
+
+      timestamp_t current_time = standard_metadata.ingress_global_timestamp;
+      timestamp_t last_packet_time = 0;
+
+      ipi_register.read(ipi, (bit<32>)meta.flowID);
+
+      lpt_register.read(last_packet_time, (bit<32>)meta.flowID);
+
+      if (last_packet_time == 0) {
+        last_packet_time = current_time;
+      } else {
+        /* IPI */
+        inter_packet_interval = current_time - last_packet_time;
+        last_packet_time = current_time;
+        if (ipi > 0) {
+          diff_ts = ((int<48>)inter_packet_interval) - ((int<48>)ipi);
+          diff_ts = diff_ts >> 7;
+          ipi = ipi + (bit<48>) diff_ts;
+        } else {
+          ipi = inter_packet_interval;
+        }
+      }
+
+      ipi_register.write((bit<32>)meta.flowID, ipi);
+
+      lpt_register.write((bit<32>)meta.flowID, last_packet_time);
+
+      meta.ipi = ipi;
     }
 
     action ipv4_forward(macAddr_v dstAddr, egressSpec_v port) {
