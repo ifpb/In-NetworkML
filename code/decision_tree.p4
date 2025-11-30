@@ -97,11 +97,15 @@ struct metadata {
     ingress_metadata_t   ingress_metadata;
     parser_metadata_t   parser_metadata;
     flowID_t flowID;
+    bit<32> seqNo;
+    bit<32> ackNo;
+    bit<16> window;
     timestamp_t ipi;
     bit<14> action_select1;
     bit<14> action_select2;
     bit<14> action_select3;
     bit<14> action_select4;
+    bit<3>  result;
 }
 
 struct headers {
@@ -181,12 +185,14 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
-    register<bit<3>>(0xffff) flow_queue;
+    // register<bit<3>>(0xffff) flow_queue;
     register<bit<48>>(0xffff) ipi_register;
 
     register<bit<48>>(0xffff) lpt_register;
 
-    register<bit<3>>(6) results_reg;
+    // register<bit<3>>(6) results_reg;
+
+    counter(3, CounterType.packets) resultCounter;
 
     action drop() {
         mark_to_drop(standard_metadata);
@@ -206,9 +212,88 @@ control MyIngress(inout headers hdr,
           IP_Port
         },
         max
-      )
+      );
 
       meta.flowID = hash_result;
+    }
+
+    action set_actionselect1(bit<14> featurevalue1) {
+      meta.action_select1 = featurevalue1;
+    }
+
+    action set_actionselect2(bit<14> featurevalue2) {
+      meta.action_select2 = featurevalue2;
+    }
+
+    action set_actionselect3(bit<14> featurevalue3) {
+      meta.action_select3 = featurevalue3;
+    }
+
+    action set_actionselect4(bit<14> featurevalue4) {
+      meta.action_select4 = featurevalue4;
+    }
+
+
+    table feature1_exact{
+      key = {
+        meta.seqNo : range ;
+      }
+      actions = {
+        NoAction;
+        set_actionselect1;
+      }
+      size = 1024;
+    }
+
+    table feature2_exact{
+      key = {
+        meta.ackNo : range ;
+      }
+      actions = {
+        NoAction;
+        set_actionselect2;
+      }
+      size = 1024;
+    }
+
+    table feature3_exact{
+      key = {
+        meta.window : range ;
+      }
+      actions = {
+        NoAction;
+        set_actionselect3;
+      }
+      size = 1024;
+    }
+
+    table feature4_exact{
+      key = {
+        meta.ipi : range ;
+      }
+      actions = {
+        NoAction;
+        set_actionselect4;
+      }
+      size = 1024;
+    }
+
+    action set_result(bit<3> result) {
+      meta.result = result;
+    }
+
+    table classify_exact {
+      key = {
+        meta.action_select1: range;
+        meta.action_select2: range;
+        meta.action_select3: range;
+        meta.action_select4: range;
+      }
+      actions = {
+        set_result;
+        NoAction;
+        drop;
+      }
     }
 
     action extract_features() {
@@ -244,6 +329,9 @@ control MyIngress(inout headers hdr,
       lpt_register.write((bit<32>)meta.flowID, last_packet_time);
 
       meta.ipi = ipi;
+      meta.seqNo = hdr.tcp.seqNo;
+      meta.ackNo = hdr.tcp.ackNo;
+      meta.window = hdr.tcp.window;
     }
 
     action ipv4_forward(macAddr_v dstAddr, egressSpec_v port) {
@@ -269,6 +357,19 @@ control MyIngress(inout headers hdr,
 
     apply {
         if (hdr.ipv4.isValid()) {
+            if (hdr.tcp.isValid()) {
+              extract_features();
+
+              feature1_exact.apply();
+              feature2_exact.apply();
+              feature3_exact.apply();
+              feature4_exact.apply();
+
+              classify_exact.apply();
+
+              resultCounter.count((bit<32>)meta.result);
+            }
+
             ipv4_lpm.apply();
         }
     }
@@ -347,6 +448,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
         packet.emit(hdr.nodeCount);
         packet.emit(hdr.INT);
     }
