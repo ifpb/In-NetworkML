@@ -112,7 +112,7 @@ cleanup() {
   rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
 }
 
-trap cleanup INT TERM EXIT
+trap cleanup EXIT
 
 log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
 
@@ -135,6 +135,8 @@ export OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
 PCAP_DIR="${OUTPUT_DIR}"
 CAP_FILE="packets.pcap"
 
+ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
+
 # Start Telemetry and iperf
 ${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
 INT_PID=$!
@@ -144,7 +146,7 @@ IPERF_PID=$!
 
 log_info "Rodando script de coleta de métricas de sistema do switch"
 scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp >/dev/null
-ssh -F "${SCRIPT_DIR}/ssh_config" s1 "FILE_PATH=${OUTPUT_DIR}/switch-resources.csv /tmp/switch_resource_metrics.sh" &
+ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resource_metrics.sh" &
 SWITCH_PID=$!
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then

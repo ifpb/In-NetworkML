@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-[ -z $FILE_PATH ] && FILE_PATH="metrics/$(echo $SCENARIO)_$(date +"%Y-%m-%d")/system_metrics.csv"
+OUTPUT_DIR="${OUTPUT_DIR:-/vagrant/metrics}"
+FILE_PATH="${OUTPUT_DIR}/system_metrics.csv"
 
 STOPPED=false
 
 trap "STOPPED=true" TERM INT
+
+mkdir -p $OUTPUT_DIR
 
 echo "timestamp,cpu_total,cpu_user,cpu_sys,cpu_idle,mem_total,mem_free,mem_used,mem_cache,load_avg" > $FILE_PATH
 
