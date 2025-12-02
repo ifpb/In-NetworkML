@@ -10,6 +10,9 @@
     - name: Compile p4 code
       command: p4c -b bmv2 /vagrant/code/basic.p4 -o /vagrant/code/bmv2
       become: yes
+    - name: stop previous Bmv2 Switch
+      shell: pkill simple_switch | true
+      become: yes
     - name: Start Bmv2 Switch
       shell: simple_switch --device-id 1 --thrift-port 9090 --interface 1@enp0s9 --interface 2@enp0s10  /vagrant/code/bmv2/basic.json &
       async: 1000
