@@ -19,18 +19,18 @@ def find_action(textfile):
 def find_feature(textfile):
     f = open(textfile)
     line = f.readline()
-    seq = re.findall('\d+\.\d+', line)
+    seq = re.findall(r"\d+", line)
     line = f.readline()
-    ack = re.findall('\d+\.\d+', line)
+    ack = re.findall(r"\d+", line)
     line = f.readline()
-    window = re.findall('\d+\.\d+', line)
+    window = re.findall(r"\d+", line)
     line = f.readline()
-    ipi = re.findall('\d+\.\d+', line)
+    ipi = re.findall(r"\d+", line)
     f.close
-    seq = [float(i) for i in seq]
-    ack = [float(i) for i in ack]
-    window = [float(i) for i in window]
-    ipi = [float(i) for i in ipi]
+    seq = [int(i) for i in seq]
+    ack = [int(i) for i in ack]
+    window = [int(i) for i in window]
+    ipi = [int(i) for i in ipi]
     return seq, ack, window, ipi
 
 def find_classification(textfile, fseq, fack, fwindow, fipi):
@@ -60,7 +60,7 @@ def find_classification(textfile, fseq, fack, fwindow, fipi):
         for j, feature in enumerate(fea[i]):
             if feature == 'seq':
                 sig = sign[i][j]
-                thres = float(num[i][j])
+                thres = int(float(num[i][j]))
                 id = fseq.index(thres)
                 if sig == '<=':
                     while id < len(fseq):
@@ -74,7 +74,7 @@ def find_classification(textfile, fseq, fack, fwindow, fipi):
                         id = id - 1
             elif feature == 'ack':
                 sig = sign[i][j]
-                thres = float(num[i][j])
+                thres = int(float(num[i][j]))
                 id = fack.index(thres)
                 if sig == '<=':
                     while id < len(fack):
@@ -88,7 +88,7 @@ def find_classification(textfile, fseq, fack, fwindow, fipi):
                         id = id - 1
             elif feature == "window":
                 sig = sign[i][j]
-                thres = float(num[i][j])
+                thres = int(float(num[i][j]))
                 id = fwindow.index(thres)
                 if sig == '<=':
                     while id < len(fwindow):
@@ -102,7 +102,7 @@ def find_classification(textfile, fseq, fack, fwindow, fipi):
                         id = id - 1
             elif feature == "ipi":
                 sig = sign[i][j]
-                thres = float(num[i][j])
+                thres = int(float(num[i][j]))
                 id = fipi.index(thres)
                 if sig == '<=':
                     while id < len(fipi):
@@ -136,59 +136,59 @@ def get_actionpara(action):
     return para
 
 
-def writeactionrule(p4info_helper, switch, a, b, c, action, port):
-    para = get_actionpara(port)
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="MyIngress.ipv4_exact",
-        match_fields={"meta.action_select1": a,
-                      "meta.action_select2": b,
-                      "meta.action_select3": c
-
-                      },
-        action_name=action,
-        action_params=para
-    )
-    switch.WriteTableEntry(table_entry)
-    print("Installed action rule on %s" % switch.name)
-
-
-def writefeature1rule(p4info_helper, switch, range, ind):
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="MyIngress.feature1_exact",
-        match_fields={
-            "hdr.ipv4.protocol": range},
-        action_name="MyIngress.set_actionselect1",
-        action_params={
-            "featurevalue1": ind,
-        })
-    switch.WriteTableEntry(table_entry)
-    print("Installed feature1 rule on %s" % switch.name)
-
-
-def writefeature2rule(p4info_helper, switch, range, ind):
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="MyIngress.feature2_exact",
-        match_fields={
-            "hdr.tcp.srcPort": range},
-        action_name="MyIngress.set_actionselect2",
-        action_params={
-            "featurevalue2": ind,
-        })
-    switch.WriteTableEntry(table_entry)
-    print("Installed feature2 rule on %s" % switch.name)
-
-
-def writefeature3rule(p4info_helper, switch, range, ind):
-    table_entry = p4info_helper.buildTableEntry(
-        table_name="MyIngress.feature3_exact",
-        match_fields={
-            "hdr.tcp.dstPort": range},
-        action_name="MyIngress.set_actionselect3",
-        action_params={
-            "featurevalue3": ind,
-        })
-    switch.WriteTableEntry(table_entry)
-    print("Installed feature3 rule on %s" % switch.name)
+#def writeactionrule(p4info_helper, switch, a, b, c, action, port):
+#    para = get_actionpara(port)
+#    table_entry = p4info_helper.buildTableEntry(
+#        table_name="MyIngress.ipv4_exact",
+#        match_fields={"meta.action_select1": a,
+#                      "meta.action_select2": b,
+#                      "meta.action_select3": c
+#
+#                      },
+#        action_name=action,
+#        action_params=para
+#    )
+#    switch.WriteTableEntry(table_entry)
+#    print("Installed action rule on %s" % switch.name)
+#
+#
+#def writefeature1rule(p4info_helper, switch, range, ind):
+#    table_entry = p4info_helper.buildTableEntry(
+#        table_name="MyIngress.feature1_exact",
+#        match_fields={
+#            "hdr.ipv4.protocol": range},
+#        action_name="MyIngress.set_actionselect1",
+#        action_params={
+#            "featurevalue1": ind,
+#        })
+#    switch.WriteTableEntry(table_entry)
+#    print("Installed feature1 rule on %s" % switch.name)
+#
+#
+#def writefeature2rule(p4info_helper, switch, range, ind):
+#    table_entry = p4info_helper.buildTableEntry(
+#        table_name="MyIngress.feature2_exact",
+#        match_fields={
+#            "hdr.tcp.srcPort": range},
+#        action_name="MyIngress.set_actionselect2",
+#        action_params={
+#            "featurevalue2": ind,
+#        })
+#    switch.WriteTableEntry(table_entry)
+#    print("Installed feature2 rule on %s" % switch.name)
+#
+#
+#def writefeature3rule(p4info_helper, switch, range, ind):
+#    table_entry = p4info_helper.buildTableEntry(
+#        table_name="MyIngress.feature3_exact",
+#        match_fields={
+#            "hdr.tcp.dstPort": range},
+#        action_name="MyIngress.set_actionselect3",
+#        action_params={
+#            "featurevalue3": ind,
+#        })
+#    switch.WriteTableEntry(table_entry)
+#    print("Installed feature3 rule on %s" % switch.name)
 
 
 def printGrpcError(e):
@@ -275,6 +275,110 @@ def main(p4info_file_path, bmv2_file_path):
 
     ShutdownAllSwitchConnections()
 
+def writeactionrule(writer, a, b, c, d, action, result):
+    print([a, b, c, d])
+    print("Action",action)
+    print(f"table_add classify_exact {action} {a[0]}->{a[1]} {b[0]}->{b[1]} {c[0]}->{c[1]} {d[0]}->{d[1]} => {str(result)} 0")
+    writer.write(f"table_add classify_exact {action} {a[0]}->{a[1]} {b[0]}->{b[1]} {c[0]}->{c[1]} {d[0]}->{d[1]} => {str(result)} 0\n")
+    print("add action rule")
+
+def writefeatureXrule(writer, range, table, action, ind):
+    print(range)
+    print(ind)
+    print(f"table_add {table} {action} {range[0]}->{range[1]} => {str(ind)}")
+    writer.write(f"table_add {table} {action} {range[0]}->{range[1]} => {str(ind)} 0\n")
+    print(f"add {table} rule")
+
+def main2():
+    seq, ack, window, ipi = find_feature(inputfile)
+    print("all features: \n") 
+    print(seq)
+    print(ack)
+    print(window)
+    print(ipi)
+
+    seq_values, ack_values, window_values, ipi_values, classification = find_classification(inputfile, seq, ack, window, ipi)
+
+    print("all classification: \n")
+    print(seq_values)
+    print(ack_values)
+    print(window_values)
+    print(ipi_values)
+
+
+    action = find_action(actionfile)
+    print(f"action = {action}\n")
+
+    with open("table2.txt", "w") as f:
+        for i in range(len(classification)):
+            a = seq_values[i]
+            #print(type(a), a)
+            id = len(a) - 1
+            del a[1:id]
+            if len(a) == 1:
+                a.append(a[0])
+            b = ack_values[i]
+            id = len(b) - 1
+            del b[1:id]
+            if len(b) == 1:
+                b.append(b[0])
+            c = window_values[i]
+            id = len(c) - 1
+            del c[1:id]
+            if len(c) == 1:
+                c.append(c[0])
+            d = ipi_values[i]
+            id = len(d) - 1
+            del d[1:id]
+            if len(d) == 1:
+                d.append(d[0])
+
+            ind = int(classification[i])
+            ac = action[ind]
+            a = [i + 1 for i in a]
+            b = [i + 1 for i in b]
+            c = [i + 1 for i in c]
+            d = [i + 1 for i in d]
+
+            print(a, b, c, d, "set_result", ind)
+
+            #if ac == 0:
+            #    pass
+            #else:
+            writeactionrule(f, a, b, c, d, 'set_result', ind)
+
+        # for feature1 table
+        if len(seq) != 0:
+            seq.append(0)
+            seq.append(2 ** 32 -1)
+            seq.sort()
+            for i in range(len(seq) - 1):
+                writefeatureXrule(f, seq[i:i + 2], "feature1_exact", "set_actionselect1", i+1)
+
+        # for feature2 table
+        if len(ack) != 0:
+            ack.append(0)
+            ack.append(2 ** 32 -1)
+            ack.sort()
+            for i in range(len(ack) - 1):
+                writefeatureXrule(f, ack[i:i + 2], "feature2_exact", "set_actionselect2", i+1)
+
+        # for feature3 table
+        if len(window) != 0:
+            window.append(0)
+            window.append(2 ** 16 -1)
+            window.sort()
+            for i in range(len(window) - 1):
+                writefeatureXrule(f, window[i:i + 2], "feature3_exact", "set_actionselect3", i+1)
+
+        # for feature4 table (ifi)
+        if len(ipi) != 0:
+            ipi.append(0)
+            ipi.append(2 ** 48 -1)
+            ipi.sort()
+            for i in range(len(ipi) - 1):
+                writefeatureXrule(f, ipi[i:i + 2], "feature4_exact", "set_actionselect4", i+1)
+
 
 if __name__ == '__main__':
     start = time.time()
@@ -285,6 +389,7 @@ if __name__ == '__main__':
         print(i)
         print(x)
 
+    main2()
     #main()
     end = time.time()
     print("time to load the tables:", end-start)
