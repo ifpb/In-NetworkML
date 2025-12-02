@@ -356,8 +356,12 @@ control MyIngress(inout headers hdr,
 
 
     apply {
+	meta.flowID = 0;
+
         if (hdr.ipv4.isValid()) {
             if (hdr.tcp.isValid()) {
+	      find_flowID_ipv4();
+
               extract_features();
 
               feature1_exact.apply();
