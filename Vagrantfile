@@ -27,8 +27,14 @@ Vagrant.configure("2") do |config|
       v.customize ["modifyvm", :id, "--nicpromisc4", "allow-all"]
     end
 
-    s.vm.provision "ansible" do |ansible|
-      ansible.playbook = "./ansible/switch-1.yml"
+    if ENV["USE_ML"] == '1'
+      s.vm.provision "ansible" do |ansible|
+        ansible.playbook = "./ansible/switch-1-ml.yml"
+      end
+    else
+      s.vm.provision "ansible" do |ansible|
+        ansible.playbook = "./ansible/switch-1.yml"
+      end
     end
   end
 

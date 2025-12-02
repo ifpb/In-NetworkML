@@ -56,6 +56,13 @@ elapsed_time() {
   echo $(total_to_kms $elapsed_time)
 }
 
+if [[ "$1" == "-ml" ]]; then
+	USE_ML=1
+	shift 1
+else
+	USE_ML=0
+fi
+
 saida() {
   echo "Uso: ./run-scenario.sh [ cenário | duração ]"
   echo "Cenários disponíveis:"
@@ -111,7 +118,7 @@ log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
 
 mkdir -p ${LOGS_DIR}
 
-vagrant up --provision
+USE_ML="$USE_ML" vagrant up --provision
 vagrant ssh-config >"${SCRIPT_DIR}/ssh_config"
 
 if [[ -f "${SCENARIO_DIR}/server.yml" ]]; then
