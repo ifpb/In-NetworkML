@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+	echo "usage: ./acc [classification]"
+fi
+
+qtd1=$(echo "counter_read MyIngress.resultCounter 0" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+qtd2=$(echo "counter_read MyIngress.resultCounter 1" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+qtd3=$(echo "counter_read MyIngress.resultCounter 2" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+
+tot=$(( $qtd1 + $qtd2 + $qtd3 ))
+echo "P4 Classification: $qtd1 $qtd2 $qtd3"
+
+if [ $1 -eq 0 ]; then
+	qtd=$qtd1
+elif [ $1 -eq 1 ]; then
+	qtd=$qtd2
+elif [ $1 -eq 2 ]; then
+	qtd=$qtd3
+else
+	echo "Invalid classification"
+	exit 1
+fi
+
+echo "Diff: $(( $tot - $qtd ))"
+echo "Accuracy %: $(( ($qtd * 100) / $tot ))%"
