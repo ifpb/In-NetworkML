@@ -300,8 +300,6 @@ control MyIngress(inout headers hdr,
       timestamp_t ipi = 0;
       int<48> diff_ts = 0;
 
-      timestamp_t inter_packet_interval = 0;
-
       timestamp_t current_time = standard_metadata.ingress_global_timestamp;
       timestamp_t last_packet_time = 0;
 
@@ -313,15 +311,8 @@ control MyIngress(inout headers hdr,
         last_packet_time = current_time;
       } else {
         /* IPI */
-        inter_packet_interval = current_time - last_packet_time;
+        ipi = current_time - last_packet_time;
         last_packet_time = current_time;
-        if (ipi > 0) {
-          diff_ts = ((int<48>)inter_packet_interval) - ((int<48>)ipi);
-          diff_ts = diff_ts >> 7;
-          ipi = ipi + (bit<48>) diff_ts;
-        } else {
-          ipi = inter_packet_interval;
-        }
       }
 
       ipi_register.write((bit<32>)meta.flowID, ipi);
