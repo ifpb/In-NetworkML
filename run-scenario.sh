@@ -131,7 +131,13 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   ansible-playbook "${SCENARIO_DIR}/client.yml"
 fi
 
-export OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
+if [[ "$USE_ML" == 1 ]]; then
+	OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TIMESTAMP}"
+else
+	OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
+fi
+
+export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
 CAP_FILE="packets.pcap"
 
