@@ -202,14 +202,17 @@ control MyIngress(inout headers hdr,
       bit<1> base = 0;
       bit<16> max = 0xffff;
       bit<16> hash_result;
-      bit<48> IP_Port = hdr.ipv4.dstAddr ++ hdr.tcp.dstPort;
 
       hash(
         hash_result,
         HashAlgorithm.crc16,
         base,
         {
-          IP_Port
+          hdr.ipv4.srcAddr,
+          hdr.ipv4.dstAddr,
+          hdr.tcp.srcPort,
+          hdr.tcp.dstPort,
+          hdr.ipv4.protocol
         },
         max
       );
