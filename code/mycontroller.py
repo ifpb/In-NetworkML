@@ -354,6 +354,9 @@ def main2():
             seq.sort()
             for i in range(len(seq) - 1):
                 writefeatureXrule(f, seq[i:i + 2], "feature1_exact", "set_actionselect1", i+1)
+        else:
+            writefeatureXrule(f, [0, 2 ** 32 -1], "feature1_exact", "set_actionselect1", 1)
+
 
         # for feature2 table
         if len(ack) != 0:
@@ -362,6 +365,8 @@ def main2():
             ack.sort()
             for i in range(len(ack) - 1):
                 writefeatureXrule(f, ack[i:i + 2], "feature2_exact", "set_actionselect2", i+1)
+        else:
+            writefeatureXrule(f, [0, 2 ** 32 -1], "feature2_exact", "set_actionselect2", 1)
 
         # for feature3 table
         if len(window) != 0:
@@ -370,6 +375,9 @@ def main2():
             window.sort()
             for i in range(len(window) - 1):
                 writefeatureXrule(f, window[i:i + 2], "feature3_exact", "set_actionselect3", i+1)
+        else:
+            writefeatureXrule(f, [0, 2 ** 16 -1], "feature3_exact", "set_actionselect3", 1)
+
 
         # for feature4 table (ifi)
         if len(ipi) != 0:
@@ -378,6 +386,8 @@ def main2():
             ipi.sort()
             for i in range(len(ipi) - 1):
                 writefeatureXrule(f, ipi[i:i + 2], "feature4_exact", "set_actionselect4", i+1)
+        else:
+            writefeatureXrule(f, [0, 2 ** 48 -1], "feature4_exact", "set_actionselect4", 1)
 
 
 if __name__ == '__main__':
