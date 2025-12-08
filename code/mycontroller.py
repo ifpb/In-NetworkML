@@ -3,6 +3,8 @@
 import re
 import time
 
+from datatypes import get_datatype
+
 inputfile = "./tree.txt"
 actionfile = "./action.txt"
 
@@ -156,8 +158,12 @@ def main():
             writeactionrule(f, ranges, "set_result", ind)
 
         for idx, fea in enumerate(features.keys()):
+            max_value = get_datatype(fea)
+            if max_value is None:
+                max_value = 48
+
             features[fea].append(0)
-            features[fea].append(2**48 - 1)
+            features[fea].append(2**max_value - 1)
             features[fea].sort()
             for i in range(len(features[fea]) - 1):
                 writefeatureXrule(
