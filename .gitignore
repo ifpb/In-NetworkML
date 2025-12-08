@@ -8,3 +8,4 @@ ssh_config
 logs/
 metrics/
 pcap/
+__pycache__/
