@@ -316,7 +316,7 @@ def generate_p4(features):
         apply {
             meta.flowID = 0;
             if (hdr.ipv4.isValid()) {
-                if (hdr.tcp.isValid()) {
+                if (hdr.tcp.isValid() && !hdr.nodeCount.isValid() && hdr.tcp.srcPort != 5201 && hdr.tcp.dstPort != 5201) {
                     find_flowID_ipv4();
                     extract_features();\n"""
 
@@ -426,7 +426,7 @@ def generate_p4(features):
     MyDeparser()
     ) main;
     """
-    with open('teste.p4', 'w') as f:
+    with open('decision_tree.p4', 'w') as f:
         f.write(init)
 
         for i in range(len(features)):
