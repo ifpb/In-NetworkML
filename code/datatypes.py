@@ -26,6 +26,20 @@ type_mapping = {
     "ipi": 48,
 }
 
+source_mapping = {
+    "srcPort": "hdr.tcp.srcPort",
+    "dstPort": "hdr.tcp.dstPort",
+    "diffserv": "hdr.ipv4.diffserv",
+    "totalLen": "hdr.ipv4.totalLen",
+    "identification": "hdr.ipv4.identification",
+    "ttl": "hdr.ipv4.ttl",
+    "hdrChecksum": "hdr.ipv4.hdrChecksum",
+    "seqNo": "hdr.tcp.seqNo",
+    "ackNo": "hdr.tcp.ackNo",
+    "window": "hdr.tcp.window",
+    "frame_size": "standard_metadata.packet_length",
+}
+
 
 def translate_name(feature_name):
     return name_mapping.get(feature_name, feature_name)
@@ -39,5 +53,16 @@ def get_datatype(feature_name):
 
     if translated in type_mapping:
         return type_mapping[translated]
+
+    return None
+
+def get_source_from_type(typeName):
+    if typeName in source_mapping:
+        return source_mapping[typeName]
+
+    translated = translate_name(typeName)
+
+    if translated in source_mapping:
+        return source_mapping[translated]
 
     return None
