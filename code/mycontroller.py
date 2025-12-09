@@ -3,6 +3,7 @@
 import re
 import time
 
+from create_p4 import generate_p4
 from datatypes import get_datatype
 
 inputfile = "./tree.txt"
@@ -133,6 +134,8 @@ def writefeatureXrule(writer, range, table, action, ind):
 
 def main():
     features = find_feature(inputfile)
+
+    generate_p4(features)
 
     rules = find_classification(inputfile, features)
 
