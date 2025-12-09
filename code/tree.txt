@@ -1,22 +1,7 @@
-seq = [215330580, 533075328, 1975076352, 2471521600, 3956166656, 4104869760];
-ack = [96262172, 1945694016, 3040256128, 3702771968, 3956166656];
-window = [497, 505, 509];
-ipi = [8587, 21828, 46827];
-when window<=505 and ack<=3702771968 and ipi<=21828 and seq<=4104869760 and seq<=215330580 then 0
-when window<=505 and ack<=3702771968 and ipi<=21828 and seq<=4104869760 and seq>215330580 then 1
-when window<=505 and ack<=3702771968 and ipi<=21828 and seq>4104869760 then 0
-when window<=505 and ack<=3702771968 and ipi>21828 and ipi<=46827 and seq<=1975076352 then 1
-when window<=505 and ack<=3702771968 and ipi>21828 and ipi<=46827 and seq>1975076352 then 2
-when window<=505 and ack<=3702771968 and ipi>21828 and ipi>46827 and window<=497 then 0
-when window<=505 and ack<=3702771968 and ipi>21828 and ipi>46827 and window>497 then 1
-when window<=505 and ack>3702771968 and ack<=3956166656 then 0
-when window<=505 and ack>3702771968 and ack>3956166656 then 1
-when window>505 and window<=509 and ack<=96262172 then 1
-when window>505 and window<=509 and ack>96262172 and seq<=3956166656 and ipi<=8587 then 0
-when window>505 and window<=509 and ack>96262172 and seq<=3956166656 and ipi>8587 then 0
-when window>505 and window<=509 and ack>96262172 and seq>3956166656 then 1
-when window>505 and window>509 and ack<=3040256128 and ack<=1945694016 and seq<=533075328 then 1
-when window>505 and window>509 and ack<=3040256128 and ack<=1945694016 and seq>533075328 then 0
-when window>505 and window>509 and ack<=3040256128 and ack>1945694016 and seq<=2471521600 then 1
-when window>505 and window>509 and ack<=3040256128 and ack>1945694016 and seq>2471521600 then 2
-when window>505 and window>509 and ack>3040256128 then 0
+tos = [4];
+ipi = [17418, 18644, 57332];
+when tos<=4 and ipi<=18644 and ipi<=17418 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 then 0
+when tos<=4 and ipi>18644 and ipi<=57332 then 2
+when tos<=4 and ipi>18644 and ipi>57332 then 0
+when tos>4 then 1
