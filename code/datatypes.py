@@ -27,11 +27,15 @@ type_mapping = {
 }
 
 
+def translate_name(feature_name):
+    return name_mapping.get(feature_name, feature_name)
+
+
 def get_datatype(feature_name):
     if feature_name in type_mapping:
         return type_mapping[feature_name]
 
-    translated = name_mapping.get(feature_name, feature_name)
+    translated = translate_name(feature_name)
 
     if translated in type_mapping:
         return type_mapping[translated]
