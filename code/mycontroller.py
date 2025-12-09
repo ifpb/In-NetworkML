@@ -135,7 +135,7 @@ def writefeatureXrule(writer, range, table, action, ind):
 def main():
     features = find_feature(inputfile)
 
-    generate_p4(features)
+    generate_p4(list(features.keys()))
 
     rules = find_classification(inputfile, features)
 
