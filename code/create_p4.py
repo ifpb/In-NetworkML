@@ -6,18 +6,18 @@ features = ['ipi', 'tos', 'sport']
 
 
 def generate_match_action(feature, index):
-    print(f"    action set_actionselect{index}(bit<14> featurevalue{index})" + " {",
-          f"\n        meta.action_select{index} = featurevalue{index}",
-          "\n    }\n"
+    print(f"\taction set_actionselect{index}(bit<14> featurevalue{index})" + " {",
+          f"\n\t\tmeta.action_select{index} = featurevalue{index}",
+          "\n\t}\n"
           )
 
-    print(f"    table feature{index}_exact" + " {",
-          "\n       key = {",
-          f"\n          meta.{feature}: range ;",
-          "\n       actions = {",
-          f"\n          NoAction;\n          set_actionselect{index};",
-          "\n       }\n         size = 1024",
-          "\n   }"
+    print(f"\ttable feature{index}_exact" + " {",
+          "\n\t\tkey = {",
+          f"\n\t\t\tmeta.{feature}: range ;",
+          "\n\t\tactions = {",
+          f"\n\t\t\tNoAction;\n\t\t\tset_actionselect{index};",
+          "\n\t\t}\n\t\tsize = 1024",
+          "\n\t}"
           )
 
 
