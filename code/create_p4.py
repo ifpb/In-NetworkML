@@ -6,24 +6,25 @@ features = ['ipi', 'tos', 'sport']
 
 
 def generate_match_action(feature, index):
-    print(f"\taction set_actionselect{index}(bit<14> featurevalue{index})" + " {",
-          f"\n\t\tmeta.action_select{index} = featurevalue{index}",
-          "\n\t}\n"
-          )
+    match = f"\taction set_actionselect{index}(bit<14> featurevalue{index})" + " {\n"
+    match += f"\t\tmeta.action_select{index} = featurevalue{index}\n" 
+    match += "\t}\n" 
+    match += f"\ttable feature{index}_exact" + " {\n" 
+    match += "\t\tkey = {\n" 
+    match += f"\t\t\tmeta.{feature}: range ;\n" 
+    match += "\t\tactions = {\n" 
+    match += f"\t\t\tNoAction;\n\t\t\tset_actionselect{index};\n" 
+    match += "\t\t}\n\t\tsize = 1024\n" 
+    match += "\t}\n"
 
-    print(f"\ttable feature{index}_exact" + " {",
-          "\n\t\tkey = {",
-          f"\n\t\t\tmeta.{feature}: range ;",
-          "\n\t\tactions = {",
-          f"\n\t\t\tNoAction;\n\t\t\tset_actionselect{index};",
-          "\n\t\t}\n\t\tsize = 1024",
-          "\n\t}"
-          )
+
+    return match
+          
 
 
 
 # Template inicial nunca muda
-print("""
+init = """
 /* -*- P4_16 -*- */
 #include <core.p4>
 #include <v1model.p4>
@@ -120,18 +121,16 @@ struct parser_metadata_t {
 }
 
 struct metadata {
-    ingress_metadata_t   ingress_metadata;
-    parser_metadata_t   parser_metadata;
-    flowID_t flowID;
-    bit<32> seqNo;
-    bit<32> ackNo;
-    bit<16> window;
-    timestamp_t ipi;
-    bit<14> action_select1;
-    bit<14> action_select2;
-    bit<14> action_select3;
-    bit<14> action_select4;
-    bit<3>  result;
+\tingress_metadata_t   ingress_metadata;
+\tparser_metadata_t   parser_metadata;
+\tflowID_t flowID;\n"""
+
+for i in range(len(features)):
+    if features[i] == "ipi": init += f"\tbit<48> ipi\n"
+    else: init += f"\tbit<32> {features[i]}\n"
+    init += f"\tbit<14> action_select{i+1}\n"
+
+init += """\tbit<3>  result;
 }
 
 struct headers {
@@ -222,7 +221,12 @@ control MyIngress(inout headers hdr,
     action drop() {
         mark_to_drop(standard_metadata);
     }
-""")
 
-for i in range(len(features)):
-    generate_match_action(features[i], i+1)
+"""
+
+
+with open('teste.p4', 'w') as f:
+    f.write(init)
+
+    for i in range(len(features)):
+        f.write(generate_match_action(features[i], i+1))
