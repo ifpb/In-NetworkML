@@ -1,9 +1,5 @@
 from datatypes import *
-
-
-
 features = ['ipi', 'tos', 'sport']
-
 
 def generate_match_action(feature, index):
     match = f"\taction set_actionselect{index}(bit<14> featurevalue{index})" + " {\n"
@@ -11,7 +7,7 @@ def generate_match_action(feature, index):
     match += "\t}\n" 
     match += f"\ttable feature{index}_exact" + " {\n" 
     match += "\t\tkey = {\n" 
-    match += f"\t\t\tmeta.{feature}: range ;\n" 
+    match += f"\t\t\tmeta.{translate_name(feature)}: range ;\n" 
     match += "\t\tactions = {\n" 
     match += f"\t\t\tNoAction;\n\t\t\tset_actionselect{index};\n" 
     match += "\t\t}\n\t\tsize = 1024\n" 
@@ -20,7 +16,52 @@ def generate_match_action(feature, index):
 
     return match
           
+def generate_classify_exact():
+    clex = """\ttable classify_exact {
+            key = {"""
+    for i in range(len(features)):
+        clex += f"\t\t\tmeta.action_select{i+1}: range ;\n"
+    clex += """}
+        actions = {
+            set_result;
+            NoAction;
+            drop;
+        }"""
+    return clex
 
+def generate_extract_features():
+    gef = "\n\taction extract_features {\n"
+    for i in range(len(features)):
+        if (features[i] == 'ipi'):
+            gef += """
+      timestamp_t ipi = 0;
+      int<48> diff_ts = 0;
+
+      timestamp_t current_time = standard_metadata.ingress_global_timestamp;
+      timestamp_t last_packet_time = 0;
+
+      ipi_register.read(ipi, (bit<32>)meta.flowID);
+
+      lpt_register.read(last_packet_time, (bit<32>)meta.flowID);
+
+      if (last_packet_time == 0) {
+        last_packet_time = current_time;
+      } else {
+        /* IPI */
+        ipi = current_time - last_packet_time;
+        last_packet_time = current_time;
+      }
+
+      ipi_register.write((bit<32>)meta.flowID, ipi);
+
+      lpt_register.write((bit<32>)meta.flowID, last_packet_time);
+
+      meta.ipi = ipi;\n"""
+        else:
+            gef += f"\tmeta.{translate_name(features[i])} = {get_source_from_type(features[i])}\n"
+    gef += "\t}\n"
+
+    return gef
 
 
 # Template inicial nunca muda
@@ -126,8 +167,7 @@ struct metadata {
 \tflowID_t flowID;\n"""
 
 for i in range(len(features)):
-    if features[i] == "ipi": init += f"\tbit<48> ipi\n"
-    else: init += f"\tbit<32> {features[i]}\n"
+    init += f"\tbit<{get_datatype(features[i])}> {translate_name(features[i])}\n"
     init += f"\tbit<14> action_select{i+1}\n"
 
 init += """\tbit<3>  result;
@@ -224,9 +264,148 @@ control MyIngress(inout headers hdr,
 
 """
 
+setresult = """
+    action set_result(bit<3> result) {
+        meta.result = result
+    }\n"""
 
+ipv4lpm = """
+    table ipv4_lpm {
+        key = {
+            hdr.ipv4.dstAddr: lpm;
+        }
+        actions = {
+            ipv4_forward;
+            drop;
+            NoAction;
+        }
+        size = 1024;
+        default_action = Noction();
+    }
+"""
+
+apply = """
+    apply {
+        meta.flowID = 0;
+        if (hdr.ipv4.isValid()) {
+            if (hdr.tcp.isValid()) {
+                find_flowID_ipv4();
+                extract_features();\n"""
+
+for i in range(len(features)):
+    apply += f"                feature{i+1}_exact.apply();\n"
+
+apply += """\n
+                classify_exact.apply();
+                resulstCounter.count((bit<32>)meta.result);
+            }
+
+            ipv4_lpm.apply();
+        }
+    }
+"""
+
+end = """
+/*************************************************************************
+****************  E G R E S S   P R O C E S S I N G   *******************
+*************************************************************************/
+
+control MyEgress(inout headers hdr,
+                 inout metadata meta,
+                 inout standard_metadata_t standard_metadata) {
+
+    action add_swtrace(switchID_v swid) {
+        hdr.nodeCount.count = hdr.nodeCount.count + 1;
+        hdr.INT.push_front(1);
+        hdr.INT[0].setValid();
+        hdr.INT[0].swid = swid;
+        hdr.INT[0].ingress_port = (ingress_port_v)standard_metadata.ingress_port;
+        hdr.INT[0].ingress_global_timestamp = (ingress_global_timestamp_v)standard_metadata.ingress_global_timestamp;
+        hdr.INT[0].egress_port = (egress_port_v)standard_metadata.egress_port;
+        hdr.INT[0].egress_spec = (egressSpec_v)standard_metadata.egress_spec;
+        hdr.INT[0].egress_global_timestamp = (egress_global_timestamp_v)standard_metadata.egress_global_timestamp;
+        hdr.INT[0].enq_timestamp = (enq_timestamp_v)standard_metadata.enq_timestamp;
+        hdr.INT[0].enq_qdepth = (enq_qdepth_v)standard_metadata.enq_qdepth;
+        hdr.INT[0].deq_timedelta = (deq_timedelta_v)standard_metadata.deq_timedelta;
+        hdr.INT[0].deq_qdepth = (deq_qdepth_v)standard_metadata.deq_qdepth;
+
+        hdr.ipv4.totalLen = hdr.ipv4.totalLen + 32;
+    }
+
+    table swtrace {
+        actions = {
+	        add_swtrace;
+	        NoAction;
+        }
+        default_action = NoAction();
+    }
+
+    apply {
+        if (hdr.nodeCount.isValid()) {
+            swtrace.apply();
+        }
+    }
+}
+
+/*************************************************************************
+*************   C H E C K S U M    C O M P U T A T I O N   **************
+*************************************************************************/
+
+control MyComputeChecksum(inout headers hdr, inout metadata meta) {
+     apply {
+	update_checksum(
+	    hdr.ipv4.isValid(),
+            { hdr.ipv4.version,
+	      hdr.ipv4.ihl,
+              hdr.ipv4.diffserv,
+              hdr.ipv4.totalLen,
+              hdr.ipv4.identification,
+              hdr.ipv4.flags,
+              hdr.ipv4.fragOffset,
+              hdr.ipv4.ttl,
+              hdr.ipv4.protocol,
+              hdr.ipv4.srcAddr,
+              hdr.ipv4.dstAddr },
+            hdr.ipv4.hdrChecksum,
+            HashAlgorithm.csum16);
+    }
+}
+
+/*************************************************************************
+***********************  D E P A R S E R  *******************************
+*************************************************************************/
+
+control MyDeparser(packet_out packet, in headers hdr) {
+    apply {
+        packet.emit(hdr.ethernet);
+        packet.emit(hdr.ipv4);
+        packet.emit(hdr.tcp);
+        packet.emit(hdr.nodeCount);
+        packet.emit(hdr.INT);
+    }
+}
+
+/*************************************************************************
+***********************  S W I T C H  *******************************
+*************************************************************************/
+
+V1Switch(
+MyParser(),
+MyVerifyChecksum(),
+MyIngress(),
+MyEgress(),
+MyComputeChecksum(),
+MyDeparser()
+) main;
+"""
 with open('teste.p4', 'w') as f:
     f.write(init)
 
     for i in range(len(features)):
         f.write(generate_match_action(features[i], i+1))
+
+    f.write(setresult)
+    f.write(generate_classify_exact())
+    f.write(generate_extract_features())
+    f.write(apply)
+    f.write(end)
