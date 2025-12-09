@@ -22,6 +22,8 @@ type_mapping = {
     "seqNo": 32,
     "ackNo": 32,
     "window": 16,
+    "frame_size": 32,
+    "ipi": 48,
 }
 
 
