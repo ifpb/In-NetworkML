@@ -1,2 +1,5 @@
 jinja2<3.1
 ansible==2.9.0
+seaborn
+matplotlib
+numpy

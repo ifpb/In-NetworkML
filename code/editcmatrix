@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ $1 == "-r" ]; then
-	echo "1 0 0
-0 1 0
-0 0 1" > $2
+	echo "0 0 0
+0 0 0
+0 0 0" > cmatrix
 	exit 0
 fi
 
@@ -30,5 +30,5 @@ for word in $a; do
 done
 b=${arr[@]}
 
-sed -i "s/$(cat /vagrant/code/cmatrix | head -n$line | tail -n1)/$b/" /vagrant/code/cmatrix
+sed -i "${line}s/$(cat /vagrant/code/cmatrix | head -n$line | tail -n1)/$b/" /vagrant/code/cmatrix
 echo "counter_reset MyIngress.resultCounter" | simple_switch_CLI 
