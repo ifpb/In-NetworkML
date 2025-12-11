@@ -197,3 +197,5 @@ kill $SWITCH_PID
 wait $INT_PID
 wait $IPERF_PID
 wait $SWITCH_PID
+
+ssh -F "${SCRIPT_DIR}/ssh_config" s1 "SCENARIO=$SCENARIO /vagrant/code/editcmatrix 2> /dev/null"

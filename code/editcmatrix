@@ -1,0 +1,33 @@
+#!/bin/bash
+if [ $1 == "-r" ]; then
+	echo "1 0 0
+0 1 0
+0 0 1" > $2
+	exit 0
+fi
+
+if [ $SCENARIO == "web" ]; then
+	line=1
+elif [ $SCENARIO == "file_transfer" ]; then
+	line=2
+elif [ $SCENARIO == "video" ]; then
+	line=3
+else
+	echo "Invalid scenario" && exit 1
+fi
+
+
+web=$(echo "counter_read MyIngress.resultCounter 0" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+file=$(echo "counter_read MyIngress.resultCounter 1" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+video=$(echo "counter_read MyIngress.resultCounter 2" | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')
+
+c=0
+arr=($web $file $video)
+a=$(cat /vagrant/code/cmatrix | head -n$line | tail -n1)
+for word in $a; do
+	arr[$c]=$((word + arr[$c]))
+	c=$(( c + 1 ))
+done
+b=${arr[@]}
+
+sed -i "s/$(cat /vagrant/code/cmatrix | head -n$line | tail -n1)/$b/" /vagrant/code/cmatrix
