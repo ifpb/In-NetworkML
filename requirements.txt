@@ -3,3 +3,4 @@ ansible==2.9.0
 seaborn
 matplotlib
 numpy
+scipy

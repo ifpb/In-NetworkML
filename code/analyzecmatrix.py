@@ -36,21 +36,26 @@ for c in classes:
                     fp += cmatrix[i][j]
                 else:
                     vn += cmatrix[i][j]
-    vpt += vp
-    t = vp + vn + fp + fn
 
-    precision = vp / (vp + fp)
-    precision_t += precision
+    try:
+        t = vp + vn + fp + fn
 
-    recall = vp / (vp + fn)
-    recall_t += recall
+        precision = vp / (vp + fp)
 
-    specificity = fp / (fp + vn)
-    specificity_t += specificity
+        recall = vp / (vp + fn)
+
+        specificity = fp / (fp + vn)
 
 
-    f1score = (2 * precision * recall) / (precision + recall)
-    f1score_t += f1score
+        f1score = (2 * precision * recall) / (precision + recall)
+
+        vpt += vp
+        precision_t += precision
+        recall_t += recall
+        specificity_t += specificity
+        f1score_t += f1score
+    except:
+        continue
 
     results["classes"].append({
         "vp": vp,
