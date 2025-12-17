@@ -108,12 +108,6 @@ else
 	exit 1
 fi
 
-cleanup() {
-  rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
-}
-
-trap cleanup EXIT
-
 log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
 
 mkdir -p ${LOGS_DIR}
@@ -141,6 +135,8 @@ export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
 CAP_FILE="packets.pcap"
 
+
+# Create output dir
 ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 
 # Start Telemetry and iperf
@@ -154,6 +150,30 @@ log_info "Rodando script de coleta de métricas de sistema do switch"
 scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp >/dev/null
 ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resource_metrics.sh" &
 SWITCH_PID=$!
+
+if [[ "$USE_ML" == 1 ]]; then
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/ml_metrics.py" &
+  ML_METRICS_PID=$!
+fi
+
+cleanup() {
+  rm -f "${SCRIPT_DIR}/server_ready" 2>/dev/null
+
+  kill $INT_PID 2>/dev/null
+  kill $IPERF_PID 2>/dev/null
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f /tmp/switch_resource_metrics.sh"
+  kill $SWITCH_PID 2>/dev/null
+  if [[ "$USE_ML" == 1 ]]; then
+    kill $ML_METRICS_PID 2>/dev/null
+    wait $ML_METRICS_PID 2>/dev/null
+  fi
+  
+  wait $INT_PID 2>/dev/null
+  wait $IPERF_PID 2>/dev/null
+  wait $SWITCH_PID 2>/dev/null
+}
+
+trap cleanup EXIT TERM INT
 
 if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   log_info "Rodando script do servidor"
@@ -189,13 +209,4 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
   fi
 fi
 
-kill $INT_PID
-kill $IPERF_PID
-ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f /tmp/switch_resource_metrics.sh"
-kill $SWITCH_PID
-
-wait $INT_PID
-wait $IPERF_PID
-wait $SWITCH_PID
-
-ssh -F "${SCRIPT_DIR}/ssh_config" s1 "SCENARIO=$SCENARIO /vagrant/code/editcmatrix 2> /dev/null"
+#ssh -F "${SCRIPT_DIR}/ssh_config" s1 "SCENARIO=$SCENARIO /vagrant/code/editcmatrix 2> /dev/null"
