@@ -57,24 +57,22 @@ class nodeCount(Packet):
 
 
 def handle_pkt(pkt, csv_writer: csv.DictWriter):
-    ip_layer = pkt[IP]
-    payload = bytes(ip_layer.payload)
-    int_fields = struct.unpack(">IHHHQQQIII", payload[:46])
+    int_fields = pkt[InBandNetworkTelemetry]
 
     int_data = {
         "timestamp": datetime.now().isoformat(),
-        "src_ip": ip_layer.src,
-        "dst_ip": ip_layer.dst,
-        "switchID_t": int_fields[0],
-        "ingress_port": int_fields[1],
-        "egress_port": int_fields[2],
-        "egress_spec": int_fields[3],
-        "ingress_global_timestamp": int_fields[4],
-        "egress_global_timestamp": int_fields[5],
-        "enq_timestamp": int_fields[6],
-        "enq_qdepth": int_fields[7],
-        "deq_timedelta": int_fields[8],
-        "deq_qdepth": int_fields[9],
+        # "src_ip": ip_layer.src,
+        # "dst_ip": ip_layer.dst,
+        "switchID_t": int_fields.switchID_t,
+        "ingress_port": int_fields.ingress_port,
+        "egress_port": int_fields.egress_port,
+        "egress_spec": int_fields.egress_spec,
+        "ingress_global_timestamp": int_fields.ingress_global_timestamp,
+        "egress_global_timestamp": int_fields.egress_global_timestamp,
+        "enq_timestamp": int_fields.enq_timestamp,
+        "enq_qdepth": int_fields.enq_qdepth,
+        "deq_timedelta": int_fields.deq_timedelta,
+        "deq_qdepth": int_fields.deq_qdepth,
     }
 
     csv_writer.writerow(int_data)
@@ -84,8 +82,8 @@ def handle_pkt(pkt, csv_writer: csv.DictWriter):
 
 FIELDNAMES = [
     "timestamp",
-    "src_ip",
-    "dst_ip",
+    # "src_ip",
+    # "dst_ip",
     "switchID_t",
     "ingress_port",
     "egress_port",
