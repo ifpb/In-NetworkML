@@ -57,10 +57,10 @@ elapsed_time() {
 }
 
 if [[ "$1" == "-ml" ]]; then
-	USE_ML=1
-	shift 1
+  USE_ML=1
+  shift 1
 else
-	USE_ML=0
+  USE_ML=0
 fi
 
 saida() {
@@ -74,38 +74,37 @@ if [ -z $1 ] || [ ! -d scenarios/$1 ]; then
   saida
 fi
 
-
 time_convert() {
-    input="$1"
-    total=0
-    temp="$input"
-    
-    while [[ $temp =~ ([0-9]+)([hms]) ]]; do
-        val="${BASH_REMATCH[1]}"
-        unit="${BASH_REMATCH[2]}"
-        
-        case "$unit" in
-            h) total=$((total + val * 3600)) ;;
-            m) total=$((total + val * 60)) ;;
-            s) total=$((total + val)) ;;
-        esac
+  input="$1"
+  total=0
+  temp="$input"
 
-        temp="${temp#*${BASH_REMATCH[0]}}"
-    done
-    echo "$total"
+  while [[ $temp =~ ([0-9]+)([hms]) ]]; do
+    val="${BASH_REMATCH[1]}"
+    unit="${BASH_REMATCH[2]}"
+
+    case "$unit" in
+    h) total=$((total + val * 3600)) ;;
+    m) total=$((total + val * 60)) ;;
+    s) total=$((total + val)) ;;
+    esac
+
+    temp="${temp#*${BASH_REMATCH[0]}}"
+  done
+  echo "$total"
 }
 
 SCENARIO="$1"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
 if [[ -z "$2" ]]; then
-	log_info "Usando valor de tempo padrão: 60 segundos"
-	DURATION=60
+  log_info "Usando valor de tempo padrão: 60 segundos"
+  DURATION=60
 elif [[ $2 =~ ^([0-9]+h)?([0-9]+m)?([0-9]+s)?$ ]] && [[ -n "$2" ]]; then
-	DURATION=$(time_convert $2)
+  DURATION=$(time_convert $2)
 else
-	log_error "Formato de tempo inválido (XhYmZx)"
-	exit 1
+  log_error "Formato de tempo inválido (XhYmZx)"
+  exit 1
 fi
 
 log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
@@ -126,15 +125,14 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
-	OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TIMESTAMP}"
 else
-	OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
 fi
 
 export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
 CAP_FILE="packets.pcap"
-
 
 # Create output dir
 ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
@@ -152,8 +150,7 @@ ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resou
 SWITCH_PID=$!
 
 if [[ "$USE_ML" == 1 ]]; then
-  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/ml_metrics.py" &
-  ML_METRICS_PID=$!
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/ml_metrics.py $SCENARIO" &
 fi
 
 cleanup() {
@@ -164,13 +161,13 @@ cleanup() {
   ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f /tmp/switch_resource_metrics.sh"
   kill $SWITCH_PID 2>/dev/null
   if [[ "$USE_ML" == 1 ]]; then
-    kill $ML_METRICS_PID 2>/dev/null
-    wait $ML_METRICS_PID 2>/dev/null
+    ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f ml_metrics.py"
   fi
-  
+
   wait $INT_PID 2>/dev/null
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
+  exit 0
 }
 
 trap cleanup EXIT TERM INT
@@ -208,5 +205,7 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
     wait $SERVER_PID 2>/dev/null
   fi
 fi
+
+cleanup
 
 #ssh -F "${SCRIPT_DIR}/ssh_config" s1 "SCENARIO=$SCENARIO /vagrant/code/editcmatrix 2> /dev/null"
