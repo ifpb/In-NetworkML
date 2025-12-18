@@ -13,7 +13,9 @@ def time_to_seconds(time):
     return sum(pointers)
 
 def shift_timestamp(df, offset):
+    print(offset)
     for i in range(len(df['timestamp'])):
+        print(df.at[i, 'timestamp'])
         df.at[i, 'timestamp'] = time_to_seconds(df.at[i,'timestamp'].split('T')[1]) - offset
 
 def insert_classification_time(df):
@@ -21,8 +23,7 @@ def insert_classification_time(df):
     for i in range(len(df['ingress_global_timestamp'])):
         ing = df.at[i,'ingress_global_timestamp']
         egr = df.at[i,'egress_global_timestamp'] 
-        ct.append(egr-ing.astype(np.uint64))
-        print(egr, type(egr), ing, type(ing.astype(np.uint64)))
+        ct.append(egr-ing)
 
     return df.assign(classification_time=ct)
 
@@ -51,7 +52,6 @@ def main():
     metric = 'classification_time'
     scenario = args.scenario if args.scenario else 'undefined'
 
-    print(time_to_seconds(df1['timestamp'][0].split('T')[1]))
     shift_timestamp(df1, time_to_seconds(df1['timestamp'][0].split('T')[1]))
     shift_timestamp(df2, time_to_seconds(df2['timestamp'][0].split('T')[1]))
 
