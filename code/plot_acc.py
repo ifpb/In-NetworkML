@@ -3,6 +3,22 @@ import argparse
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
+
+classe_desc = {
+        "0": {
+            "name": "web",
+            "color": "C0",
+            },
+        "1": {
+            "name": "file_transfer",
+            "color": "C1",
+            },
+        "2": {
+            "name": "video",
+            "color": "C2",
+            },
+        }
 
 
 def shift_timestamp(df, offset):
@@ -10,15 +26,51 @@ def shift_timestamp(df, offset):
         df.at[i, "timestamp"] -= offset
 
 
+def plot_data(ax, data):
+    classe = data["class"].unique()[0]
+    ax.plot(data["timestamp"], data["precision"], label="Precision")
+    ax.plot(data["timestamp"], data["recall"], label="Recall")
+    ax.set_title(f"Classe {classe}")
+    ax.set_xlabel("Time (seconds)")
+    ax.legend()
+    ax.grid()
+
+
 def plot_figure(dataset):
+    fig = plt.figure()
+
+    grid = 231
     for v in dataset["class"].unique():
-        d = dataset[dataset["class"] == v]
-        shift_timestamp(d, d["timestamp"].iloc[0])
-        plt.plot(d["timestamp"], d["recall"], label=f"Classe {v}")
-    plt.ylabel("recall")
-    plt.xlabel("Time (microsseconds)")
-    plt.title("Recall over time")
+        ax = plt.subplot(grid)
+        grid+=1
+        d = dataset[dataset["class"] == v].reset_index(drop=True)
+        shift_timestamp(d, d["timestamp"][0])
+        plot_data(ax, d)
+
+    ax = plt.subplot(212)
+    shift_timestamp(dataset, dataset["timestamp"][0])
+    ax.plot(dataset["accuracy"], label="Accuracy")
+    ax.set_ylabel("Accuracy")
+    ax.set_xlabel("Time (microsseconds)")
+    ax.set_title("Accuracy over time")
+    ax.legend()
+    ax.grid()
+
+    plt.tight_layout()
+    plt.savefig("accuracy.png")
+
+def plot_a(dataset):
+    for v in dataset["class"].unique():
+        d = dataset[dataset["class"] == v].reset_index(drop=True)
+        shift_timestamp(d, d["timestamp"][0])
+        plt.plot(d["timestamp"], d["recall"], label=classe_desc[str(v)]["name"], color=classe_desc[str(v)]["color"])
+
+    plt.ylabel("Recall")
+    plt.xlabel("Time (Seconds)")
+    plt.tight_layout()
     plt.legend()
+    plt.grid()
+
     plt.savefig("accuracy.png")
 
 
@@ -29,7 +81,7 @@ def main():
     args = parser.parse_args()
     df = pd.read_csv(args.dataset)
 
-    plot_figure(df)
+    plot_a(df)
     print(df)
 
 
