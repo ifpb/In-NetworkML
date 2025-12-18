@@ -1,51 +1,75 @@
 #!/usr/bin/env python3
 
-import os
-
-import numpy as np
-
 import argparse
+import os
+import signal
 import subprocess
-
-from time import sleep
+import sys
+from datetime import datetime
 from pathlib import Path
+from time import sleep
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-cmatrix_path = f"{script_dir}/cmatrix"
+cmatrix_path = "{}/cmatrix".format(script_dir)
 
 
-def get_switch_results_counter(class_num: int) -> int:
-    cmd = f"echo 'counter_read MyIngress.resultCounter {class_num}' | simple_switch_CLI | awk -F ' ' 'NR==4 {print $5}')"
+def get_switch_results_counter(class_num):
+    echo_cmd = ["echo", "counter_read MyIngress.resultCounter {}".format(class_num)]
+    s_CLI_cmd = ["simple_switch_CLI"]
+    awk_cmd = ["awk", "-F", " ", "NR==4 {{print $5}}"]
 
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    try:
+        echo_res = subprocess.Popen(echo_cmd, stdout=subprocess.PIPE)
+        s_cli_res = subprocess.Popen(
+            s_CLI_cmd, stdin=echo_res.stdout, stdout=subprocess.PIPE
+        )
+        awk_res = subprocess.Popen(
+            awk_cmd, stdin=s_cli_res.stdout, stdout=subprocess.PIPE
+        )
 
-    if result.returncode == 0:
-        try:
-            return int(result.stdout.strip())
-        except ValueError:
-            return 0
-    else:
+        result, _ = awk_res.communicate()
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+    try:
+        return int(result.strip())
+    except ValueError:
         return 0
 
+
+def handle_exit(sig, frame):
+    with open(cmatrix_path, "w") as f:
+        for linha in metricas.cmatrix:
+            f.write(" ".join(map(str, linha)))
+            f.write("\n")
+
+    sys.exit(0)
 
 
 class Metrics:
     def __init__(self, initialMatrix=None):
         if initialMatrix:
+            if len(initialMatrix) != 3 or any(len(x) != 3 for x in initialMatrix):
+                raise ValueError("Matriz não é 3x3")
             self.cmatrix = [list(x) for x in initialMatrix]
         else:
             self.cmatrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
-    def update(self, y_true: int, curr_pred: list[int]):
+    def update(self, y_true, curr_pred):
+        if y_true < 0 or y_true > 2:
+            raise ValueError("y_true precisa ser 0, 1 ou 2")
+        if len(curr_pred) != 3:
+            raise ValueError("curr_pred precisa ser de tamanho 3")
+
         self.cmatrix[y_true] = curr_pred.copy()
 
     def get_metrics(self):
-        #total = np.sum(self.cmatrix)
+        # total = np.sum(self.cmatrix)
 
-        #precision = np.nan_to_num(np.diag(self.cmatrix) / np.sum(self.cmatrix, axis=0))
-        #recall = np.nan_to_num(np.diag(self.cmatrix) / np.sum(self.cmatrix, axis=1))
-        #f1score = np.nan_to_num((2 * precision * recall) / (precision + recall))
-        #accuracy = np.nan_to_num(np.trace(self.cmatrix) / total)
+        # precision = np.nan_to_num(np.diag(self.cmatrix) / np.sum(self.cmatrix, axis=0))
+        # recall = np.nan_to_num(np.diag(self.cmatrix) / np.sum(self.cmatrix, axis=1))
+        # f1score = np.nan_to_num((2 * precision * recall) / (precision + recall))
+        # accuracy = np.nan_to_num(np.trace(self.cmatrix) / total)
 
         total = sum(sum(x) for x in self.cmatrix)
 
@@ -63,16 +87,14 @@ class Metrics:
         f1score = []
 
         for i in range(len(self.cmatrix)):
-            precision.append(
-                    diag[i] / col_sums[i] if col_sums[i] != 0 else 0
-                )
+            precision.append(diag[i] / col_sums[i] if col_sums[i] != 0 else 0)
 
-            recall.append(
-                    diag[i] / row_sums[i] if row_sums[i] != 0 else 0
-                )
+            recall.append(diag[i] / row_sums[i] if row_sums[i] != 0 else 0)
 
             f1score.append(
-               (2*precision[i] * recall[i]) / (precision[i] + recall[i]) if (precision[i] + recall[i] != 0) else 0
+                (2 * precision[i] * recall[i]) / (precision[i] + recall[i])
+                if (precision[i] + recall[i] != 0)
+                else 0
             )
 
         accuracy = sum(diag) / total if total != 0 else 0
@@ -86,29 +108,35 @@ class Metrics:
 
     def __str__(self) -> str:
         res = ""
-        res += f"{ str(self.cmatrix) }\n"
+        res += "{}\n".format(str(self.cmatrix))
         metrics = self.get_metrics()
 
-        res += f"Precision: {metrics['precision']}\n"
-        res += f"Recall: {metrics['recall']}\n"
-        res += f"F1 Score: {metrics['f1score']}\n"
-        res += f"Accuracy: {metrics['accuracy']}\n"
+        res += "Precision: {}\n".format(metrics["precision"])
+        res += "Recall: {}\n".format(metrics["recall"])
+        res += "F1 Score: {}\n".format(metrics["f1score"])
+        res += "Accuracy: {}\n".format(metrics["accuracy"])
 
         return res
 
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("class", help="class name")
+parser.add_argument("class_name", help="class name")
 
-args = parser.parse_flags()
+args = parser.parse_args()
 
-if args.class == "web":
+if args.class_name == "web":
     class_num = 0
-elif args.class == "file_transfer":
+elif args.class_name == "file_transfer":
     class_num = 1
-elif args.class == "video":
+elif args.class_name == "video":
     class_num = 2
+else:
+    raise ValueError("Nome de classe invalido")
+
+### Salva a cmatrix antes de fechar ###
+signal.signal(signal.SIGINT, handle_exit)
+signal.signal(signal.SIGTERM, handle_exit)
 
 try:
     cmatrix = []
@@ -121,24 +149,35 @@ except FileNotFoundError:
     print("ARQUIVO NAO ENCONTRADO")
     metricas = Metrics()
 
-FILE=f"{script_dir}/accuracy.csv"
+FILE = "{}/accuracy.csv".format(script_dir)
 
 if not Path(FILE).is_file():
     with open(FILE, "w+") as f:
-        f.write("precision_0, recall_0, f1score_0, precision_1, recall_1, f1score_1, precision_2, recall_2, f1score_2, accuracy\n")
+        f.write(
+            # "precision_0,recall_0,f1score_0,precision_1,recall_1,f1score_1,precision_2,recall_2,f1score_2,accuracy\n"
+            "timestamp,class,precision,recall,f1score,accuracy\n"
+        )
 
 with open(FILE, "a") as f:
     while True:
+        sleep(1)
         pred = [get_switch_results_counter(x) for x in range(3)]
         if all(x == 0 for x in pred):
             continue
 
+        metricas.update(class_num, pred)
+
         metrics = metricas.get_metrics()
 
-        for i in range(3):
-            f.write(f"{metrics['precision'][i]:.3f},")
-            f.write(f"{metrics['recall'][i]:.3f},")
-            f.write(f"{metrics['f1score'][i]:.3f},")
-        f.write(f"{metrics['accuracy']:.3f}")
+        f.write("{},".format(datetime.now().timestamp()))
+
+        # for i in range(3):
+        #     f.write("{},".format(metrics["precision"][i]))
+        #     f.write("{},".format(metrics["recall"][i]))
+        #     f.write("{},".format(metrics["f1score"][i]))
+        f.write("{},".format(class_num))
+        f.write("{},".format(metrics["precision"][class_num]))
+        f.write("{},".format(metrics["recall"][class_num]))
+        f.write("{},".format(metrics["f1score"][class_num]))
+        f.write("{}".format(metrics["accuracy"]))
         f.write("\n")
-        sleep(1)
