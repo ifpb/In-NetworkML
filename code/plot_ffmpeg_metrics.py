@@ -4,6 +4,8 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 
+from colors import label_color
+
 def shift_timestamp(df, offset):
     for i in range(len(df['frame'])):
         df.at[i, 'frame'] -= offset
@@ -14,11 +16,13 @@ def numerize_speed(df):
         df.at[i, 'speed'] = np.float64(df.at[i, 'speed'][:-1])
 
 def plot_figure(dataset1, dataset2, metric='fps'):
-    plt.plot(dataset1['frame'], dataset1[metric], 'r', label="Without ML")
-    plt.plot(dataset2['frame'], dataset2[metric], 'b', label="With ML")
+    plt.plot(dataset1['frame'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
+    plt.plot(dataset2['frame'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
     plt.ylabel(metric)
     plt.xlabel('frame')
-    plt.title(f'FFMPEG {metric}')
+    #plt.title(f'FFMPEG {metric}')
+    plt.tight_layout()
+    plt.grid(alpha=0.3)
     plt.legend()
     plt.savefig('ffmpeg_metrics.png')
     

@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import datetime
 import numpy as np
 import seaborn as sns
+from colors import label_color
 
 def time_to_seconds(time):
     pointers = list(map(float, time.split(':')))
@@ -31,11 +32,14 @@ def insert_classification_time(df):
 
 
 def plot_figure(dataset1, dataset2, metric='classfication_time', scenario='undefined'):
-    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(25).mean(), 'r', label="Without ML")
-    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(25).mean(), 'b', label="With ML")
+    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(25).mean(), label="Without ML", color=label_color['wml']["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(25).mean(), label="With ML", color=label_color['ml']["color"])
+    plt.axhline(y=dataset1[metric].mean(), color=label_color["wml"]["color"], linestyle="--", label="Média Without ML")
+    plt.axhline(y=dataset2[metric].mean(), color=label_color["ml"]["color"], linestyle="--", label="Média With ML")
     plt.ylabel(metric)
     plt.xlabel('time (seconds)')
-    plt.title(f'Switch Forwarding time for {scenario}')
+    plt.tight_layout()
+    plt.grid(alpha=0.3)
     plt.legend()
     plt.savefig('classification_time.png')
     

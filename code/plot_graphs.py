@@ -8,6 +8,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from colors import label_color
+
 
 def extract_iperf(inputfile):
     with open(f"{inputfile}iperf.json") as f:
@@ -18,12 +20,12 @@ def extract_iperf(inputfile):
 def plot_iperf(data, path):
     plt.figure(figsize=(12, 6))
     #sns.kdeplot(data, cumulative=True, linewidth=2) #label=data.columns)
-    sns.lineplot(data.rolling(10).mean(), linewidth=2) #label=data.columns)
-    #plt.xlabel('Tempo (s)')
-    #plt.fill_between(data["ML"].index, data["ML"].rolling(1).mean(), alpha=0.2)
-    plt.xlabel('Vazão (mbps)')
-    #plt.legend()
-    plt.grid(True, alpha=0.3)
+    sns.lineplot(data["ML"].rolling(10).mean(), linewidth=2, color=label_color["ml"]["color"], label="ML")
+    sns.lineplot(data["Sem ML"].rolling(10).mean(), linewidth=2, color=label_color["wml"]["color"], label="Sem ML")
+    plt.ylabel('Vazão (mbps)')
+    plt.xlabel('Tempo (s)')
+    plt.legend()
+    plt.grid(alpha=0.3)
     plt.tight_layout()
     plt.savefig(f"{path}/bits_per_second.png", dpi=300, bbox_inches='tight')
 

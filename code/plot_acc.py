@@ -5,21 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-classe_desc = {
-        "0": {
-            "name": "web",
-            "color": "C0",
-            },
-        "1": {
-            "name": "file_transfer",
-            "color": "C1",
-            },
-        "2": {
-            "name": "video",
-            "color": "C2",
-            },
-        }
-
+from colors import label_color
 
 def shift_timestamp(df, offset):
     for i in range(len(df["timestamp"])):
@@ -63,13 +49,14 @@ def plot_a(dataset):
     for v in dataset["class"].unique():
         d = dataset[dataset["class"] == v].reset_index(drop=True)
         shift_timestamp(d, d["timestamp"][0])
-        plt.plot(d["timestamp"], d["recall"], label=classe_desc[str(v)]["name"], color=classe_desc[str(v)]["color"])
+        plt.plot(d["timestamp"], d["recall"], label=label_color[str(v)]["name"], color=label_color[str(v)]["color"])
 
+    #plt.axhline(y=dataset["recall"].mean(), color="tab:orange", linestyle="--", label="Média")
     plt.ylabel("Recall")
     plt.xlabel("Time (Seconds)")
     plt.tight_layout()
     plt.legend()
-    plt.grid()
+    plt.grid(alpha=0.3)
 
     plt.savefig("accuracy.png")
 

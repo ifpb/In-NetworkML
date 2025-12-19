@@ -3,17 +3,22 @@ import pandas as pd
 import argparse
 import matplotlib.pyplot as plt
 
+from colors import label_color
+
 def shift_timestamp(df, offset):
     for i in range(len(df['timestamp'])):
         df.at[i, 'timestamp'] -= offset
+        df.at[i, 'timestamp'] /= 1e3
 
 def plot_figure(dataset1, dataset2, metric='time_total'):
-    plt.plot(dataset1['timestamp'], dataset1[metric], 'r', label="Without ML")
-    plt.plot(dataset2['timestamp'], dataset2[metric], 'b', label="With ML")
+    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(10).mean(), label="Without ML", color=label_color["wml"]["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(10).mean(), label="With ML", color=label_color["ml"]["color"])
     plt.ylabel(metric)
-    plt.xlabel('time (microsseconds)')
-    plt.title(f'Http {metric}')
+    plt.xlabel('time (seconds)')
+    #plt.title(f'Http {metric}')
+    plt.grid(alpha=0.3)
     plt.legend()
+    plt.tight_layout()
     plt.savefig('http_metrics.png')
     
 
@@ -34,7 +39,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
-    plot_figure(df1, df2, metric, scenario)
+    plot_figure(df1, df2, metric)
     print(df1)
 
 if __name__ == '__main__':

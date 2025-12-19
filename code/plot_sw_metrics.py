@@ -3,16 +3,21 @@ import pandas as pd
 import argparse
 import matplotlib.pyplot as plt
 
+from colors import label_color
+
 def shift_timestamp(df, offset):
     for i in range(len(df['timestamp'])):
         df.at[i, 'timestamp'] -= offset
+        df.at[i, 'timestamp'] /= 1e3
 
 def plot_figure(dataset1, dataset2, metric='cpu_total', scenario='undefined'):
-    plt.plot(dataset1['timestamp'], dataset1[metric], 'r', label="Without ML")
-    plt.plot(dataset2['timestamp'], dataset2[metric], 'b', label="With ML")
+    plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
     plt.ylabel(metric)
-    plt.xlabel('time (microsseconds)')
-    plt.title(f'Switch {metric} for {scenario}')
+    plt.xlabel('time (seconds)')
+    #plt.title(f'Switch {metric} for {scenario}')
+    plt.tight_layout()
+    plt.grid(alpha=0.3)
     plt.legend()
     plt.savefig('sw_metrics.png')
     
