@@ -23,23 +23,29 @@ def extract_iperf(inputfile):
 
 def plot_iperf(data, path):
     # plt.figure(figsize=(12, 6))
-    # sns.kdeplot(
-    #     data["ML"],
-    #     cumulative=True,
-    #     linewidth=2,
-    #     color=label_color["ml"]["color"],
-    #     label="With ML",
-    # )
-    # sns.kdeplot(
-    #     data["Sem ML"],
-    #     cumulative=True,
-    #     linewidth=2,
-    #     color=label_color["wml"]["color"],
-    #     label="Without ML",
-    # )
-    # plt.ylabel("Density")
-    # plt.xlabel("Throughput (mbps)")
+    plt.figure()
+    sns.kdeplot(
+        data["ML"],
+        cumulative=True,
+        linewidth=2,
+        color=label_color["ml"]["color"],
+        label="With ML",
+    )
+    sns.kdeplot(
+        data["Sem ML"],
+        cumulative=True,
+        linewidth=2,
+        color=label_color["wml"]["color"],
+        label="Without ML",
+    )
+    plt.ylabel("Density")
+    plt.xlabel("Throughput (mbps)")
+    plt.legend()
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f"{path}/iperf_kde_vazao_density.png", dpi=300, bbox_inches="tight")
 
+    plt.figure()
     sns.lineplot(
         data["ML"].rolling(10).mean(),
         linewidth=2,
@@ -57,7 +63,7 @@ def plot_iperf(data, path):
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
-    plt.savefig(f"{path}/bits_per_second.png", dpi=300, bbox_inches="tight")
+    plt.savefig(f"{path}/iperf_vazao_tempo.png", dpi=300, bbox_inches="tight")
 
 
 def main(args):
