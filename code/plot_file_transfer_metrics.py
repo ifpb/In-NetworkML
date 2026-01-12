@@ -12,21 +12,21 @@ def shift_timestamp(df, offset):
 
 def plot_figure(dataset1, dataset2):
     metric = 'flow_completion_time'
-    plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
-    plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
+    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(10).mean(), label="Without ML", color=label_color["wml"]["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(10).mean(), label="With ML", color=label_color["ml"]["color"])
     plt.ylabel(metric)
     plt.xlabel('Time (seconds)')
     #plt.title(f'File Transfer {metric}')
     plt.grid(alpha=0.3)
     plt.legend()
     plt.savefig('file_transfer_metrics.png')
-    
+
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset1", help="First dataset to be extracted (NO ML)")
     parser.add_argument("dataset2", help="Second dataset to be extracted (WITH ML)")
-    
+
     args = parser.parse_args()
     df1 = pd.read_csv(args.dataset1)
     df2 = pd.read_csv(args.dataset2)
