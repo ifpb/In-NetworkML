@@ -94,6 +94,22 @@ time_convert() {
   echo "$total"
 }
 
+time_unconvert() {
+  local seconds=$1
+  local hours=$((seconds / 3600))
+  local minutes=$(((seconds % 3600) / 60))
+  local seconds=$((seconds % 60))
+  local result=""
+
+  [ "$hours" -gt 0 ] && result="${hours}h"
+  [ "$minutes" -gt 0 ] && result="${result}${minutes}m"
+  [ "$seconds" -gt 0 ] && result="${result}${seconds}s"
+
+  [ -z "$result" ] && result="0s"
+
+  echo "$result"
+}
+
 SCENARIO="$1"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
@@ -106,6 +122,8 @@ else
   log_error "Formato de tempo inválido (XhYmZx)"
   exit 1
 fi
+
+DURATION_STRING=$(time_unconvert $DURATION)
 
 log_info "Rodando cenário ${SCENARIO} com duração de ${DURATION}s"
 
@@ -125,9 +143,9 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${DURATION_STRING}_${TIMESTAMP}"
 else
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
 fi
 
 export OUTPUT_DIR
