@@ -1,0 +1,5 @@
+tos = [4];
+ipi = [18644];
+when tos<=4 and ipi<=18644 then 0
+when tos<=4 and ipi>18644 then 2
+when tos>4 then 1

@@ -1,0 +1,33 @@
+tos = [4];
+ipi = [604, 737, 8864, 13995, 14235, 14921, 17128, 17418, 17422, 17436, 17847, 17887, 17892, 18616, 18644, 19169, 19262, 19446, 20211, 43096, 45970, 50367, 57332, 58214, 72324, 205558, 208274, 208520, 208524];
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi<=737 and ipi<=604 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi<=737 and ipi>604 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi>737 and ipi<=8864 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi>737 and ipi>8864 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi<=14921 and ipi<=14235 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi<=14921 and ipi>14235 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi>14921 and ipi<=17128 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi>14921 and ipi>17128 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi<=17436 and ipi<=17422 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi<=17436 and ipi>17422 then 2
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi>17436 and ipi<=17847 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi>17436 and ipi>17847 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 and ipi<=18616 and ipi<=17892 then 1
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 and ipi<=18616 and ipi>17892 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 and ipi>18616 then 0
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi<=19262 and ipi<=19169 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi<=19262 and ipi>19169 then 0
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi>19262 and ipi<=19446 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi>19262 and ipi>19446 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi<=45970 and ipi<=43096 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi<=45970 and ipi>43096 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi>45970 and ipi<=50367 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi>45970 and ipi>50367 then 2
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 and ipi<=58214 then 0
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 and ipi>58214 and ipi<=72324 then 1
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 and ipi>58214 and ipi>72324 then 1
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi<=208520 and ipi<=208274 then 0
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi<=208520 and ipi>208274 then 0
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi>208520 and ipi<=208524 then 1
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi>208520 and ipi>208524 then 0
+when tos>4 then 1

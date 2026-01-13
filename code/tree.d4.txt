@@ -1,0 +1,11 @@
+tos = [4];
+ipi = [13995, 17418, 17887, 18644, 20211, 57332, 205558];
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 then 0
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 then 2
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 then 1
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 then 0
+when tos>4 then 1

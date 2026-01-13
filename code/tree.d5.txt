@@ -1,0 +1,19 @@
+tos = [4];
+ipi = [737, 13995, 14921, 17418, 17436, 17887, 18616, 18644, 19262, 20211, 45970, 57332, 58214, 205558, 208520];
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi<=737 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 and ipi>737 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi<=14921 then 0
+when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 and ipi>14921 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi<=17436 then 2
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 and ipi>17436 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 and ipi<=18616 then 0
+when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 and ipi>18616 then 0
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi<=19262 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 and ipi>19262 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi<=45970 then 2
+when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 and ipi>45970 then 2
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 and ipi<=58214 then 0
+when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 and ipi>58214 then 1
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi<=208520 then 0
+when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 and ipi>208520 then 0
+when tos>4 then 1
