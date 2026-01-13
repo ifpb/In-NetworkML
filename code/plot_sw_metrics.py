@@ -16,8 +16,8 @@ def plot_figure(dataset1, dataset2, metric='cpu_total', scenario='undefined'):
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
-    dataset1["type"] = "Without ML"
-    dataset2["type"] = "With ML"
+    dataset1["type"] = label_color["wml"]["label"]
+    dataset2["type"] = label_color["ml"]["label"]
 
     dataset = pd.concat([dataset1[[metric, "type"]], dataset2[[metric, "type"]]])
     sns.boxplot(dataset, x="type", y=metric, hue="type")
@@ -33,8 +33,8 @@ def plot_figure_cpu_total(dataset1, dataset2, metric="cpu_total"):
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
-    dataset1["type"] = "Without ML"
-    dataset2["type"] = "With ML"
+    dataset1["type"] = label_color["wml"]["label"]
+    dataset2["type"] = label_color["ml"]["label"]
 
     dataset = pd.concat([dataset1[[metric, "type"]], dataset2[[metric, "type"]]])
     sns.boxplot(dataset, x="type", y=metric, hue="type")
@@ -50,8 +50,8 @@ def plot_figure_mem_used(dataset1, dataset2, metric='mem_used'):
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
-    dataset1["type"] = "Without ML"
-    dataset2["type"] = "With ML"
+    dataset1["type"] = label_color["wml"]["label"]
+    dataset2["type"] = label_color["ml"]["label"]
 
     dataset = pd.concat([dataset1[[metric, "type"]], dataset2[[metric, "type"]]])
     sns.boxplot(dataset, x="type", y=metric, hue="type")

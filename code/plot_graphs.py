@@ -29,14 +29,14 @@ def plot_iperf(data, path):
         cumulative=True,
         linewidth=2,
         color=label_color["ml"]["color"],
-        label="With ML",
+        label=label_color["ml"]["label"],
     )
     sns.kdeplot(
         data["Sem ML"],
         cumulative=True,
         linewidth=2,
         color=label_color["wml"]["color"],
-        label="Without ML",
+        label=label_color["wml"]["label"],
     )
     plt.ylabel("Density")
     plt.xlabel("Throughput (mbps)")

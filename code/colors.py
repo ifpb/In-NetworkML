@@ -1,11 +1,11 @@
 label_color = {
     "ml": {
         "color": "C0",
-        "name": "With ML",
+        "name": "ML",
     },
     "wml": {
         "color": "C1",
-        "name": "Without ML",
+        "name": "WML",
     },
     "0": {
         "color": "C0",
