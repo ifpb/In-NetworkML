@@ -46,6 +46,7 @@ def plot_figure(dataset):
     plt.savefig("accuracy.png")
 
 def plot_a(dataset):
+    plt.figure(dpi=300)
     for v in dataset["class"].unique():
         d = dataset[dataset["class"] == v].reset_index(drop=True)
         shift_timestamp(d, d["timestamp"][0])
@@ -68,6 +69,7 @@ def main():
     args = parser.parse_args()
     df = pd.read_csv(args.dataset)
 
+    plt.rcParams.update({"font.size": 14})
     plot_a(df)
     print(df)
 

@@ -13,6 +13,7 @@ def shift_timestamp(df, offset):
         df.at[i, 'timestamp'] /= 1e3
 
 def plot_figure(dataset1, dataset2, metric='cpu_total', scenario='undefined'):
+    plt.figure(dpi=300)
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
@@ -30,6 +31,7 @@ def plot_figure(dataset1, dataset2, metric='cpu_total', scenario='undefined'):
     plt.savefig(f'sw_metrics_{metric}.png')
 
 def plot_figure_cpu_total(dataset1, dataset2, metric="cpu_total"):
+    plt.figure(dpi=300)
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
@@ -47,6 +49,7 @@ def plot_figure_cpu_total(dataset1, dataset2, metric="cpu_total"):
     plt.savefig(f'sw_metrics_{metric}.png')
 
 def plot_figure_mem_used(dataset1, dataset2, metric='mem_used'):
+    plt.figure(dpi=300)
     # plt.plot(dataset1['timestamp'], dataset1[metric], label="Without ML", color=label_color["wml"]["color"])
     # plt.plot(dataset2['timestamp'], dataset2[metric], label="With ML", color=label_color["ml"]["color"])
 
@@ -82,6 +85,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
+    plt.rcParams.update({"font.size": 14})
     plot_figure_cpu_total(df1, df2)
     plot_figure_mem_used(df1, df2)
     # plot_figure(df1, df2, "cpu_total", scenario)

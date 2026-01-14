@@ -11,6 +11,7 @@ def shift_timestamp(df, offset):
         df.at[i, 'timestamp'] /= 1e3
 
 def plot_figure(dataset1, dataset2, metric='time_total'):
+    plt.figure(dpi=300)
     plt.plot(dataset1['timestamp'], dataset1[metric].rolling(20).mean(), label=label_color["wml"]["name"], color=label_color["wml"]["color"])
     plt.plot(dataset2['timestamp'], dataset2[metric].rolling(20).mean(), label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel("time_total (seconds)")
@@ -39,6 +40,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
+    plt.rcParams.update({"font.size": 14})
     plot_figure(df1, df2, metric)
     print(df1)
 

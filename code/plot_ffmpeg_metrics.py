@@ -16,6 +16,7 @@ def numerize_speed(df):
         df.at[i, 'speed'] = np.float64(df.at[i, 'speed'][:-1])
 
 def plot_figure(dataset1, dataset2, metric='fps'):
+    plt.figure(dpi=300)
     plt.plot(dataset1['frame'], dataset1[metric], label=label_color["wml"]["name"], color=label_color["wml"]["color"])
     plt.plot(dataset2['frame'], dataset2[metric], label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel(metric)
@@ -45,6 +46,7 @@ def main():
     numerize_speed(df1)
     numerize_speed(df2)
 
+    plt.rcParams.update({"font.size": 14})
     plot_figure(df1, df2, metric)
     print(df1)
 

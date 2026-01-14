@@ -38,6 +38,7 @@ def insert_classification_time(df):
 
 
 def plot_figure(dataset1, dataset2, metric='classfication_time', scenario='undefined'):
+    plt.figure(dpi=300)
     plt.plot(dataset1['timestamp'], dataset1[metric].rolling(50).mean(), label=label_color["wml"]["name"], color=label_color['wml']["color"])
     plt.plot(dataset2['timestamp'], dataset2[metric].rolling(50).mean(), label=label_color["ml"]["name"], color=label_color['ml']["color"])
     plt.axhline(y=dataset1[metric].mean(), color=label_color["wml"]["color"], linestyle="--", label="Average WML")
@@ -70,6 +71,7 @@ def main():
     df1 = insert_classification_time(df1)
     df2 = insert_classification_time(df2)
 
+    plt.rcParams.update({"font.size": 14})
     plot_figure(df1, df2, metric, scenario)
     print(df1)
 
