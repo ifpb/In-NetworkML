@@ -59,6 +59,9 @@ def plot_figure_mem_used(dataset1, dataset2, metric='mem_used'):
     dataset = pd.concat([dataset1[[metric, "type"]], dataset2[[metric, "type"]]])
     sns.boxplot(dataset, x="type", y=metric, hue="type")
     plt.ylabel("Memory Used (KiB)")
+
+    plt.yscale("log")
+
     plt.xlabel('Time (seconds)')
     #plt.title(f'Switch {metric} for {scenario}')
     plt.tight_layout()
