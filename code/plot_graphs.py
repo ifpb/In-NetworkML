@@ -29,14 +29,14 @@ def plot_iperf(data, path):
         cumulative=True,
         linewidth=2,
         color=label_color["ml"]["color"],
-        label=label_color["ml"]["label"],
+        label=label_color["ml"]["name"],
     )
     sns.kdeplot(
         data["Sem ML"],
         cumulative=True,
         linewidth=2,
         color=label_color["wml"]["color"],
-        label=label_color["wml"]["label"],
+        label=label_color["wml"]["name"],
     )
     plt.ylabel("Density")
     plt.xlabel("Throughput (mbps)")
@@ -50,13 +50,13 @@ def plot_iperf(data, path):
         data["ML"].rolling(10).mean(),
         linewidth=2,
         color=label_color["ml"]["color"],
-        label="With ML",
+        label=label_color["ml"]["name"],
     )
     sns.lineplot(
         data["Sem ML"].rolling(10).mean(),
         linewidth=2,
         color=label_color["wml"]["color"],
-        label="Without ML",
+        label=label_color["wml"]["name"],
     )
     plt.ylabel("Throughput (mbps)")
     plt.xlabel("Time (s)")

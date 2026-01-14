@@ -16,8 +16,8 @@ def numerize_speed(df):
         df.at[i, 'speed'] = np.float64(df.at[i, 'speed'][:-1])
 
 def plot_figure(dataset1, dataset2, metric='fps'):
-    plt.plot(dataset1['frame'], dataset1[metric], label=label_color["wml"]["label"], color=label_color["wml"]["color"])
-    plt.plot(dataset2['frame'], dataset2[metric], label=label_color["ml"]["label"], color=label_color["ml"]["color"])
+    plt.plot(dataset1['frame'], dataset1[metric], label=label_color["wml"]["name"], color=label_color["wml"]["color"])
+    plt.plot(dataset2['frame'], dataset2[metric], label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel(metric)
     plt.xlabel('frame')
     #plt.title(f'FFMPEG {metric}')

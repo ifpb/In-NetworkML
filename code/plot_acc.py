@@ -4,8 +4,8 @@ import argparse
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-
 from colors import label_color
+
 
 def shift_timestamp(df, offset):
     for i in range(len(df["timestamp"])):

@@ -12,8 +12,8 @@ def shift_timestamp(df, offset):
 
 def plot_figure(dataset1, dataset2):
     metric = 'flow_completion_time'
-    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(10).mean(), label=label_color["wml"]["label"], color=label_color["wml"]["color"])
-    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(10).mean(), label=label_color["ml"]["label"], color=label_color["ml"]["color"])
+    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(10).mean(), label=label_color["wml"]["name"], color=label_color["wml"]["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(10).mean(), label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel("Flow Completion Time (seconds)")
     plt.xlabel('Time (seconds)')
     #plt.title(f'File Transfer {metric}')

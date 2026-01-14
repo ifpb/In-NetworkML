@@ -11,8 +11,8 @@ def shift_timestamp(df, offset):
         df.at[i, 'timestamp'] /= 1e3
 
 def plot_figure(dataset1, dataset2, metric='time_total'):
-    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(20).mean(), label=label_color["wml"]["label"], color=label_color["wml"]["color"])
-    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(20).mean(), label=label_color["ml"]["label"], color=label_color["ml"]["color"])
+    plt.plot(dataset1['timestamp'], dataset1[metric].rolling(20).mean(), label=label_color["wml"]["name"], color=label_color["wml"]["color"])
+    plt.plot(dataset2['timestamp'], dataset2[metric].rolling(20).mean(), label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel("time_total (seconds)")
     plt.xlabel('time (seconds)')
     #plt.title(f'Http {metric}')
