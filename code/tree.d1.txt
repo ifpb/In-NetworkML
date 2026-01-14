@@ -1,4 +1,6 @@
 tos = [4];
+frame_size = [];
+window = [];
 ipi = [];
 when tos<=4 then 0
 when tos>4 then 1

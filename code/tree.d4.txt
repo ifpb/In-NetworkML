@@ -1,11 +1,14 @@
 tos = [4];
-ipi = [13995, 17418, 17887, 18644, 20211, 57332, 205558];
-when tos<=4 and ipi<=18644 and ipi<=17418 and ipi<=13995 then 0
-when tos<=4 and ipi<=18644 and ipi<=17418 and ipi>13995 then 0
-when tos<=4 and ipi<=18644 and ipi>17418 and ipi<=17887 then 0
-when tos<=4 and ipi<=18644 and ipi>17418 and ipi>17887 then 0
-when tos<=4 and ipi>18644 and ipi<=57332 and ipi<=20211 then 2
-when tos<=4 and ipi>18644 and ipi<=57332 and ipi>20211 then 2
-when tos<=4 and ipi>18644 and ipi>57332 and ipi<=205558 then 1
-when tos<=4 and ipi>18644 and ipi>57332 and ipi>205558 then 0
+frame_size = [786, 1445];
+window = [508, 1219, 1399, 1556];
+ipi = [18594];
+when tos<=4 and window<=508 and frame_size<=786 and ipi<=18594 then 0
+when tos<=4 and window<=508 and frame_size<=786 and ipi>18594 then 2
+when tos<=4 and window<=508 and frame_size>786 and frame_size<=1445 then 3
+when tos<=4 and window<=508 and frame_size>786 and frame_size>1445 then 3
+when tos<=4 and window>508 and window<=1399 and window<=1219 then 0
+when tos<=4 and window>508 and window<=1399 and window>1219 then 0
+when tos<=4 and window>508 and window>1399 and window<=1556 then 3
+when tos<=4 and window>508 and window>1399 and window>1556 then 0
 when tos>4 then 1
+
