@@ -46,7 +46,7 @@ def main():
     numerize_speed(df1)
     numerize_speed(df2)
 
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_figure(df1, df2, metric)
     print(df1)
 

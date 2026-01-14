@@ -56,12 +56,15 @@ def plot_figure_mem_used(dataset1, dataset2, metric='mem_used'):
     dataset1["type"] = label_color["wml"]["name"]
     dataset2["type"] = label_color["ml"]["name"]
 
+    # dataset1["mem_used"] = dataset1["mem_used"] / 1024
+    # dataset2["mem_used"] = dataset2["mem_used"] / 1024
+
     dataset = pd.concat([dataset1[[metric, "type"]], dataset2[[metric, "type"]]])
     sns.boxplot(dataset, x="type", y=metric, hue="type")
-    plt.ylabel("Memory Used (KiB)")
 
     plt.yscale("log")
 
+    plt.ylabel("Memory Used (KiB)")
     plt.xlabel('Time (seconds)')
     #plt.title(f'Switch {metric} for {scenario}')
     plt.tight_layout()
@@ -88,7 +91,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_figure_cpu_total(df1, df2)
     plot_figure_mem_used(df1, df2)
     # plot_figure(df1, df2, "cpu_total", scenario)

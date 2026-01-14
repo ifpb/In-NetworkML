@@ -47,7 +47,7 @@ def plot_figure(dataset1, dataset2, metric='classfication_time', scenario='undef
     plt.xlabel("Time (seconds)")
     plt.tight_layout()
     plt.grid(alpha=0.3)
-    plt.legend()
+    plt.legend(ncols=2)
     plt.savefig("classification_time.png")
 
 
@@ -71,7 +71,7 @@ def main():
     df1 = insert_classification_time(df1)
     df2 = insert_classification_time(df2)
 
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_figure(df1, df2, metric, scenario)
     print(df1)
 

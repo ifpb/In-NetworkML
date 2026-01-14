@@ -74,7 +74,7 @@ def main(args):
     qtd_linhas = min(len(ml), len(sml)) - 1
     data["ML"] = ml[:qtd_linhas]
     data["Sem ML"] = sml[:qtd_linhas]
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_iperf(data, "./")
 
 

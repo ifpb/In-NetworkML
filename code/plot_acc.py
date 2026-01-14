@@ -69,7 +69,7 @@ def main():
     args = parser.parse_args()
     df = pd.read_csv(args.dataset)
 
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_a(df)
     print(df)
 

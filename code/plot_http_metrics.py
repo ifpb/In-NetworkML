@@ -40,7 +40,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
-    plt.rcParams.update({"font.size": 14})
+    plt.rcParams.update({"font.size": 16})
     plot_figure(df1, df2, metric)
     print(df1)
 
