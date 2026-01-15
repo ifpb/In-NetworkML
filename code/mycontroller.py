@@ -1,13 +1,32 @@
 #!/usr/bin/env python
 
+import argparse
 import re
 import time
 
 from create_p4 import generate_p4
 from datatypes import get_datatype
 
-inputfile = "./tree.txt"
-actionfile = "./action.txt"
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-t",
+    "--treefile",
+    default="./tree.txt",
+    help="Path to tree file",
+    required=False,
+)
+parser.add_argument(
+    "-a",
+    "--actionfile",
+    default="./action.txt",
+    help="Path to action file",
+    required=False,
+)
+
+args = parser.parse_args()
+
+inputfile = args.treefile
+actionfile = args.actionfile
 
 
 def find_action(textfile):
