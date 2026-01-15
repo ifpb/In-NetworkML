@@ -108,6 +108,7 @@ SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
 if [[ "$1" == "-d" ]]; then
 	treefile="${SCRIPT_DIR}/code/tree.d$2.txt"
+	TREE_DEPTH=$2
 	shift 2
 	if [[ ! -f $treefile ]]; then
 		log_error "a treefile with this depth does not exists"
@@ -158,7 +159,7 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${DURATION_STRING}_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
 else
   OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
 fi
