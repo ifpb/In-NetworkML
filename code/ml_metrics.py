@@ -49,17 +49,17 @@ def handle_exit(sig, frame):
 class Metrics:
     def __init__(self, initialMatrix=None):
         if initialMatrix:
-            if len(initialMatrix) != 3 or any(len(x) != 3 for x in initialMatrix):
-                raise ValueError("Matriz não é 3x3")
+            if len(initialMatrix) != 4 or any(len(x) != 4 for x in initialMatrix):
+                raise ValueError("Matriz não é 4x4")
             self.cmatrix = [list(x) for x in initialMatrix]
         else:
-            self.cmatrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+            self.cmatrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
     def update(self, y_true, curr_pred):
-        if y_true < 0 or y_true > 2:
-            raise ValueError("y_true precisa ser 0, 1 ou 2")
-        if len(curr_pred) != 3:
-            raise ValueError("curr_pred precisa ser de tamanho 3")
+        if y_true < 0 or y_true > 3:
+            raise ValueError("y_true precisa ser 0, 1, 2 ou 3")
+        if len(curr_pred) != 4:
+            raise ValueError("curr_pred precisa ser de tamanho 4")
 
         self.cmatrix[y_true] = curr_pred.copy()
 
@@ -131,6 +131,8 @@ elif args.class_name == "file_transfer":
     class_num = 1
 elif args.class_name == "video":
     class_num = 2
+elif args.class_name == "dash":
+    class_num = 3
 else:
     raise ValueError("Nome de classe invalido")
 
@@ -161,7 +163,7 @@ if not Path(FILE).is_file():
 with open(FILE, "a") as f:
     while True:
         sleep(1)
-        pred = [get_switch_results_counter(x) for x in range(3)]
+        pred = [get_switch_results_counter(x) for x in range(4)]
         if all(x == 0 for x in pred):
             continue
 
