@@ -41,13 +41,13 @@ def plot_figure(dataset1, dataset2, metric='classfication_time', scenario='undef
     plt.figure(dpi=300)
     plt.plot(dataset1['timestamp'], dataset1[metric].rolling(50).mean(), label=label_color["wml"]["name"], color=label_color['wml']["color"])
     plt.plot(dataset2['timestamp'], dataset2[metric].rolling(50).mean(), label=label_color["ml"]["name"], color=label_color['ml']["color"])
-    plt.axhline(y=dataset1[metric].mean(), color=label_color["wml"]["color"], linestyle="--", label="Average WML")
-    plt.axhline(y=dataset2[metric].mean(), color=label_color["ml"]["color"], linestyle="--", label="Average ML")
-    plt.ylabel("Forwarding time (microseconds)")
-    plt.xlabel("Time (seconds)")
+    plt.axhline(y=dataset1[metric].mean(), color=label_color["wml"]["color"], linestyle="--", label="AVG WML")
+    plt.axhline(y=dataset2[metric].mean(), color=label_color["ml"]["color"], linestyle="--", label="AVG ML")
+    plt.ylabel("Forwarding time (μs)")
+    plt.xlabel("Runtime (seconds)")
     plt.tight_layout()
     plt.grid(alpha=0.3)
-    plt.legend(ncols=2)
+    plt.legend(ncols=2, fontsize=16)
     plt.savefig("classification_time.png")
 
 
@@ -71,7 +71,7 @@ def main():
     df1 = insert_classification_time(df1)
     df2 = insert_classification_time(df2)
 
-    plt.rcParams.update({"font.size": 16})
+    plt.rcParams.update({"font.size": 20})
     plot_figure(df1, df2, metric, scenario)
     print(df1)
 

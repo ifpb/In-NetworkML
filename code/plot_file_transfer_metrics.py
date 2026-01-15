@@ -16,8 +16,9 @@ def plot_figure(dataset1, dataset2):
     plt.plot(dataset1['timestamp'], dataset1[metric].rolling(10).mean(), label=label_color["wml"]["name"], color=label_color["wml"]["color"])
     plt.plot(dataset2['timestamp'], dataset2[metric].rolling(10).mean(), label=label_color["ml"]["name"], color=label_color["ml"]["color"])
     plt.ylabel("Flow Completion Time (seconds)")
-    plt.xlabel('Time (seconds)')
+    plt.xlabel('Runtime (seconds)')
     #plt.title(f'File Transfer {metric}')
+    plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.legend()
     plt.savefig('file_transfer_metrics.png')
@@ -35,7 +36,7 @@ def main():
     shift_timestamp(df1, df1['timestamp'][0])
     shift_timestamp(df2, df2['timestamp'][0])
 
-    plt.rcParams.update({"font.size": 16})
+    plt.rcParams.update({"font.size": 20})
     plot_figure(df1, df2)
     print(df1)
 

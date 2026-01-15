@@ -54,7 +54,7 @@ def plot_a(dataset):
 
     #plt.axhline(y=dataset["recall"].mean(), color="tab:orange", linestyle="--", label="Média")
     plt.ylabel("Recall")
-    plt.xlabel("Time (Seconds)")
+    plt.xlabel("Runtime (Seconds)")
     plt.tight_layout()
     plt.legend()
     plt.grid(alpha=0.3)
@@ -69,7 +69,7 @@ def main():
     args = parser.parse_args()
     df = pd.read_csv(args.dataset)
 
-    plt.rcParams.update({"font.size": 16})
+    plt.rcParams.update({"font.size": 20})
     plot_a(df)
     print(df)
 

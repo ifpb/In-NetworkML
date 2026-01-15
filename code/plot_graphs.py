@@ -59,7 +59,7 @@ def plot_iperf(data, path):
         label=label_color["wml"]["name"],
     )
     plt.ylabel("Throughput (mbps)")
-    plt.xlabel("Time (s)")
+    plt.xlabel("Runtime (s)")
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()
@@ -74,7 +74,7 @@ def main(args):
     qtd_linhas = min(len(ml), len(sml)) - 1
     data["ML"] = ml[:qtd_linhas]
     data["Sem ML"] = sml[:qtd_linhas]
-    plt.rcParams.update({"font.size": 16})
+    plt.rcParams.update({"font.size": 20})
     plot_iperf(data, "./")
 
 
