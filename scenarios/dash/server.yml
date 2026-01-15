@@ -1,0 +1,51 @@
+- name: Configure web server
+  hosts: server
+  become: yes
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Ensure dir "/etc/nginx" is created
+      file:
+        path: "/etc/nginx"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure dir "/var/www/html/videos" is created
+      file:
+        path: "/var/www/html/videos"
+        state: directory
+        mode: "0755"
+
+    - name: Configure nginx
+      copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+        mode: "644"
+
+    - name: Configure mime
+      copy:
+        src: ./mime.types
+        dest: /etc/nginx/mime.types
+        mode: "644"
+
+    - name: Copy Video files
+      copy:
+        src: ./dash-videos/
+        dest: /var/www/html/videos/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes

@@ -1,0 +1,55 @@
+- name: Configure mpeg-dash player
+  hosts: client
+  become: yes
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
+    - name: Install Nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Clone Mpegdash Player Repo
+      ansible.builtin.git:
+        repo: "https://github.com/leandrocalmeida/player-mpegdash"
+        dest: "/home/vagrant/player-mpegdash"
+        version: "main"  # branch, tag ou commit
+        clone: yes
+        update: no  # não faz pull se já existir
+        force: no
+
+    - name: Install Player Dependencies
+      command: "npm install"
+      args:
+        chdir: "/home/vagrant/player-mpegdash"
+
+    - name: Configure player to use virtual server
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/player-mpegdash/index.html"
+        regexp: '^url*'
+        line: '        url = "http://192.168.56.102/videos/worldcup2002-mp4.mpd";'
+
+    - name: Configure player to use chromium browser by default
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/player-mpegdash/index.js"
+        regexp: '^google-chrome'
+        line: "      '/usr/bin/chromium';"
+
+    - name: Configure player to use time passed through extra vars
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/player-mpegdash/index.js"
+        regexp: '^const videoDuration*'
+        line: '  const videoDuration = {{ duration }} * 1000;'
