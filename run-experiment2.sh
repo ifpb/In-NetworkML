@@ -158,11 +158,8 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   ansible-playbook "${SCENARIO_DIR}/client.yml" --extra-vars "duration=${DURATION}"
 fi
 
-if [[ "$USE_ML" == 1 ]]; then
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
-else
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
-fi
+OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
+OUTPUT_DIR_CURR="${SCRIPT_DIR}/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
 
 export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
@@ -202,7 +199,7 @@ cleanup() {
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
 
-  mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR}/dash_accuracy.csv"
+  mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
 
   exit 0
 }
@@ -227,7 +224,7 @@ START_TIME=$(date +%s)
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp >/dev/null
-  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "PCAP_DIR=${OUTPUT_DIR} CAP_FILE='packets.pcap' DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" h1 -X "PCAP_DIR=${OUTPUT_DIR} CAP_FILE='packets.pcap' DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
   CLIENT_PID=$!
   while [[ ! -f "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; do
     log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"
