@@ -7,19 +7,21 @@
       apt:
         update_cache: yes
 
-    - name: Install Git
+    - name: Install Necessary Packages
       apt:
-        name: git
-        state: present
-
-    - name: Install Nodejs
-      apt:
-        name: nodejs
-        state: present
-
-    - name: Install npm
-      apt:
-        name: npm
+        pkg: 
+          - git
+          - nodejs
+          - npm
+          - xauth
+          - x11-utils
+          - libx11-6
+          - libxext6
+          - libxrender1
+          - libxfixes3
+          - libxi6
+          - libxtst6
+          - chromium
         state: present
 
     - name: Clone Mpegdash Player Repo
@@ -36,20 +38,32 @@
       args:
         chdir: "/home/vagrant/player-mpegdash"
 
+    - name: Configure SSH to enable X11 forwarding
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: '^#X11UseLocalhost*'
+        line: 'X11UseLocalhost yes'
+
+    - name: Configure SSH DisplayOffset
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: '^#X11DisplayOffset*'
+        line: 'X11DisplayOffset 10'
+
     - name: Configure player to use virtual server
       ansible.builtin.lineinfile:
         path: "/home/vagrant/player-mpegdash/index.html"
-        regexp: '^url*'
+        regexp: '^        url = "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd";'
         line: '        url = "http://192.168.56.102/videos/worldcup2002-mp4.mpd";'
 
     - name: Configure player to use chromium browser by default
       ansible.builtin.lineinfile:
         path: "/home/vagrant/player-mpegdash/index.js"
-        regexp: '^google-chrome'
-        line: "      '/usr/bin/chromium';"
+        regexp: "^      '/usr/bin/google-chrome',"
+        line: "      '/usr/bin/chromium',"
 
     - name: Configure player to use time passed through extra vars
       ansible.builtin.lineinfile:
         path: "/home/vagrant/player-mpegdash/index.js"
-        regexp: '^const videoDuration*'
+        regexp: '^  const videoDuration*'
         line: '  const videoDuration = {{ duration }} * 1000;'

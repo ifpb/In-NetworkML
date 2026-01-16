@@ -38,11 +38,17 @@
 
     - name: Copy Video files
       copy:
-        src: ./dash-videos/
+        src: ./dash_videos/
         dest: /var/www/html/videos/
         owner: www-data
         group: www-data
         mode: '0644'
+
+    - name: Remove Default NGINX Website
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      ignore_errors: yes
 
     - name: Restart nginx
       service:
