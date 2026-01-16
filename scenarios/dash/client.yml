@@ -39,6 +39,14 @@
       args:
         chdir: "/home/vagrant/player-mpegdash"
 
+    - name: Change owner of Player Repo
+      ansible.builtin.file:
+        path: "/home/vagrant/player-mpegdash"
+        state: "directory"
+        recurse: true
+        owner: "vagrant"
+        group: "vagrant"
+
     - name: Configure SSH to enable X11 forwarding
       ansible.builtin.lineinfile:
         path: "/etc/ssh/sshd_config"
@@ -56,6 +64,7 @@
         path: "/home/vagrant/player-mpegdash/index.html"
         regexp: '^        url = "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd";'
         line: '        url = "http://192.168.56.102/videos/worldcup2002-mp4.mpd";'
+        backrefs: true
 
     - name: Configure player to use chromium browser by default
       ansible.builtin.lineinfile:
@@ -69,3 +78,4 @@
         path: "/home/vagrant/player-mpegdash/index.js"
         regexp: '^  const videoDuration*'
         line: '  const videoDuration = {{ duration }} * 1000;'
+        backrefs: true
