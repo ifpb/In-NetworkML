@@ -1,20 +1,21 @@
 from datatypes import *
 
+
 def generate_match_action(feature, index):
     match = f"\taction set_actionselect{index}(bit<14> featurevalue{index})" + " {\n"
-    match += f"\t\tmeta.action_select{index} = featurevalue{index};\n" 
-    match += "\t}\n" 
-    match += f"\ttable feature{index}_exact" + " {\n" 
-    match += "\t\tkey = {\n" 
-    match += f"\t\t\tmeta.{translate_name(feature)}: range ;\n" + "\t\t}\n" 
-    match += "\t\tactions = {\n" 
-    match += f"\t\t\tNoAction;\n\t\t\tset_actionselect{index};\n" 
-    match += "\t\t}\n\t\tsize = 1024;\n" 
+    match += f"\t\tmeta.action_select{index} = featurevalue{index};\n"
+    match += "\t}\n"
+    match += f"\ttable feature{index}_exact" + " {\n"
+    match += "\t\tkey = {\n"
+    match += f"\t\t\tmeta.{translate_name(feature)}: range ;\n" + "\t\t}\n"
+    match += "\t\tactions = {\n"
+    match += f"\t\t\tNoAction;\n\t\t\tset_actionselect{index};\n"
+    match += "\t\t}\n\t\tsize = 1024;\n"
     match += "\t}\n"
 
-
     return match
-          
+
+
 def generate_classify_exact(features):
     clex = """\ttable classify_exact {
             key = {"""
@@ -29,10 +30,11 @@ def generate_classify_exact(features):
     clex += "   }\n"
     return clex
 
+
 def generate_extract_features(features):
     gef = "\n\taction extract_features() {\n"
     for i in range(len(features)):
-        if (features[i] == 'ipi'):
+        if features[i] == "ipi":
             gef += """
       timestamp_t ipi = 0;
       int<48> diff_ts = 0;
@@ -62,6 +64,7 @@ def generate_extract_features(features):
     gef += "\t}\n"
 
     return gef
+
 
 def generate_p4(features):
     # Template inicial nunca muda
@@ -256,7 +259,7 @@ def generate_p4(features):
 
         // register<bit<3>>(6) results_reg;
 
-        counter(3, CounterType.packets) resultCounter;
+        counter(4, CounterType.packets) resultCounter;
 
         action drop() {
             mark_to_drop(standard_metadata);
@@ -426,11 +429,11 @@ def generate_p4(features):
     MyDeparser()
     ) main;
     """
-    with open('decision_tree.p4', 'w') as f:
+    with open("decision_tree.p4", "w") as f:
         f.write(init)
 
         for i in range(len(features)):
-            f.write(generate_match_action(features[i], i+1))
+            f.write(generate_match_action(features[i], i + 1))
 
         f.write(setresult)
         f.write(generate_classify_exact(features))
