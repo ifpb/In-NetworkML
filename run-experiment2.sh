@@ -107,24 +107,24 @@ SCENARIO="dash"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
 if [[ "$1" == "-d" ]]; then
-	treefile="${SCRIPT_DIR}/code/tree.d$2.txt"
-	TREE_DEPTH=$2
-	shift 2
-	if [[ ! -f $treefile ]]; then
-		log_error "a treefile with this depth does not exists"
-		exit 1
-	fi
+  treefile="${SCRIPT_DIR}/code/tree.d$2.txt"
+  TREE_DEPTH=$2
+  shift 2
+  if [[ ! -f $treefile ]]; then
+    log_error "a treefile with this depth does not exists"
+    exit 1
+  fi
 else
-	log_error "tree depth required. Use -d <depth>"
-	exit 1
+  log_error "tree depth required. Use -d <depth>"
+  exit 1
 fi
 
 pushd "${SCRIPT_DIR}/code" >/dev/null
 
 python3 mycontroller.py -t ${treefile}
 if [[ "$?" -ne 0 ]]; then
-	log_error "Tree compilation failed"
-	exit 1
+  log_error "Tree compilation failed"
+  exit 1
 fi
 
 popd >/dev/null
@@ -155,7 +155,7 @@ fi
 
 if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   log_info "Rodando playbook do cliente"
-  ansible-playbook "${SCENARIO_DIR}/client.yml"
+  ansible-playbook "${SCENARIO_DIR}/client.yml --extra-vars 'duration=${DURATION}'"
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
@@ -227,7 +227,7 @@ START_TIME=$(date +%s)
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
   scp -F "${SCRIPT_DIR}/ssh_config" "${SCENARIO_DIR}/client.sh" h1:/tmp >/dev/null
-  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo PCAP_DIR=${OUTPUT_DIR} CAP_FILE='packets.pcap' DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" h1 "PCAP_DIR=${OUTPUT_DIR} CAP_FILE='packets.pcap' DURATION=$DURATION bash /tmp/client.sh 2>/vagrant/logs/client.err | tee /vagrant/logs/client.log" &
   CLIENT_PID=$!
   while [[ ! -f "$CLIENT_PID" ]] && kill -0 $CLIENT_PID 2>/dev/null; do
     log_info "Tempo decorrido: $(elapsed_time)/$(total_to_kms $DURATION)"

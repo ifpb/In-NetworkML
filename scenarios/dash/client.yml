@@ -9,7 +9,7 @@
 
     - name: Install Necessary Packages
       apt:
-        pkg: 
+        pkg:
           - git
           - nodejs
           - npm
