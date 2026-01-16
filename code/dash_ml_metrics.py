@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import signal
 import subprocess
 import sys
 from datetime import datetime
@@ -10,7 +9,6 @@ from pathlib import Path
 from time import sleep
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-cmatrix_path = "{}/dash_cmatrix".format(script_dir)
 
 
 def get_switch_results_counter(class_num):
@@ -35,15 +33,6 @@ def get_switch_results_counter(class_num):
         return int(result.strip())
     except ValueError:
         return 0
-
-
-def handle_exit(sig, frame):
-    with open(cmatrix_path, "w") as f:
-        for linha in metricas.cmatrix:
-            f.write(" ".join(map(str, linha)))
-            f.write("\n")
-
-    sys.exit(0)
 
 
 class Metrics:
@@ -137,20 +126,7 @@ elif args.class_name == "dash":
 else:
     raise ValueError("Nome de classe invalido")
 
-### Salva a cmatrix antes de fechar ###
-signal.signal(signal.SIGINT, handle_exit)
-signal.signal(signal.SIGTERM, handle_exit)
-
-try:
-    cmatrix = []
-    with open(cmatrix_path, "r") as f:
-        for i, line in enumerate(f):
-            line = line.strip()
-            cmatrix.append(list(map(int, line.split())))
-    metricas = Metrics(cmatrix)
-except FileNotFoundError:
-    print("ARQUIVO NAO ENCONTRADO")
-    metricas = Metrics()
+metricas = Metrics()
 
 FILE = "{}/dash_accuracy.csv".format(args.output_dir)
 
