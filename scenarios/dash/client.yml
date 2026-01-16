@@ -22,6 +22,7 @@
           - libxi6
           - libxtst6
           - chromium
+          - tcpdump
         state: present
 
     - name: Clone Mpegdash Player Repo
