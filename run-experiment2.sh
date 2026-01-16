@@ -155,7 +155,7 @@ fi
 
 if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   log_info "Rodando playbook do cliente"
-  ansible-playbook "${SCENARIO_DIR}/client.yml --extra-vars 'duration=${DURATION}'"
+  ansible-playbook "${SCENARIO_DIR}/client.yml" --extra-vars "duration=${DURATION}"
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
