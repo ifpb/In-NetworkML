@@ -181,7 +181,7 @@ ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resou
 SWITCH_PID=$!
 
 if [[ "$USE_ML" == 1 ]]; then
-  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/dash_ml_metrics.py $SCENARIO" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/dash_ml_metrics.py $SCENARIO ${OUTPUT_DIR}" &
 fi
 
 cleanup() {
@@ -199,7 +199,7 @@ cleanup() {
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
 
-  mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
+  # mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
 
   exit 0
 }

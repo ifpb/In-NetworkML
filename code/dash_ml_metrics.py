@@ -122,6 +122,7 @@ class Metrics:
 parser = argparse.ArgumentParser()
 
 parser.add_argument("class_name", help="class name")
+parser.add_argument("output_dir", help="output dir")
 
 args = parser.parse_args()
 
@@ -151,7 +152,7 @@ except FileNotFoundError:
     print("ARQUIVO NAO ENCONTRADO")
     metricas = Metrics()
 
-FILE = "{}/dash_accuracy.csv".format(script_dir)
+FILE = "{}/dash_accuracy.csv".format(args.output_dir)
 
 if not Path(FILE).is_file():
     with open(FILE, "w+") as f:
