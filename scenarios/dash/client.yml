@@ -62,6 +62,7 @@
         path: "/home/vagrant/player-mpegdash/index.js"
         regexp: "^      '/usr/bin/google-chrome',"
         line: "      '/usr/bin/chromium',"
+        backrefs: true
 
     - name: Configure player to use time passed through extra vars
       ansible.builtin.lineinfile:
