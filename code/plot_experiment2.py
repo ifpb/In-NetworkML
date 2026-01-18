@@ -52,7 +52,7 @@ def plot_dash_metrics(dataset: pd.DataFrame):
 
     sns.boxplot(dataset)
 
-    plt.ylabel("Metrics")
+    plt.ylabel("FrameRate (FPS)")
     plt.xlabel("Model complexity")
     plt.tight_layout()
     plt.grid(alpha=0.3)
@@ -69,28 +69,43 @@ def main():
     df_acc = pd.DataFrame()
     df_met = pd.DataFrame()
 
+    dash_metrics_column_names = [
+        "time",
+        "bufferLevel",
+        "frameRate",
+        "bitrate",
+        "resolution",
+        "calculatedBitrate",
+    ]
+
     for i, dir in enumerate(args.dirs):
         if not dir.endswith("/"):
             dir += "/"
 
         swm = pd.read_csv(f"{dir}system_metrics.csv")
         acc = pd.read_csv(f"{dir}dash_accuracy.csv")
-        met = pd.read_csv(f"{dir}logs.txt")
+        met = pd.read_csv(
+            f"{dir}logs.txt", sep=";", header=None, names=dash_metrics_column_names
+        )
 
         df_cpu[i + 1] = swm["cpu_total"]
         df_mem[i + 1] = swm["mem_used"]
 
-        df_acc[i+1] = acc["recall"]
+        df_acc[i + 1] = acc["recall"]
 
-        df_met[i+1] = met["fps"]
+        df_met[i + 1] = met["frameRate"]
 
     df_cpu = df_cpu.dropna()
     df_mem = df_mem.dropna()
+    df_acc = df_acc.dropna()
+    df_met = df_met.dropna()
 
     plt.rcParams.update({"font.size": 20})
 
     plot_switch_cpu_total(df_cpu)
     plot_switch_mem_used(df_mem)
+    plot_model_accuracy(df_acc)
+    plot_dash_metrics(df_met)
 
 
 if __name__ == "__main__":
