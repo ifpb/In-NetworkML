@@ -12,7 +12,14 @@ OUTPUT_PREFIX = "experiment2"
 def plot_switch_cpu_total(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    sns.boxplot(dataset)
+    sns.boxplot(
+        dataset,
+        x="complexity",
+        y="cpu_total",
+        hue="complexity",
+        palette="tab10",
+        legend=False,
+    )
 
     plt.ylabel("CPU Usage")
     plt.xlabel("Model complexity")
@@ -26,7 +33,14 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
 
     plt.yscale("log")
 
-    sns.boxplot(dataset)
+    sns.boxplot(
+        dataset,
+        x="complexity",
+        y="mem_used",
+        hue="complexity",
+        palette="tab10",
+        legend=False,
+    )
 
     plt.ylabel("Memory Usage (KiB)")
     plt.xlabel("Model complexity")
@@ -38,7 +52,14 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
 def plot_model_accuracy(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    sns.boxplot(dataset)
+    sns.boxplot(
+        dataset,
+        x="complexity",
+        y="recall",
+        hue="complexity",
+        palette="tab10",
+        legend=False,
+    )
 
     plt.ylabel("Accuracy")
     plt.xlabel("Model complexity")
@@ -50,7 +71,31 @@ def plot_model_accuracy(dataset: pd.DataFrame):
 def plot_dash_metrics(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    sns.boxplot(dataset)
+    # sns.ecdfplot(
+    #     dataset,
+    #     x="frameRate",
+    #     hue="complexity",
+    #     palette="tab10",
+    #     legend=False,
+    # )
+
+    depths = dataset["complexity"].unique()
+
+    for depth in depths:
+        subset = dataset[dataset["complexity"] == depth]
+        sns.ecdfplot(
+            data=subset,
+            x="frameRate",
+            label=str(depth),
+        )
+
+    plt.legend(
+        loc="upper center",
+        title="Complexity",
+        ncols=2,
+        fontsize=14,
+        title_fontsize=16,
+    )
 
     plt.ylabel("FrameRate (FPS)")
     plt.xlabel("Model complexity")
@@ -64,10 +109,6 @@ def main():
     parser.add_argument("dirs", nargs="+", help="Experiment result dirs", type=str)
 
     args = parser.parse_args()
-    df_cpu = pd.DataFrame()
-    df_mem = pd.DataFrame()
-    df_acc = pd.DataFrame()
-    df_met = pd.DataFrame()
 
     dash_metrics_column_names = [
         "time",
@@ -78,6 +119,10 @@ def main():
         "calculatedBitrate",
     ]
 
+    swm_dfs = []
+    acc_dfs = []
+    met_dfs = []
+
     for i, dir in enumerate(args.dirs):
         if not dir.endswith("/"):
             dir += "/"
@@ -85,26 +130,35 @@ def main():
         swm = pd.read_csv(f"{dir}system_metrics.csv")
         acc = pd.read_csv(f"{dir}dash_accuracy.csv")
         met = pd.read_csv(
-            f"{dir}logs.txt", sep=";", header=None, names=dash_metrics_column_names
+            f"{dir}logs.txt",
+            sep=";",
+            header=None,
+            names=dash_metrics_column_names,
+            parse_dates=["time"],
         )
 
-        df_cpu[i + 1] = swm["cpu_total"]
-        df_mem[i + 1] = swm["mem_used"]
+        swm["complexity"] = i + 1
+        acc["complexity"] = i + 1
+        met["complexity"] = i + 1
 
-        df_acc[i + 1] = acc["recall"]
+        swm_dfs.append(swm)
+        acc_dfs.append(acc)
+        met_dfs.append(met)
 
-        df_met[i + 1] = met["frameRate"]
+    df_swm = pd.concat(swm_dfs, ignore_index=True)
+    df_acc = pd.concat(acc_dfs, ignore_index=True)
+    df_met = pd.concat(met_dfs, ignore_index=True)
 
-    df_cpu = df_cpu.dropna()
-    df_mem = df_mem.dropna()
+    df_swm = df_swm.dropna()
     df_acc = df_acc.dropna()
     df_met = df_met.dropna()
 
     plt.rcParams.update({"font.size": 20})
 
-    plot_switch_cpu_total(df_cpu)
-    plot_switch_mem_used(df_mem)
+    plot_switch_cpu_total(df_swm)
+    plot_switch_mem_used(df_swm)
     plot_model_accuracy(df_acc)
+    # plt.rcParams.update({"font.size": 14})
     plot_dash_metrics(df_met)
 
 
