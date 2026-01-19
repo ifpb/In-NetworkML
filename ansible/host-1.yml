@@ -9,3 +9,6 @@
     - name: Adjust arp table
       command: arp -i eth1 -s 192.168.56.102 080088112212
       become: yes
+    - name: Adjust arp table
+      command: arp -i eth1 -s 192.168.56.103 080088112213
+      become: yes
