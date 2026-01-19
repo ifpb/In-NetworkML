@@ -68,7 +68,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     plt.savefig(f"{OUTPUT_PREFIX}_accuracy.png")
 
 
-def plot_dash_metrics(dataset: pd.DataFrame):
+def plot_dash_metrics_fps(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
     # sns.ecdfplot(
@@ -101,7 +101,43 @@ def plot_dash_metrics(dataset: pd.DataFrame):
     plt.xlabel("Model complexity")
     plt.tight_layout()
     plt.grid(alpha=0.3)
-    plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics.png")
+    plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_fps.png")
+
+
+def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
+    plt.figure(dpi=300)
+
+    # sns.ecdfplot(
+    #     dataset,
+    #     x="frameRate",
+    #     hue="complexity",
+    #     palette="tab10",
+    #     legend=False,
+    # )
+
+    depths = dataset["complexity"].unique()
+
+    for depth in depths:
+        subset = dataset[dataset["complexity"] == depth]
+        sns.ecdfplot(
+            data=subset,
+            x="bufferLevel",
+            label=str(depth),
+        )
+
+    plt.legend(
+        loc="upper center",
+        title="Complexity",
+        ncols=2,
+        fontsize=14,
+        title_fontsize=16,
+    )
+
+    plt.ylabel("BufferLevel")
+    plt.xlabel("Model complexity")
+    plt.tight_layout()
+    plt.grid(alpha=0.3)
+    plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel.png")
 
 
 def main():
@@ -158,8 +194,8 @@ def main():
     plot_switch_cpu_total(df_swm)
     plot_switch_mem_used(df_swm)
     plot_model_accuracy(df_acc)
-    # plt.rcParams.update({"font.size": 14})
-    plot_dash_metrics(df_met)
+    plot_dash_metrics_fps(df_met)
+    plot_dash_metrics_bufferlevel(df_met)
 
 
 if __name__ == "__main__":
