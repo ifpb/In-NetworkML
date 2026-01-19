@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import statistics
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -76,6 +77,12 @@ def main(args):
     data["Sem ML"] = sml[:qtd_linhas]
     plt.rcParams.update({"font.size": 20})
     plot_iperf(data, "./")
+
+    wml_median = statistics.median(sml)
+    ml_median = statistics.median(ml)
+    diff_percentage = (wml_median - ml_median) / ml_median * 100
+    with open("throughput_diff", "a+") as f:
+        f.write(f"{diff_percentage}\n")
 
 
 if __name__ == "__main__":

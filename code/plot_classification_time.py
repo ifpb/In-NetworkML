@@ -43,7 +43,7 @@ def plot_figure(dataset1, dataset2, metric='classfication_time', scenario='undef
     plt.plot(dataset2['timestamp'], dataset2[metric].rolling(50).mean(), label=label_color["ml"]["name"], color=label_color['ml']["color"])
     plt.axhline(y=dataset1[metric].mean(), color=label_color["wml"]["color"], linestyle="--", label="AVG WML")
     plt.axhline(y=dataset2[metric].mean(), color=label_color["ml"]["color"], linestyle="--", label="AVG ML")
-    plt.ylabel("Forwarding time (μs)")
+    plt.ylabel("Queue delay (μs)")
     plt.xlabel("Runtime (seconds)")
     plt.tight_layout()
     plt.grid(alpha=0.3)
@@ -73,7 +73,12 @@ def main():
 
     plt.rcParams.update({"font.size": 20})
     plot_figure(df1, df2, metric, scenario)
-    print(df1)
+
+    wml_median = df1["classification_time"].median()
+    ml_median = df2["classification_time"].median()
+    diff_percentage = (wml_median - ml_median) / ml_median * 100
+    with open("queue_delay_diff", "a+") as f:
+        f.write(f"{diff_percentage}\n")
 
 
 if __name__ == "__main__":

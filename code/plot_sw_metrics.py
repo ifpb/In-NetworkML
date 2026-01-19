@@ -98,5 +98,17 @@ def main():
     # plot_figure(df1, df2, "mem_used", scenario)
     print(df1)
 
+    wml_median = df1["cpu_total"].median()
+    ml_median = df2["cpu_total"].median()
+    diff_percentage = (wml_median - ml_median) / ml_median * 100
+    with open("cpu_total_diff", "a+") as f:
+        f.write(f"{diff_percentage}\n")
+
+    wml_median = df1["mem_used"].median()
+    ml_median = df2["mem_used"].median()
+    diff_percentage = (wml_median - ml_median) / ml_median * 100
+    with open("mem_used_diff", "a+") as f:
+        f.write(f"{diff_percentage}\n")
+
 if __name__ == '__main__':
     main()
