@@ -74,6 +74,12 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define :h3 do |h3|
+
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 4096
+      v.cpus = 4
+    end
+
     h3.vm.hostname = "h3"
     h3.vm.network "private_network", ip: "192.168.56.103", mac: "080088112213",
         virtualbox__intnet: "S1-H1"
