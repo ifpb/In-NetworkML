@@ -1,14 +1,72 @@
 ---
-- hosts: all
+- hosts: h3
 
   tasks:
     - name: Install python-Scapy and dependencies
       apt: name={{ item }} update_cache=yes
       loop: ["python3-scapy", "net-tools", "iperf3"]
       become: yes
+
     - name: Adjust arp table
       command: arp -i eth1 -s 192.168.56.101 080088112211
       become: yes
+
     - name: Adjust arp table
       command: arp -i eth1 -s 192.168.56.102 080088112212
+      become: yes
+
+    - name: Install Necessary Packages
+      apt:
+        pkg:
+          - git
+          - vim
+          - vlc
+          - xauth
+          - x11-utils
+          - libx11-6
+          - libxext6
+          - libxrender1
+          - libxfixes3
+          - libxi6
+          - libxtst6
+        state: present
+      become: yes
+
+    - name: Clone Wave
+      ansible.builtin.git:
+        repo: "https://github.com/leandrocalmeida/wave"
+        dest: "/home/vagrant/wave"
+        version: "master"
+        clone: yes
+        update: no
+        force: no
+
+    - name: Configure Wave Target Server
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/wave/run_wave.sh"
+        regexp: '^TARGET=*'
+        line: 'TARGET="http://192.168.56.102/videos/worldcup2002-mp4.mpd"'
+        backrefs: true
+
+    - name: Configure Loadgen Location
+      ansible.builtin.lineinfile:
+        path: "/home/vagrant/wave/run_wave.sh"
+        regexp: '^PATH_LOADGEN=*'
+        line: 'PATH_LOADGEN="loadGen"'
+        backrefs: true
+
+    - name: Configure SSH to enable X11 forwarding
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: '^#X11UseLocalhost*'
+        line: 'X11UseLocalhost yes'
+        backrefs: true
+      become: yes
+
+    - name: Configure SSH DisplayOffset
+      ansible.builtin.lineinfile:
+        path: "/etc/ssh/sshd_config"
+        regexp: '^#X11DisplayOffset*'
+        line: 'X11DisplayOffset 10'
+        backrefs: true
       become: yes
