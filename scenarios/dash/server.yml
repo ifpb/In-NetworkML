@@ -43,6 +43,7 @@
         owner: www-data
         group: www-data
         mode: '0644'
+        force: no
 
     - name: Remove Default NGINX Website
       ansible.builtin.file:
