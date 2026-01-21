@@ -97,8 +97,8 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
         title_fontsize=16,
     )
 
-    plt.ylabel("FrameRate (FPS)")
-    plt.xlabel("Model complexity")
+    plt.ylabel("Proportion")
+    plt.xlabel("FrameRate (FPS)")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_fps.png")
@@ -133,8 +133,8 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
         title_fontsize=16,
     )
 
-    plt.ylabel("BufferLevel")
-    plt.xlabel("Model complexity")
+    plt.ylabel("Proportion")
+    plt.xlabel("BufferLevel")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel.png")
