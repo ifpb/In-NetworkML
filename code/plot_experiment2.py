@@ -90,7 +90,7 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
         )
 
     plt.legend(
-        loc="upper center",
+        # loc="upper center",
         title="Complexity",
         ncols=2,
         fontsize=14,
@@ -126,7 +126,7 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
         )
 
     plt.legend(
-        loc="upper center",
+        # loc="upper center",
         title="Complexity",
         ncols=2,
         fontsize=14,
@@ -134,7 +134,7 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
     )
 
     plt.ylabel("Proportion")
-    plt.xlabel("BufferLevel")
+    plt.xlabel("BufferLevel (Seconds)")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel.png")
