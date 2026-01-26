@@ -1,9 +1,10 @@
 tos = [4];
-frame_size = [786];
-window = [508, 1399];
+frame_size = [791];
+window = [508, 2158];
 ipi = [];
-when tos<=4 and window<=508 and frame_size<=786 then 2
-when tos<=4 and window<=508 and frame_size>786 then 3
-when tos<=4 and window>508 and window<=1399 then 0
-when tos<=4 and window>508 and window>1399 then 3
+when tos<=4 and window<=508 and frame_size<=791 then 2
+when tos<=4 and window<=508 and frame_size>791 then 3
+when tos<=4 and window>508 and window<=2158 then 0
+when tos<=4 and window>508 and window>2158 then 3
 when tos>4 then 1
+
