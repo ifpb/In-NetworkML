@@ -33,6 +33,8 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
 
     plt.yscale("log")
 
+    dataset["mem_used"] = dataset["mem_used"] / 1024
+
     sns.boxplot(
         dataset,
         x="complexity",
@@ -42,7 +44,7 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
         legend=False,
     )
 
-    plt.ylabel("Memory Usage (KiB)")
+    plt.ylabel("Memory Usage (MB)")
     plt.xlabel("Model complexity")
     plt.tight_layout()
     plt.grid(alpha=0.3)
