@@ -70,6 +70,25 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     plt.savefig(f"{OUTPUT_PREFIX}_accuracy.png")
 
 
+def plot_queue_delay(dataset: pd.DataFrame):
+    plt.figure(dpi=300)
+
+    sns.boxplot(
+        dataset,
+        x="complexity",
+        y="deq_timedelta",
+        hue="complexity",
+        palette="tab10",
+        legend=False,
+    )
+
+    plt.ylabel("Queue Delay")
+    plt.xlabel("Model complexity")
+    plt.tight_layout()
+    plt.grid(alpha=0.3)
+    plt.savefig(f"{OUTPUT_PREFIX}_queue_delay.png")
+
+
 def plot_dash_metrics_fps(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
@@ -160,6 +179,7 @@ def main():
     swm_dfs = []
     acc_dfs = []
     met_dfs = []
+    tel_dfs = []
 
     for i, dir in enumerate(args.dirs):
         if not dir.endswith("/"):
@@ -167,6 +187,7 @@ def main():
 
         swm = pd.read_csv(f"{dir}system_metrics.csv")
         acc = pd.read_csv(f"{dir}dash_accuracy.csv")
+        tel = pd.read_csv(f"{dir}telemetry.csv")
         met = pd.read_csv(
             f"{dir}logs.txt",
             sep=";",
@@ -178,18 +199,23 @@ def main():
         swm["complexity"] = i + 1
         acc["complexity"] = i + 1
         met["complexity"] = i + 1
+        tel["complexity"] = i + 1
+
 
         swm_dfs.append(swm)
         acc_dfs.append(acc)
         met_dfs.append(met)
+        tel_dfs.append(tel)
 
     df_swm = pd.concat(swm_dfs, ignore_index=True)
     df_acc = pd.concat(acc_dfs, ignore_index=True)
     df_met = pd.concat(met_dfs, ignore_index=True)
+    df_tel = pd.concat(tel_dfs, ignore_index=True)
 
     df_swm = df_swm.dropna()
     df_acc = df_acc.dropna()
     df_met = df_met.dropna()
+    df_tel = df_tel.dropna()
 
     plt.rcParams.update({"font.size": 20})
 
@@ -198,7 +224,7 @@ def main():
     plot_model_accuracy(df_acc)
     plot_dash_metrics_fps(df_met)
     plot_dash_metrics_bufferlevel(df_met)
-
+    plot_queue_delay(df_tel)
 
 if __name__ == "__main__":
     main()
