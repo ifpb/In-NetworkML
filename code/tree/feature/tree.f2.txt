@@ -1,0 +1,35 @@
+tos = [4];
+window = [412, 455, 475, 479, 484, 488, 489, 490, 493, 495, 496, 499, 500, 501, 502, 508, 513, 774, 903, 926, 1055, 1076, 1155, 1961, 2143, 2147, 2150, 2156, 2167, 33659, 64700];
+when tos<=4 and window<=508 and window<=496 and window<=484 and window<=412 then 3
+when tos<=4 and window<=508 and window<=496 and window<=484 and window>412 and window<=475 and window<=455 then 0
+when tos<=4 and window<=508 and window<=496 and window<=484 and window>412 and window<=475 and window>455 then 0
+when tos<=4 and window<=508 and window<=496 and window<=484 and window>412 and window>475 and window<=479 then 3
+when tos<=4 and window<=508 and window<=496 and window<=484 and window>412 and window>475 and window>479 then 0
+when tos<=4 and window<=508 and window<=496 and window>484 and window<=490 and window<=489 and window<=488 then 0
+when tos<=4 and window<=508 and window<=496 and window>484 and window<=490 and window<=489 and window>488 then 0
+when tos<=4 and window<=508 and window<=496 and window>484 and window<=490 and window>489 then 3
+when tos<=4 and window<=508 and window<=496 and window>484 and window>490 and window<=495 and window<=493 then 0
+when tos<=4 and window<=508 and window<=496 and window>484 and window>490 and window<=495 and window>493 then 0
+when tos<=4 and window<=508 and window<=496 and window>484 and window>490 and window>495 then 0
+when tos<=4 and window<=508 and window>496 and window<=502 and window<=501 and window<=500 and window<=499 then 2
+when tos<=4 and window<=508 and window>496 and window<=502 and window<=501 and window<=500 and window>499 then 1
+when tos<=4 and window<=508 and window>496 and window<=502 and window<=501 and window>500 then 3
+when tos<=4 and window<=508 and window>496 and window<=502 and window>501 then 0
+when tos<=4 and window<=508 and window>496 and window>502 then 3
+when tos<=4 and window>508 and window<=2143 and window<=513 then 0
+when tos<=4 and window>508 and window<=2143 and window>513 and window<=1055 and window<=903 and window<=774 then 3
+when tos<=4 and window>508 and window<=2143 and window>513 and window<=1055 and window<=903 and window>774 then 3
+when tos<=4 and window>508 and window<=2143 and window>513 and window<=1055 and window>903 and window<=926 then 0
+when tos<=4 and window>508 and window<=2143 and window>513 and window<=1055 and window>903 and window>926 then 3
+when tos<=4 and window>508 and window<=2143 and window>513 and window>1055 and window<=1155 and window<=1076 then 0
+when tos<=4 and window>508 and window<=2143 and window>513 and window>1055 and window<=1155 and window>1076 then 3
+when tos<=4 and window>508 and window<=2143 and window>513 and window>1055 and window>1155 and window<=1961 then 0
+when tos<=4 and window>508 and window<=2143 and window>513 and window>1055 and window>1155 and window>1961 then 0
+when tos<=4 and window>508 and window>2143 and window<=2150 and window<=2147 then 3
+when tos<=4 and window>508 and window>2143 and window<=2150 and window>2147 then 3
+when tos<=4 and window>508 and window>2143 and window>2150 and window<=33659 and window<=2167 and window<=2156 then 3
+when tos<=4 and window>508 and window>2143 and window>2150 and window<=33659 and window<=2167 and window>2156 then 3
+when tos<=4 and window>508 and window>2143 and window>2150 and window<=33659 and window>2167 then 3
+when tos<=4 and window>508 and window>2143 and window>2150 and window>33659 and window<=64700 then 0
+when tos<=4 and window>508 and window>2143 and window>2150 and window>33659 and window>64700 then 0
+when tos>4 then 1

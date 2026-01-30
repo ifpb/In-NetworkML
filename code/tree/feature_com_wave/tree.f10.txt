@@ -1,0 +1,40 @@
+sport = [51, 1007, 37692, 53006, 53390];
+dport = [1007];
+tos = [4];
+id = [62594, 62605];
+frame_size = [72, 257];
+chksum = [19443, 23716, 59572];
+seq = [1177366432];
+ack = [85774780, 657363728, 2217206656, 3823880192];
+window = [508, 1569, 2158, 34883];
+ipi = [402, 570, 613, 31308];
+when tos<=4 and window<=508 and sport<=1007 and sport<=51 then 1
+when tos<=4 and window<=508 and sport<=1007 and sport>51 then 3
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi<=613 and ipi<=402 and frame_size<=257 then 0
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi<=613 and ipi<=402 and frame_size>257 then 3
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi<=613 and ipi>402 and ipi<=570 then 3
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi<=613 and ipi>402 and ipi>570 then 0
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi>613 and ack<=85774780 then 3
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi>613 and ack>85774780 and id<=62605 then 0
+when tos<=4 and window<=508 and sport>1007 and dport<=1007 and ipi>613 and ack>85774780 and id>62605 then 3
+when tos<=4 and window<=508 and sport>1007 and dport>1007 then 2
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport<=53006 and window<=1569 and chksum<=59572 then 0
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport<=53006 and window<=1569 and chksum>59572 then 0
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport<=53006 and window>1569 and chksum<=23716 then 3
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport<=53006 and window>1569 and chksum>23716 then 0
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport>53006 and sport<=53390 then 3
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport>53006 and sport>53390 and ack<=3823880192 then 0
+when tos<=4 and window>508 and window<=2158 and ipi<=31308 and sport>53006 and sport>53390 and ack>3823880192 then 0
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport<=37692 and sport<=51 then 1
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport<=37692 and sport>51 and frame_size<=72 then 0
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport<=37692 and sport>51 and frame_size>72 then 0
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport>37692 and seq<=1177366432 and chksum<=19443 then 3
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport>37692 and seq<=1177366432 and chksum>19443 then 0
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport>37692 and seq>1177366432 and ack<=657363728 then 3
+when tos<=4 and window>508 and window<=2158 and ipi>31308 and sport>37692 and seq>1177366432 and ack>657363728 then 3
+when tos<=4 and window>508 and window>2158 and window<=34883 then 3
+when tos<=4 and window>508 and window>2158 and window>34883 and sport<=51 then 1
+when tos<=4 and window>508 and window>2158 and window>34883 and sport>51 and id<=62594 and ack<=2217206656 then 0
+when tos<=4 and window>508 and window>2158 and window>34883 and sport>51 and id<=62594 and ack>2217206656 then 0
+when tos<=4 and window>508 and window>2158 and window>34883 and sport>51 and id>62594 then 3
+when tos>4 then 1
