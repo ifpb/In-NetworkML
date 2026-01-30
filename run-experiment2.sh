@@ -107,7 +107,17 @@ SCENARIO="dash"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
 if [[ "$1" == "-d" ]]; then
-  treefile="${SCRIPT_DIR}/code/tree.d$2.txt"
+  treefile="${SCRIPT_DIR}/code/tree/depth/tree.d$2.txt"
+  TYPE="D"
+  TREE_DEPTH=$2
+  shift 2
+  if [[ ! -f $treefile ]]; then
+    log_error "a treefile with this depth does not exists"
+    exit 1
+  fi
+elif [[ "$1" == "-f" ]]; then
+  treefile="${SCRIPT_DIR}/code/tree/feature/tree.f$2.txt"
+  TYPE="F"
   TREE_DEPTH=$2
   shift 2
   if [[ ! -f $treefile ]]; then
@@ -115,7 +125,7 @@ if [[ "$1" == "-d" ]]; then
     exit 1
   fi
 else
-  log_error "tree depth required. Use -d <depth>"
+  log_error "tree depth required. Use -d <depth> or -f <depth>"
   exit 1
 fi
 
@@ -158,8 +168,8 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
   ansible-playbook "${SCENARIO_DIR}/client.yml" --extra-vars "duration=${DURATION}"
 fi
 
-OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
-OUTPUT_DIR_CURR="${SCRIPT_DIR}/metrics/${SCENARIO}_ML_D${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
+OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TYPE}${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
+OUTPUT_DIR_CURR="${SCRIPT_DIR}/metrics/${SCENARIO}_ML_${TYPE}${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
 
 export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
@@ -195,12 +205,20 @@ cleanup() {
     ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f ml_metrics.py"
   fi
 
+  #kill -9 $WAVE_PID 2>/dev/null
+  kill $CLIENT_PID 2>/dev/null
+
   wait $INT_PID 2>/dev/null
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
+  #wait $WAVE_PID 2>/dev/null
+  wait $CLIENT_PID 2>/dev/null
 
   # mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
 
+  vagrant halt -f
+  log_info "Fim do experimento"
+  sleep 10
   exit 0
 }
 
@@ -220,6 +238,10 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
 fi
 
 START_TIME=$(date +%s)
+
+# Run wave
+#ssh -XF "${SCRIPT_DIR}/ssh_config" h3 "./wave/run_wave.sh -l sinusoid 1 5 10 15" 2>/dev/null >/dev/null &
+#WAVE_PID=$!
 
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
