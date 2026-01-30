@@ -14,15 +14,15 @@ def plot_switch_cpu_total(dataset: pd.DataFrame):
 
     sns.boxplot(
         dataset,
-        x="complexity",
+        x="n_features",
         y="cpu_total",
-        hue="complexity",
+        hue="n_features",
         palette="tab10",
         legend=False,
     )
 
     plt.ylabel("CPU Usage")
-    plt.xlabel("Model complexity")
+    plt.xlabel("Model n_features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_cpu_usage.png")
@@ -31,21 +31,23 @@ def plot_switch_cpu_total(dataset: pd.DataFrame):
 def plot_switch_mem_used(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    plt.yscale("log")
+    #plt.yscale("log")
 
     dataset["mem_used"] = dataset["mem_used"] / 1024
 
+    #dataset["mem_used"] = dataset["mem_used"] / 100
+
     sns.boxplot(
         dataset,
-        x="complexity",
+        x="n_features",
         y="mem_used",
-        hue="complexity",
+        hue="n_features",
         palette="tab10",
         legend=False,
     )
 
     plt.ylabel("Memory Usage (MB)")
-    plt.xlabel("Model complexity")
+    plt.xlabel("Model n_features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_mem_used.png")
@@ -56,15 +58,15 @@ def plot_model_accuracy(dataset: pd.DataFrame):
 
     sns.boxplot(
         dataset,
-        x="complexity",
+        x="n_features",
         y="recall",
-        hue="complexity",
+        hue="n_features",
         palette="tab10",
         legend=False,
     )
 
     plt.ylabel("Accuracy")
-    plt.xlabel("Model complexity")
+    plt.xlabel("Model n_features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_accuracy.png")
@@ -75,15 +77,15 @@ def plot_queue_delay(dataset: pd.DataFrame):
 
     sns.boxplot(
         dataset,
-        x="complexity",
+        x="n_features",
         y="deq_timedelta",
-        hue="complexity",
+        hue="n_features",
         palette="tab10",
         legend=False,
     )
 
     plt.ylabel("Queue Delay")
-    plt.xlabel("Model complexity")
+    plt.xlabel("Model n_features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_queue_delay.png")
@@ -95,15 +97,15 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
     # sns.ecdfplot(
     #     dataset,
     #     x="frameRate",
-    #     hue="complexity",
+    #     hue="n_features",
     #     palette="tab10",
     #     legend=False,
     # )
 
-    depths = dataset["complexity"].unique()
+    depths = dataset["n_features"].unique()
 
     for depth in depths:
-        subset = dataset[dataset["complexity"] == depth]
+        subset = dataset[dataset["n_features"] == depth]
         sns.ecdfplot(
             data=subset,
             x="frameRate",
@@ -112,7 +114,7 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
 
     plt.legend(
         # loc="upper center",
-        title="Complexity",
+        title="N features",
         ncols=2,
         fontsize=14,
         title_fontsize=16,
@@ -131,15 +133,15 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
     # sns.ecdfplot(
     #     dataset,
     #     x="frameRate",
-    #     hue="complexity",
+    #     hue="n_features",
     #     palette="tab10",
     #     legend=False,
     # )
 
-    depths = dataset["complexity"].unique()
+    depths = dataset["n_features"].unique()
 
     for depth in depths:
-        subset = dataset[dataset["complexity"] == depth]
+        subset = dataset[dataset["n_features"] == depth]
         sns.ecdfplot(
             data=subset,
             x="bufferLevel",
@@ -148,7 +150,7 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
 
     plt.legend(
         # loc="upper center",
-        title="Complexity",
+        title="N features",
         ncols=2,
         fontsize=14,
         title_fontsize=16,
@@ -196,10 +198,10 @@ def main():
             parse_dates=["time"],
         )
 
-        swm["complexity"] = i + 1
-        acc["complexity"] = i + 1
-        met["complexity"] = i + 1
-        tel["complexity"] = i + 1
+        swm["n_features"] = i * 2 + 2
+        acc["n_features"] = i * 2 + 2
+        met["n_features"] = i * 2 + 2
+        tel["n_features"] = i * 2 + 2
 
 
         swm_dfs.append(swm)
