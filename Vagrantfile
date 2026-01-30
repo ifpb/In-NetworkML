@@ -76,8 +76,8 @@ Vagrant.configure("2") do |config|
   config.vm.define :h3 do |h3|
 
     config.vm.provider "virtualbox" do |v|
-      v.memory = 4096
-      v.cpus = 4
+      v.memory = 8192
+      v.cpus = 8
     end
 
     h3.vm.hostname = "h3"

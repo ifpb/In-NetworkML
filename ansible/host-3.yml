@@ -52,7 +52,7 @@
       ansible.builtin.lineinfile:
         path: "/home/vagrant/wave/run_wave.sh"
         regexp: '^PATH_LOADGEN=*'
-        line: 'PATH_LOADGEN="loadGen"'
+        line: 'PATH_LOADGEN="/home/vagrant/wave/loadGen"'
         backrefs: true
 
     - name: Configure SSH to enable X11 forwarding
