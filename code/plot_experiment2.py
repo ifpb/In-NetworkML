@@ -31,11 +31,11 @@ def plot_switch_cpu_total(dataset: pd.DataFrame):
 def plot_switch_mem_used(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    #plt.yscale("log")
+    # plt.yscale("log")
 
     dataset["mem_used"] = dataset["mem_used"] / 1024
 
-    #dataset["mem_used"] = dataset["mem_used"] / 100
+    # dataset["mem_used"] = dataset["mem_used"] / 100
 
     sns.boxplot(
         dataset,
@@ -57,7 +57,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
     sns.barplot(
-        dataset.iloc[[-1]],
+        dataset.groupby(["n_features"]).tail(1),
         x="n_features",
         y="recall",
         hue="n_features",
@@ -75,6 +75,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     # )
 
     plt.ylabel("Accuracy")
+    plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.xlabel("Model n_features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
@@ -212,7 +213,6 @@ def main():
         met["n_features"] = i * 2 + 2
         tel["n_features"] = i * 2 + 2
 
-
         swm_dfs.append(swm)
         acc_dfs.append(acc)
         met_dfs.append(met)
@@ -236,6 +236,7 @@ def main():
     plot_dash_metrics_fps(df_met)
     plot_dash_metrics_bufferlevel(df_met)
     plot_queue_delay(df_tel)
+
 
 if __name__ == "__main__":
     main()
