@@ -56,14 +56,23 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
 def plot_model_accuracy(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    sns.boxplot(
-        dataset,
+    sns.barplot(
+        dataset.iloc[[-1]],
         x="n_features",
         y="recall",
         hue="n_features",
         palette="tab10",
         legend=False,
     )
+
+    # sns.boxplot(
+    #     dataset,
+    #     x="n_features",
+    #     y="recall",
+    #     hue="n_features",
+    #     palette="tab10",
+    #     legend=False,
+    # )
 
     plt.ylabel("Accuracy")
     plt.xlabel("Model n_features")
