@@ -1,96 +1,86 @@
-length = [76, 1380];
-frame_size = [72, 92, 760, 858, 1547, 2238];
-chksum = [6264, 10542, 12481, 15257, 16557, 18593, 29588, 43580, 45230, 49896, 52822, 54303, 62606, 63685];
-seq = [60251580, 65705600, 317519704, 559286208, 656539328, 660940320, 951396768, 951399744, 1034641504, 1090122752, 1167870464, 1179267328, 1236523840, 1240818624, 1314741952, 1781240512, 1961005760, 1982327040, 1982327232, 2103686784, 2730069120, 2747188736, 3048863616, 3048873984, 3202596736, 3358224000, 3613705344];
-ack = [41282276, 65705640, 88020484, 143743764, 280548504, 366358944, 513895536, 951399744, 1086071872, 1090088768, 1090089344, 1090123456, 1167870656, 1179267328, 1236523840, 1259455808, 1314742016, 1660471296, 1767106944, 1781249024, 1955805248, 1982327232, 2103687488, 2143010240, 2153565312, 2374499584, 2569474048, 2641488640, 3662765952, 3724037504, 3790178560, 4061742976, 4143201920];
-ipi = [16, 608, 677, 28581, 53670, 249715];
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack<=88020484 and ack<=41282276 and chksum<=63685 and seq<=60251580 then 3
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack<=88020484 and ack<=41282276 and chksum<=63685 and seq>60251580 then 0
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack<=88020484 and ack<=41282276 and chksum>63685 then 3
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack<=88020484 and ack>41282276 then 1
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size<=760 and seq<=1240818624 and seq<=1034641504 then 0
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size<=760 and seq<=1240818624 and seq>1034641504 then 3
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size<=760 and seq>1240818624 and frame_size<=92 then 0
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size<=760 and seq>1240818624 and frame_size>92 then 1
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size>760 and seq<=656539328 and ack<=513895536 then 3
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size>760 and seq<=656539328 and ack>513895536 then 1
-when ipi<=677 and ipi<=16 and ack<=1086071872 and ack>88020484 and frame_size>760 and seq>656539328 then 0
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq<=951396768 and ack<=1259455808 then 3
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq<=951396768 and ack>1259455808 and ack<=2374499584 then 0
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq<=951396768 and ack>1259455808 and ack>2374499584 then 0
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq>951396768 and ack<=2569474048 and ack<=1781249024 then 1
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq>951396768 and ack<=2569474048 and ack>1781249024 then 3
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq>951396768 and ack>2569474048 and seq<=3358224000 then 1
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size<=1547 and seq>951396768 and ack>2569474048 and seq>3358224000 then 0
-when ipi<=677 and ipi<=16 and ack>1086071872 and frame_size>1547 then 3
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack<=280548504 and ack<=143743764 and chksum<=12481 then 1
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack<=280548504 and ack<=143743764 and chksum>12481 then 0
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack<=280548504 and ack>143743764 and frame_size<=858 then 1
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack<=280548504 and ack>143743764 and frame_size>858 then 0
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack>280548504 and ipi<=608 and ack<=1179267328 then 3
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack>280548504 and ipi<=608 and ack>1179267328 then 3
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack>280548504 and ipi>608 and seq<=1179267328 then 0
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq<=2747188736 and ack>280548504 and ipi>608 and seq>1179267328 then 3
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq>2747188736 and ack<=1090123456 then 0
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq>2747188736 and ack>1090123456 and seq<=3202596736 and chksum<=29588 then 3
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq>2747188736 and ack>1090123456 and seq<=3202596736 and chksum>29588 then 0
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq>2747188736 and ack>1090123456 and seq>3202596736 and ack<=2153565312 then 1
-when ipi<=677 and ipi>16 and ack<=2641488640 and seq>2747188736 and ack>1090123456 and seq>3202596736 and ack>2153565312 then 0
-when ipi<=677 and ipi>16 and ack>2641488640 and seq<=1090122752 and chksum<=10542 then 1
-when ipi<=677 and ipi>16 and ack>2641488640 and seq<=1090122752 and chksum>10542 then 0
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length<=76 and chksum<=16557 and chksum<=6264 then 3
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length<=76 and chksum<=16557 and chksum>6264 then 0
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length<=76 and chksum>16557 and ack<=3662765952 then 1
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length<=76 and chksum>16557 and ack>3662765952 then 0
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length>76 and seq<=3048863616 and seq<=2730069120 then 1
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length>76 and seq<=3048863616 and seq>2730069120 then 0
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length>76 and seq>3048863616 and ack<=3790178560 then 1
-when ipi<=677 and ipi>16 and ack>2641488640 and seq>1090122752 and length>76 and seq>3048863616 and ack>3790178560 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack<=1314742016 and ack<=1167870656 and seq<=660940320 and seq<=317519704 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack<=1314742016 and ack<=1167870656 and seq<=660940320 and seq>317519704 then 1
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack<=1314742016 and ack<=1167870656 and seq>660940320 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack<=1314742016 and ack>1167870656 and ack<=1236523840 then 3
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack<=1314742016 and ack>1167870656 and ack>1236523840 then 1
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum<=49896 and seq<=65705600 and chksum<=15257 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum<=49896 and seq<=65705600 and chksum>15257 then 3
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum<=49896 and seq>65705600 and chksum<=18593 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum<=49896 and seq>65705600 and chksum>18593 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum>49896 and chksum<=52822 and seq<=559286208 then 1
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum>49896 and chksum<=52822 and seq>559286208 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum>49896 and chksum>52822 and chksum<=54303 then 0
-when ipi>677 and ipi<=28581 and seq<=951399744 and ack>1314742016 and chksum>49896 and chksum>52822 and chksum>54303 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq<=1314741952 and seq<=1236523840 and seq<=1167870464 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq<=1314741952 and seq<=1236523840 and seq>1167870464 then 3
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq<=1314741952 and seq>1236523840 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq>1314741952 and chksum<=43580 and ack<=65705640 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq>1314741952 and chksum<=43580 and ack>65705640 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq>1314741952 and chksum>43580 and chksum<=45230 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack<=951399744 and seq>1314741952 and chksum>43580 and chksum>45230 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq<=3048873984 and seq<=1781240512 and ack<=4143201920 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq<=3048873984 and seq<=1781240512 and ack>4143201920 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq<=3048873984 and seq>1781240512 and seq<=1982327232 then 3
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq<=3048873984 and seq>1781240512 and seq>1982327232 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq>3048873984 and ack<=1090088768 then 0
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq>3048873984 and ack>1090088768 and seq<=3613705344 then 1
-when ipi>677 and ipi<=28581 and seq>951399744 and ack>951399744 and seq>3048873984 and ack>1090088768 and seq>3613705344 then 1
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq<=1961005760 and ipi<=249715 and frame_size<=72 and ack<=366358944 then 3
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq<=1961005760 and ipi<=249715 and frame_size<=72 and ack>366358944 then 1
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq<=1961005760 and ipi<=249715 and frame_size>72 and frame_size<=2238 then 0
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq<=1961005760 and ipi<=249715 and frame_size>72 and frame_size>2238 then 3
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq<=1961005760 and ipi>249715 then 3
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq>1961005760 and seq<=1982327040 then 3
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq>1961005760 and seq>1982327040 and ack<=1767106944 then 1
-when ipi>677 and ipi>28581 and seq<=2103686784 and seq>1961005760 and seq>1982327040 and ack>1767106944 then 0
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack<=1955805248 and ack<=1090089344 and frame_size<=72 then 1
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack<=1955805248 and ack<=1090089344 and frame_size>72 then 0
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack<=1955805248 and ack>1090089344 and ack<=1660471296 then 1
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack<=1955805248 and ack>1090089344 and ack>1660471296 then 0
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack>1955805248 and ack<=1982327232 then 3
-when ipi>677 and ipi>28581 and seq>2103686784 and ack<=2103687488 and ack>1955805248 and ack>1982327232 then 0
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length<=1380 and ipi<=53670 and ack<=4061742976 then 2
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length<=1380 and ipi<=53670 and ack>4061742976 then 1
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length<=1380 and ipi>53670 and chksum<=62606 then 1
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length<=1380 and ipi>53670 and chksum>62606 then 0
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length>1380 and ack<=2143010240 then 2
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length>1380 and ack>2143010240 and ack<=3724037504 then 1
-when ipi>677 and ipi>28581 and seq>2103686784 and ack>2103687488 and length>1380 and ack>2143010240 and ack>3724037504 then 0
+tos = [4];
+frame_size = [66, 72, 111, 117, 624, 1631, 2238];
+seq = [19354543, 19459506, 65705432, 65705600, 65705640, 121428896, 280548504, 280549896, 465566192, 533240992, 656547264, 815958576, 2202115200, 2202115392, 2371806080, 2371806336, 2402862464, 2414276352, 2469314176, 2489727872, 2510343552, 2556948992, 2641525504, 2747200256];
+ack = [280548504, 1029921128, 1101020224, 1179267328, 1408513408, 1933417984, 1961005888, 1982327232, 2371806080, 2408535936, 2409326720, 2747178624, 2942428160, 3049644416];
+window = [480, 483, 489, 490, 498, 501, 505, 507, 508, 513, 1297, 1798, 2147, 2151, 33659];
+ipi = [3, 612, 677, 892, 893, 4428, 4452, 31676, 35270, 35282, 372579, 1388341];
+when ipi<=677 and tos<=4 and ipi<=3 and window<=508 and frame_size<=117 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window<=508 and frame_size>117 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window<=513 and frame_size<=2238 and seq<=2469314176 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window<=513 and frame_size<=2238 and seq>2469314176 and seq<=2556948992 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window<=513 and frame_size<=2238 and seq>2469314176 and seq>2556948992 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window<=513 and frame_size>2238 and ack<=1029921128 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window<=513 and frame_size>2238 and ack>1029921128 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window<=33659 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window>33659 and seq<=65705432 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window>33659 and seq>65705432 and ack<=2408535936 and ack<=2371806080 and seq<=2489727872 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window>33659 and seq>65705432 and ack<=2408535936 and ack<=2371806080 and seq>2489727872 then 0
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window>33659 and seq>65705432 and ack<=2408535936 and ack>2371806080 then 1
+when ipi<=677 and tos<=4 and ipi<=3 and window>508 and window>513 and window>33659 and seq>65705432 and ack>2408535936 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack<=280548504 and window<=508 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack<=280548504 and window>508 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq<=280549896 and seq<=121428896 and seq<=19354543 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq<=280549896 and seq<=121428896 and seq>19354543 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq<=280549896 and seq>121428896 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq>280549896 and window<=498 and window<=483 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq>280549896 and window<=498 and window>483 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq>280549896 and window>498 and window<=501 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi<=612 and seq>280549896 and window>498 and window>501 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window<=2147 and window<=507 and frame_size<=111 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window<=2147 and window<=507 and frame_size>111 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window<=2147 and window>507 and seq<=2510343552 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window<=2147 and window>507 and seq>2510343552 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window>2147 and seq<=2202115200 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack<=2747178624 and ack>280548504 and ipi>612 and window>2147 and seq>2202115200 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window<=505 and ack<=3049644416 and ack<=2942428160 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window<=505 and ack<=3049644416 and ack>2942428160 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window<=505 and ack>3049644416 and seq<=2371806080 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window<=505 and ack>3049644416 and seq>2371806080 and seq<=2402862464 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window<=505 and ack>3049644416 and seq>2371806080 and seq>2402862464 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq<=2641525504 and ack>2747178624 and window>505 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq>2641525504 and window<=508 and frame_size<=624 then 0
+when ipi<=677 and tos<=4 and ipi>3 and seq>2641525504 and window<=508 and frame_size>624 then 1
+when ipi<=677 and tos<=4 and ipi>3 and seq>2641525504 and window>508 then 0
+when ipi<=677 and tos>4 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq<=465566192 and seq<=280548504 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq<=465566192 and seq>280548504 and tos<=4 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq<=465566192 and seq>280548504 and tos>4 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq>465566192 and ipi<=372579 and window<=1297 and window<=480 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq>465566192 and ipi<=372579 and window<=1297 and window>480 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq>465566192 and ipi<=372579 and window>1297 and ack<=1408513408 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq>465566192 and ipi<=372579 and window>1297 and ack>1408513408 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window<=1798 and seq>465566192 and ipi>372579 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack<=1961005888 and window>1798 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack<=1982327232 and ack>1961005888 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window<=490 and seq<=2414276352 and window<=489 and seq<=2371806336 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window<=490 and seq<=2414276352 and window<=489 and seq>2371806336 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window<=490 and seq<=2414276352 and window>489 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window<=490 and seq>2414276352 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq<=65705600 and seq<=19459506 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq<=65705600 and seq>19459506 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq>65705600 and frame_size<=66 and ipi<=4428 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq>65705600 and frame_size<=66 and ipi>4428 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq>65705600 and frame_size>66 and ack<=2409326720 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi<=35270 and seq>65705600 and frame_size>66 and ack>2409326720 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi>35270 and ipi<=35282 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi>35270 and ipi>35282 and seq<=65705640 then 1
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi>35270 and ipi>35282 and seq>65705640 and frame_size<=72 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi<=1388341 and window>490 and ipi>35270 and ipi>35282 and seq>65705640 and frame_size>72 then 0
+when ipi>677 and window<=2151 and frame_size<=1631 and ack>1982327232 and ipi>1388341 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack<=1101020224 and seq<=656547264 and seq<=533240992 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack<=1101020224 and seq<=656547264 and seq>533240992 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack<=1101020224 and seq>656547264 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq<=2747200256 and ack<=1179267328 and window<=507 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq<=2747200256 and ack<=1179267328 and window>507 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq<=2747200256 and ack>1179267328 and ack<=1933417984 and seq<=815958576 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq<=2747200256 and ack>1179267328 and ack<=1933417984 and seq>815958576 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq<=2747200256 and ack>1179267328 and ack>1933417984 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq>2747200256 and ipi<=4452 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos<=4 and seq>2747200256 and ipi>4452 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack<=1982327232 and ack>1101020224 and tos>4 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack>1982327232 and ipi<=31676 and ipi<=893 and ipi<=892 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack>1982327232 and ipi<=31676 and ipi<=893 and ipi>892 then 1
+when ipi>677 and window<=2151 and frame_size>1631 and ack>1982327232 and ipi<=31676 and ipi>893 then 0
+when ipi>677 and window<=2151 and frame_size>1631 and ack>1982327232 and ipi>31676 then 1
+when ipi>677 and window>2151 and seq<=2202115392 then 1
+when ipi>677 and window>2151 and seq>2202115392 then 0

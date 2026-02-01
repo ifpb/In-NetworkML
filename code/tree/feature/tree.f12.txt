@@ -1,0 +1,47 @@
+sport = [44249, 52828, 53447, 54150, 54374, 60510, 60517];
+dport = [51, 44737, 52773, 52821, 54145, 54370, 60510, 60517];
+tos = [];
+length = [];
+id = [48740, 50471, 58862, 61729];
+ttl = [];
+frame_size = [3686];
+chksum = [63729];
+seq = [367143696, 2202068288];
+ack = [60251768, 1293393856, 2315148160];
+window = [412, 508, 1236, 1961, 2143, 33659];
+ipi = [383178];
+when dport<=60510 and window<=2143 and seq<=367143696 and window<=508 and dport<=44737 and sport<=53447 then 0
+when dport<=60510 and window<=2143 and seq<=367143696 and window<=508 and dport<=44737 and sport>53447 then 1
+when dport<=60510 and window<=2143 and seq<=367143696 and window<=508 and dport>44737 then 1
+when dport<=60510 and window<=2143 and seq<=367143696 and window>508 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id<=58862 and window<=412 and dport<=51 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id<=58862 and window<=412 and dport>51 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id<=58862 and window>412 and ack<=60251768 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id<=58862 and window>412 and ack>60251768 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id>58862 and dport<=52821 and window<=1236 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id>58862 and dport<=52821 and window>1236 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id>58862 and dport>52821 and ack<=1293393856 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size<=3686 and id>58862 and dport>52821 and ack>1293393856 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size>3686 and id<=50471 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size>3686 and id>50471 and id<=61729 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum<=63729 and frame_size>3686 and id>50471 and id>61729 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum>63729 and sport<=44249 then 0
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi<=383178 and chksum>63729 and sport>44249 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window<=1961 and ipi>383178 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window>1961 and seq<=2202068288 then 1
+when dport<=60510 and window<=2143 and seq>367143696 and window>1961 and seq>2202068288 then 0
+when dport<=60510 and window>2143 and sport<=52828 and dport<=52773 then 0
+when dport<=60510 and window>2143 and sport<=52828 and dport>52773 and dport<=54370 and ack<=2315148160 then 1
+when dport<=60510 and window>2143 and sport<=52828 and dport>52773 and dport<=54370 and ack>2315148160 and dport<=54145 then 0
+when dport<=60510 and window>2143 and sport<=52828 and dport>52773 and dport<=54370 and ack>2315148160 and dport>54145 then 1
+when dport<=60510 and window>2143 and sport<=52828 and dport>52773 and dport>54370 then 0
+when dport<=60510 and window>2143 and sport>52828 and window<=33659 then 1
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport<=54374 and sport<=54150 and id<=48740 then 0
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport<=54374 and sport<=54150 and id>48740 then 1
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport<=54374 and sport>54150 then 1
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport>54374 and sport<=60510 then 0
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport>54374 and sport>60510 and sport<=60517 then 1
+when dport<=60510 and window>2143 and sport>52828 and window>33659 and sport>54374 and sport>60510 and sport>60517 then 0
+when dport>60510 and dport<=60517 then 1
+when dport>60510 and dport>60517 then 0
+
