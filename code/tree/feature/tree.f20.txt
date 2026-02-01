@@ -1,0 +1,45 @@
+sport = [51, 45069, 47954, 47962];
+dport = [42264, 42637, 47844];
+tos = [4];
+length = [68];
+id = [];
+ttl = [];
+frame_size = [90];
+chksum = [];
+seq = [2919781760, 2921542016];
+ack = [490564688, 599145696, 3220472704, 3981285632, 4022321792];
+window = [507, 3022, 44404];
+ipi = [195];
+dataofs = [];
+urgptr = [];
+reserved = [];
+tcp_chk = [];
+proto = [];
+version = [];
+frag = [];
+ihl = [];
+when tos<=4 and ipi<=195 and window<=507 and sport<=47962 and sport<=51 then 0
+when tos<=4 and ipi<=195 and window<=507 and sport<=47962 and sport>51 then 1
+when tos<=4 and ipi<=195 and window<=507 and sport>47962 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack<=599145696 and ack<=490564688 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack<=599145696 and ack>490564688 then 1
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack>599145696 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack>3981285632 and ack<=4022321792 then 1
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack>3981285632 and ack>4022321792 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and dport<=42637 and sport<=45069 and sport<=51 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and dport<=42637 and sport<=45069 and sport>51 then 1
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and dport<=42637 and sport>45069 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and dport>42637 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq<=2921542016 then 1
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length<=68 and sport<=47954 and dport<=42264 and ack<=3220472704 then 1
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length<=68 and sport<=47954 and dport<=42264 and ack>3220472704 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length<=68 and sport<=47954 and dport>42264 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length<=68 and sport>47954 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length>68 and frame_size<=90 and window<=3022 then 1
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length>68 and frame_size<=90 and window>3022 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and length>68 and frame_size>90 then 0
+when tos<=4 and ipi>195 and sport<=47954 and dport<=47844 and sport<=51 then 0
+when tos<=4 and ipi>195 and sport<=47954 and dport<=47844 and sport>51 then 1
+when tos<=4 and ipi>195 and sport<=47954 and dport>47844 then 0
+when tos<=4 and ipi>195 and sport>47954 then 0
+when tos>4 then 0

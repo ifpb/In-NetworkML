@@ -1,31 +1,33 @@
 tos = [4];
-length = [58, 76, 169, 2794, 6568];
-id = [9133, 12497, 22148, 43792, 47916, 49055, 49074];
+length = [76, 166, 169, 2794];
+id = [9133, 22148, 43792, 47916];
 ttl = [63];
-frame_size = [60, 82, 180];
-chksum = [6654, 9792, 14999, 17045, 33883, 43777];
-seq = [406238160, 479833808, 674650688, 699841584, 1152928320, 1254457248, 1660220992, 2112943104, 2919781760, 2921542016, 3353015680, 3738420608, 3998598144];
-ack = [81185616, 87147728, 490564688, 599056496, 599145696, 599160224, 671610368, 1029892640, 1141769600, 1974399232, 2278332800, 2304546432, 2782237056, 2878233600, 2938083072, 3489480960, 3728776320, 3894264192, 3979870464, 3981285632, 3997925632, 4022321792, 4051127808, 4136339968];
-window = [498, 501, 504, 507, 508, 520, 2836, 2846, 3022, 44404, 64700];
-ipi = [6, 127, 195, 24171, 563858, 1015724, 1326703];
+frame_size = [82, 6582];
+chksum = [14999, 17045, 24466, 33883];
+seq = [406238160, 479833808, 674650688, 699841584, 1152928320, 1660220992, 2112943104, 2919781760, 2921542016, 3353015680, 3998598144, 4106920320];
+ack = [45347576, 332833584, 490564688, 599145696, 599160224, 671610368, 950175808, 1029892640, 1141769600, 1974399232, 2278332800, 2304546432, 2878233600, 2938083072, 3489480960, 3728776320, 3894264192, 3979908608, 3981285632, 4022321792, 4136339968];
+window = [390, 498, 501, 504, 507, 508, 520, 2836, 2846, 3022, 44404, 44408, 64700];
+ipi = [4, 37, 140, 195, 24171, 563858, 1015724, 1326703];
+dataofs = [9];
+urgptr = [];
+reserved = [];
+tcp_chk = [3076, 37729, 39222, 39358, 62230];
+frag = [];
 when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq<=406238160 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq>406238160 and length<=169 and frame_size<=180 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq>406238160 and length<=169 and frame_size>180 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq>406238160 and length<=169 and length<=166 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq>406238160 and length<=169 and length>166 then 0
 when tos<=4 and ipi<=195 and window<=507 and ttl<=63 and seq>406238160 and length>169 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi<=6 and chksum<=9792 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi<=6 and chksum>9792 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack<=599056496 and id<=49055 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack<=599056496 and id>49055 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack>599056496 and ack<=3979870464 and id<=12497 and chksum<=6654 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack>599056496 and ack<=3979870464 and id<=12497 and chksum>6654 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack>599056496 and ack<=3979870464 and id>12497 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack>599056496 and ack>3979870464 and ack<=3997925632 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi<=127 and ipi>6 and ack>599056496 and ack>3979870464 and ack>3997925632 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi>127 and length<=58 and seq<=3353015680 and ack<=671610368 and seq<=1254457248 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi>127 and length<=58 and seq<=3353015680 and ack<=671610368 and seq>1254457248 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi>127 and length<=58 and seq<=3353015680 and ack>671610368 then 0
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi>127 and length<=58 and seq>3353015680 then 1
-when tos<=4 and ipi<=195 and window<=507 and ttl>63 and ipi>127 and length>58 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi<=140 and ipi<=4 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi<=140 and ipi>4 and ipi<=37 and window<=390 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi<=140 and ipi>4 and ipi<=37 and window>390 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi<=140 and ipi>4 and ipi>37 and ack<=3979908608 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi<=140 and ipi>4 and ipi>37 and ack>3979908608 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi>140 and seq<=3353015680 and ack<=671610368 and chksum<=24466 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi>140 and seq<=3353015680 and ack<=671610368 and chksum>24466 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi>140 and seq<=3353015680 and ack>671610368 then 0
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk<=62230 and ipi>140 and seq>3353015680 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs<=9 and tcp_chk>62230 then 1
+when tos<=4 and ipi<=195 and window<=507 and ttl>63 and dataofs>9 then 1
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack<=599145696 and ack<=490564688 then 0
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack<=599145696 and ack>490564688 then 1
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window<=44404 and ack<=3981285632 and ack>599145696 then 0
@@ -38,8 +40,8 @@ when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq<=674650688 and seq>479833808 and window>64700 then 1
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack<=2878233600 then 0
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack>2878233600 and ack<=2938083072 then 1
-when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack>2878233600 and ack>2938083072 and ack<=4051127808 then 0
-when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack>2878233600 and ack>2938083072 and ack>4051127808 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack>2878233600 and ack>2938083072 and tcp_chk<=39222 then 0
+when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum<=33883 and seq>674650688 and ack>2878233600 and ack>2938083072 and tcp_chk>39222 then 0
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum>33883 and id<=47916 and seq<=1660220992 then 0
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum>33883 and id<=47916 and seq>1660220992 and seq<=2112943104 then 1
 when tos<=4 and ipi<=195 and window>507 and seq<=2919781760 and window>44404 and chksum>33883 and id<=47916 and seq>1660220992 and seq>2112943104 and id<=43792 then 0
@@ -49,12 +51,12 @@ when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq<=2921542016 t
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window<=2836 and ack<=2304546432 and ack<=1974399232 then 0
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window<=2836 and ack<=2304546432 and ack>1974399232 then 1
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window<=2836 and ack>2304546432 then 0
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id<=9133 and window<=64700 then 1
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id<=9133 and window>64700 and seq<=3738420608 then 0
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id<=9133 and window>64700 and seq>3738420608 then 0
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id>9133 and ack<=87147728 and chksum<=43777 then 0
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id>9133 and ack<=87147728 and chksum>43777 then 0
-when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and id>9133 and ack>87147728 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk<=39358 and tcp_chk<=37729 and ack<=950175808 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk<=39358 and tcp_chk<=37729 and ack>950175808 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk<=39358 and tcp_chk>37729 then 1
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk>39358 and ack<=45347576 and id<=9133 then 1
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk>39358 and ack<=45347576 and id>9133 then 0
+when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size<=82 and window>2836 and tcp_chk>39358 and ack>45347576 then 0
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size>82 and length<=76 and window<=3022 then 1
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size>82 and length<=76 and window>3022 then 0
 when tos<=4 and ipi<=195 and window>507 and seq>2919781760 and seq>2921542016 and frame_size>82 and length>76 then 0
@@ -65,32 +67,32 @@ when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window<=508 and
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window<=508 and ack>1029892640 and ack>3728776320 and ack<=3894264192 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window<=508 and ack>1029892640 and ack>3728776320 and ack>3894264192 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl<=63 then 0
-when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack<=599160224 and id<=49074 then 0
-when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack<=599160224 and id>49074 then 1
+when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack<=599160224 and ack<=332833584 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack<=599160224 and ack>332833584 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack>599160224 and ipi<=1326703 and window<=520 and ack<=3489480960 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack>599160224 and ipi<=1326703 and window<=520 and ack>3489480960 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack>599160224 and ipi<=1326703 and window>520 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq<=1152928320 and window>508 and ttl>63 and ack>599160224 and ipi>1326703 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window<=508 and window<=504 and frame_size<=60 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window<=508 and window<=504 and frame_size>60 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window<=508 and window<=504 and tcp_chk<=3076 then 1
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window<=508 and window<=504 and tcp_chk>3076 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window<=508 and window>504 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi<=563858 and window>508 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack<=1141769600 and ipi>563858 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length<=6568 and length<=2794 and window<=498 then 0
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length<=6568 and length<=2794 and window>498 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length<=6568 and length>2794 and window<=508 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length<=6568 and length>2794 and window>508 then 0
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length>6568 and window<=507 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and length>6568 and window>507 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size<=6582 and length<=2794 and window<=498 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size<=6582 and length<=2794 and window>498 then 1
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size<=6582 and length>2794 and window<=508 then 1
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size<=6582 and length>2794 and window>508 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size>6582 and window<=507 then 1
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq<=3998598144 and frame_size>6582 and window>507 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window<=501 and ack<=2278332800 and window<=498 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window<=501 and ack<=2278332800 and window>498 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window<=501 and ack>2278332800 then 0
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window>501 and ipi<=24171 then 0
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window>501 and ipi>24171 and ack<=2782237056 then 1
-when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window>501 and ipi>24171 and ack>2782237056 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window>501 and ipi>24171 and seq<=4106920320 then 0
+when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack<=4136339968 and seq>3998598144 and window>501 and ipi>24171 and seq>4106920320 then 1
 when tos<=4 and ipi>195 and window<=2846 and seq>1152928320 and ack>1141769600 and ack>4136339968 then 0
-when tos<=4 and ipi>195 and window>2846 and ack<=81185616 and ipi<=1015724 then 1
-when tos<=4 and ipi>195 and window>2846 and ack<=81185616 and ipi>1015724 then 0
-when tos<=4 and ipi>195 and window>2846 and ack>81185616 then 0
+when tos<=4 and ipi>195 and window>2846 and window<=44408 then 0
+when tos<=4 and ipi>195 and window>2846 and window>44408 and ipi<=1015724 then 1
+when tos<=4 and ipi>195 and window>2846 and window>44408 and ipi>1015724 then 0
 when tos>4 then 0
 
