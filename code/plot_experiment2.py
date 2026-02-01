@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
 OUTPUT_PREFIX = "experiment2"
+
+
+def extract_iperf(inputfile):
+    with open(f"{inputfile}iperf.json") as f:
+        lines = f.readlines()
+        try:
+            obj = json.loads("".join(lines))
+        except json.JSONDecodeError:
+            obj = json.loads("".join(lines[:-11]))
+        lst = [x["sum"]["bits_per_second"] / 1e6 for x in obj["intervals"]]
+    return lst
 
 
 def plot_switch_cpu_total(dataset: pd.DataFrame):
@@ -21,8 +33,8 @@ def plot_switch_cpu_total(dataset: pd.DataFrame):
         legend=False,
     )
 
-    plt.ylabel("CPU Usage")
-    plt.xlabel("Model n_features")
+    plt.ylabel("CPU Usage (%)")
+    plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_cpu_usage.png")
@@ -47,7 +59,7 @@ def plot_switch_mem_used(dataset: pd.DataFrame):
     )
 
     plt.ylabel("Memory Usage (MB)")
-    plt.xlabel("Model n_features")
+    plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_mem_used.png")
@@ -76,7 +88,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
 
     plt.ylabel("Accuracy")
     plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
-    plt.xlabel("Model n_features")
+    plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_accuracy.png")
@@ -95,7 +107,7 @@ def plot_queue_delay(dataset: pd.DataFrame):
     )
 
     plt.ylabel("Queue Delay")
-    plt.xlabel("Model n_features")
+    plt.xlabel("# features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_queue_delay.png")
@@ -104,34 +116,41 @@ def plot_queue_delay(dataset: pd.DataFrame):
 def plot_dash_metrics_fps(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    # sns.ecdfplot(
-    #     dataset,
-    #     x="frameRate",
-    #     hue="n_features",
-    #     palette="tab10",
-    #     legend=False,
-    # )
+    dataset["menor_que_30"] = dataset["frameRate"] < 30
 
-    depths = dataset["n_features"].unique()
+    data = dataset.groupby("n_features")["menor_que_30"].mean().reset_index()
+    data["menor_que_30"] = data["menor_que_30"] * 100
 
-    for depth in depths:
-        subset = dataset[dataset["n_features"] == depth]
-        sns.ecdfplot(
-            data=subset,
-            x="frameRate",
-            label=str(depth),
-        )
-
-    plt.legend(
-        # loc="upper center",
-        title="N features",
-        ncols=2,
-        fontsize=14,
-        title_fontsize=16,
+    sns.barplot(
+        data=data,
+        x="n_features",
+        # y="frameRate",
+        y="menor_que_30",
+        hue="n_features",
+        palette="tab10",
+        legend=False,
     )
 
-    plt.ylabel("Proportion")
-    plt.xlabel("FrameRate (FPS)")
+    # depths = dataset["n_features"].unique()
+
+    # for depth in depths:
+    #     subset = dataset[dataset["n_features"] == depth]
+    #     sns.ecdfplot(
+    #         data=subset,
+    #         x="frameRate",
+    #         label=str(depth),
+    #     )
+
+    # plt.legend(
+    #     # loc="upper center",
+    #     title="N features",
+    #     ncols=2,
+    #     fontsize=14,
+    #     title_fontsize=16,
+    # )
+
+    plt.ylabel("Time under 30 FPS (%)")
+    plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_fps.png")
@@ -140,37 +159,53 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
 def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    # sns.ecdfplot(
-    #     dataset,
-    #     x="frameRate",
-    #     hue="n_features",
-    #     palette="tab10",
-    #     legend=False,
-    # )
-
-    depths = dataset["n_features"].unique()
-
-    for depth in depths:
-        subset = dataset[dataset["n_features"] == depth]
-        sns.ecdfplot(
-            data=subset,
-            x="bufferLevel",
-            label=str(depth),
-        )
-
-    plt.legend(
-        # loc="upper center",
-        title="N features",
-        ncols=2,
-        fontsize=14,
-        title_fontsize=16,
+    sns.boxplot(
+        dataset,
+        x="n_features",
+        y="bufferLevel",
+        hue="n_features",
+        palette="tab10",
+        legend=False,
     )
 
-    plt.ylabel("Proportion")
-    plt.xlabel("BufferLevel (Seconds)")
+    # depths = dataset["n_features"].unique()
+
+    # for depth in depths:
+    #     subset = dataset[dataset["n_features"] == depth]
+    #     sns.ecdfplot(
+    #         data=subset,
+    #         x="bufferLevel",
+    #         label=str(depth),
+    #     )
+
+    # plt.legend(
+    #     # loc="upper center",
+    #     title="N features",
+    #     ncols=2,
+    #     fontsize=14,
+    #     title_fontsize=16,
+    # )
+
+    plt.ylabel("BufferLevel (Seconds)")
+    plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel.png")
+
+
+def plot_throughput(dataset):
+    plt.figure(dpi=300)
+
+    sns.lineplot(
+        dataset.rolling(10).mean(),
+        legend=False,
+    )
+
+    plt.ylabel("Throughput (mbps)")
+    plt.xlabel("Runtime (s)")
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(f"{OUTPUT_PREFIX}_iperf_vazao_tempo.png")
 
 
 def main():
@@ -192,8 +227,9 @@ def main():
     acc_dfs = []
     met_dfs = []
     tel_dfs = []
+    iperf_dfs = []
 
-    for i, dir in enumerate(args.dirs):
+    for i, dir in enumerate(args.dirs, 1):
         if not dir.endswith("/"):
             dir += "/"
 
@@ -208,6 +244,8 @@ def main():
             parse_dates=["time"],
         )
 
+        iperf = extract_iperf(dir)
+
         swm["n_features"] = i * 2 + 2
         acc["n_features"] = i * 2 + 2
         met["n_features"] = i * 2 + 2
@@ -217,6 +255,7 @@ def main():
         acc_dfs.append(acc)
         met_dfs.append(met)
         tel_dfs.append(tel)
+        iperf_dfs.append(pd.DataFrame(iperf))
 
     df_swm = pd.concat(swm_dfs, ignore_index=True)
     df_acc = pd.concat(acc_dfs, ignore_index=True)
@@ -227,6 +266,7 @@ def main():
     df_acc = df_acc.dropna()
     df_met = df_met.dropna()
     df_tel = df_tel.dropna()
+    iperf_dfs[-1] = iperf_dfs[-1].dropna()
 
     plt.rcParams.update({"font.size": 20})
 
@@ -236,6 +276,7 @@ def main():
     plot_dash_metrics_fps(df_met)
     plot_dash_metrics_bufferlevel(df_met)
     plot_queue_delay(df_tel)
+    plot_throughput(iperf_dfs[-1])
 
 
 if __name__ == "__main__":
