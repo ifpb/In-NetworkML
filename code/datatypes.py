@@ -9,6 +9,17 @@ name_mapping = {
     "seq": "seqNo",
     "ack": "ackNo",
     "window": "window",
+    "flags": "flags",
+    "frag": "fragOffset",
+    "ihl": "ihl",
+    "proto": "protocol",
+    "dataofs": "dataOffset",
+    "urgptr": "urgentPtr",
+    "reserved": "reserved",
+    "chksum_tcp": "tcpChecksum",
+    "urg": "urgFlag",
+    "ece": "eceFlag",
+    "cwr": "cwrFlag",
 }
 
 type_mapping = {
@@ -24,6 +35,18 @@ type_mapping = {
     "window": 16,
     "frame_size": 32,
     "ipi": 48,
+    "flags": 3,
+    "fragOffset": 13,
+    "ihl": 4,
+    "protocol": 8,
+    "dataOffset": 4,
+    "urgentPtr": 16,
+    "reserved": 3,
+    "tcpChecksum": 16,
+    "urgFlag": 1,
+    "eceFlag": 1,
+    "cwrFlag": 1,
+    "payload_length": 16,
 }
 
 source_mapping = {
@@ -38,8 +61,19 @@ source_mapping = {
     "ackNo": "hdr.tcp.ackNo",
     "window": "hdr.tcp.window",
     "frame_size": "standard_metadata.packet_length",
+    "flags": "hdr.ipv4.flags",
+    "fragOffset": "hdr.ipv4.fragOffset",
+    "ihl": "hdr.ipv4.ihl",
+    "protocol": "hdr.ipv4.protocol",
+    "dataOffset": "hdr.tcp.dataOffset",
+    "urgentPtr": "hdr.tcp.urgentPtr",
+    "reserved": "hdr.tcp.reserved",
+    "tcpChecksum": "hdr.tcp.checksum",
+    "urgFlag": "hdr.tcp.flags[5]",  
+    "eceFlag": "hdr.tcp.flags[6]", 
+    "cwrFlag": "hdr.tcp.flags[7]", 
+    "payload_length": "meta.payload_len",  
 }
-
 
 def translate_name(feature_name):
     return name_mapping.get(feature_name, feature_name)
