@@ -205,13 +205,13 @@ cleanup() {
     ssh -F "${SCRIPT_DIR}/ssh_config" s1 "sudo pkill -2 -f ml_metrics.py"
   fi
 
-  #kill -9 $WAVE_PID 2>/dev/null
+  kill -9 $WAVE_PID 2>/dev/null
   kill $CLIENT_PID 2>/dev/null
 
   wait $INT_PID 2>/dev/null
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
-  #wait $WAVE_PID 2>/dev/null
+  wait $WAVE_PID 2>/dev/null
   wait $CLIENT_PID 2>/dev/null
 
   # mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
@@ -241,8 +241,8 @@ fi
 START_TIME=$(date +%s)
 
 # Run wave
-#ssh -XF "${SCRIPT_DIR}/ssh_config" h3 "./wave/run_wave.sh -l sinusoid 1 5 10 15" 2>/dev/null >/dev/null &
-#WAVE_PID=$!
+ssh -XF "${SCRIPT_DIR}/ssh_config" h3 "./wave/run_wave.sh -l sinusoid 10 10 20 15" 2>/dev/null >/dev/null &
+WAVE_PID=$!
 
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then
   log_info "Rodando script do client com duração de ${DURATION}s"
