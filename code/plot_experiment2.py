@@ -87,7 +87,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     # )
 
     plt.ylabel("Accuracy")
-    #plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+    # plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
@@ -116,41 +116,44 @@ def plot_queue_delay(dataset: pd.DataFrame):
 def plot_dash_metrics_fps(dataset: pd.DataFrame):
     plt.figure(dpi=300)
 
-    dataset["menor_que_30"] = dataset["frameRate"] < 30
-
-    data = dataset.groupby("n_features")["menor_que_30"].mean().reset_index()
-    data["menor_que_30"] = data["menor_que_30"] * 100
-
-    sns.barplot(
-        data=data,
-        x="n_features",
-        # y="frameRate",
-        y="menor_que_30",
-        hue="n_features",
-        palette="tab10",
-        legend=False,
+    counts = (
+        dataset.groupby(["n_features", "frameRate"]).size().reset_index(name="count")
     )
 
-    # depths = dataset["n_features"].unique()
+    counts["total"] = counts.groupby("n_features")["count"].transform("sum")
 
-    # for depth in depths:
-    #     subset = dataset[dataset["n_features"] == depth]
-    #     sns.ecdfplot(
-    #         data=subset,
-    #         x="frameRate",
-    #         label=str(depth),
-    #     )
+    counts["percentage"] = (counts["count"] / counts["total"]) * 100
 
-    # plt.legend(
-    #     # loc="upper center",
-    #     title="N features",
-    #     ncols=2,
-    #     fontsize=14,
-    #     title_fontsize=16,
+    sns.barplot(
+        data=counts,
+        x="n_features",
+        y="percentage",
+        hue="frameRate",
+        palette="tab10",
+    )
+
+    # dataset["menor_que_30"] = dataset["frameRate"] < 30
+    #
+    # data = dataset.groupby("n_features")["menor_que_30"].mean().reset_index()
+    # data["menor_que_30"] = data["menor_que_30"] * 100
+    #
+    # sns.barplot(
+    #     data=data,
+    #     x="n_features",
+    #     # y="frameRate",
+    #     y="menor_que_30",
+    #     hue="n_features",
+    #     palette="tab10",
+    #     legend=False,
     # )
 
-    plt.ylabel("Time under 30 FPS (%)")
+    plt.ylabel("Percentage (%)")
     plt.xlabel("# of features")
+    plt.legend(
+        title="Frame Rate (FPS)",
+        fontsize=14,
+        title_fontsize=16,
+    )
     plt.tight_layout()
     plt.grid(alpha=0.3)
     plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_fps.png")
