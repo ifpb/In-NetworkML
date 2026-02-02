@@ -18,7 +18,7 @@ start_capture() {
   echo "Starting packet capture on interface $INTERFACE..."
   echo "Capturing to file: $CAP_FILE_PATH"
   mkdir -p /vagrant/pcap
-  sudo tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" host "$SERVER_IP" and not tcp port 5201 and not ip proto 253 &
+  sudo tcpdump -i $INTERFACE -w "$CAP_FILE_PATH" not tcp port 5201 and not ip proto 253 &
   TCPDUMP_PID=$!
 }
 
