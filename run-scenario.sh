@@ -113,11 +113,46 @@ time_unconvert() {
 SCENARIO="$1"
 SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 
-if [[ -z "$2" ]]; then
+shift 1
+
+if [[ "$1" == "-d" ]]; then
+  treefile="${SCRIPT_DIR}/code/tree/depth/tree.d$2.txt"
+  TYPE="D"
+  TREE_DEPTH=$2
+  shift 2
+  if [[ ! -f $treefile ]]; then
+    log_error "a treefile with this depth does not exists"
+    exit 1
+  fi
+elif [[ "$1" == "-f" ]]; then
+  treefile="${SCRIPT_DIR}/code/tree/feature/tree.f$2.txt"
+  TYPE="F"
+  TREE_DEPTH=$2
+  shift 2
+  if [[ ! -f $treefile ]]; then
+    log_error "a treefile with this depth does not exists"
+    exit 1
+  fi
+else
+  log_error "tree depth required. Use -d <depth> or -f <depth>"
+  exit 1
+fi
+
+pushd "${SCRIPT_DIR}/code" >/dev/null
+
+python3 mycontroller.py -t ${treefile}
+if [[ "$?" -ne 0 ]]; then
+  log_error "Tree compilation failed"
+  exit 1
+fi
+
+popd >/dev/null
+
+if [[ -z "$1" ]]; then
   log_info "Usando valor de tempo padrão: 60 segundos"
   DURATION=60
-elif [[ $2 =~ ^([0-9]+h)?([0-9]+m)?([0-9]+s)?$ ]] && [[ -n "$2" ]]; then
-  DURATION=$(time_convert $2)
+elif [[ $1 =~ ^([0-9]+h)?([0-9]+m)?([0-9]+s)?$ ]] && [[ -n "$1" ]]; then
+  DURATION=$(time_convert $1)
 else
   log_error "Formato de tempo inválido (XhYmZx)"
   exit 1
@@ -143,7 +178,7 @@ if [[ -f "${SCENARIO_DIR}/client.yml" ]]; then
 fi
 
 if [[ "$USE_ML" == 1 ]]; then
-  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${DURATION_STRING}_${TIMESTAMP}"
+  OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TYPE}${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
 else
   OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
 fi
@@ -168,7 +203,7 @@ ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resou
 SWITCH_PID=$!
 
 if [[ "$USE_ML" == 1 ]]; then
-  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/ml_metrics.py $SCENARIO" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/dash_ml_metrics.py dash ${OUTPUT_DIR}" &
 fi
 
 cleanup() {
@@ -223,7 +258,3 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
     wait $SERVER_PID 2>/dev/null
   fi
 fi
-
-cleanup
-
-#ssh -F "${SCRIPT_DIR}/ssh_config" s1 "SCENARIO=$SCENARIO /vagrant/code/editcmatrix 2> /dev/null"
