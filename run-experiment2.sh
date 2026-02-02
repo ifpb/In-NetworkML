@@ -262,5 +262,3 @@ if [[ -f "${SCENARIO_DIR}/server.sh" ]]; then
     wait $SERVER_PID 2>/dev/null
   fi
 fi
-
-cleanup
