@@ -196,8 +196,12 @@ def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
 def plot_throughput(dataset):
     plt.figure(dpi=300)
 
+    dataset["mbps_smoothed"] = dataset["mbps"].rolling(10).mean()
+
     sns.lineplot(
-        dataset.rolling(10).mean(),
+        data=dataset,
+        x="runtime_s",
+        y="mbps_smoothed",
         legend=False,
     )
 
@@ -205,7 +209,7 @@ def plot_throughput(dataset):
     plt.xlabel("Runtime (s)")
     plt.grid(alpha=0.3)
     plt.tight_layout()
-    plt.savefig(f"{OUTPUT_PREFIX}_iperf_vazao_tempo.png")
+    plt.savefig(f"{OUTPUT_PREFIX}_throughput.png")
 
 
 def main():
@@ -227,7 +231,6 @@ def main():
     acc_dfs = []
     met_dfs = []
     tel_dfs = []
-    iperf_dfs = []
 
     for i, dir in enumerate(args.dirs, 1):
         if not dir.endswith("/"):
@@ -244,8 +247,6 @@ def main():
             parse_dates=["time"],
         )
 
-        iperf = extract_iperf(dir)
-
         swm["n_features"] = i * 2 + 2
         acc["n_features"] = i * 2 + 2
         met["n_features"] = i * 2 + 2
@@ -255,7 +256,32 @@ def main():
         acc_dfs.append(acc)
         met_dfs.append(met)
         tel_dfs.append(tel)
-        iperf_dfs.append(pd.DataFrame(iperf))
+
+    # 1. Read the raw tshark output
+    tp_df = pd.read_csv(f"{args.dirs[-1]}throughput_raw.csv")
+
+    # 2. Convert epoch to datetime
+    tp_df["time"] = pd.to_datetime(tp_df["frame.time_epoch"], unit="s")
+
+    # 3. Resample to 1-second intervals and sum the bytes
+    #    We set 'time' as index strictly for resampling
+    tp_df = tp_df.set_index("time")
+    throughput_resampled = (
+        tp_df["frame.len"].resample("1s").sum().to_frame(name="bytes")
+    )
+
+    # 4. Convert Bytes/sec to Mbps
+    throughput_resampled["mbps"] = (throughput_resampled["bytes"] * 8) / 1_000_000
+
+    # 5. Create a relative time column (0, 1, 2...) for plotting consistency
+    #    We reset index to get 'time' back as a column, then calculate delta
+    throughput_resampled = throughput_resampled.reset_index()
+    start_time = throughput_resampled["time"].min()
+    throughput_resampled["runtime_s"] = (
+        throughput_resampled["time"] - start_time
+    ).dt.total_seconds()
+
+    df_tp = throughput_resampled.dropna()
 
     df_swm = pd.concat(swm_dfs, ignore_index=True)
     df_acc = pd.concat(acc_dfs, ignore_index=True)
@@ -266,7 +292,6 @@ def main():
     df_acc = df_acc.dropna()
     df_met = df_met.dropna()
     df_tel = df_tel.dropna()
-    iperf_dfs[-1] = iperf_dfs[-1].dropna()
 
     plt.rcParams.update({"font.size": 20})
 
@@ -276,7 +301,7 @@ def main():
     plot_dash_metrics_fps(df_met)
     plot_dash_metrics_bufferlevel(df_met)
     plot_queue_delay(df_tel)
-    plot_throughput(iperf_dfs[-1])
+    plot_throughput(df_tp)
 
 
 if __name__ == "__main__":
