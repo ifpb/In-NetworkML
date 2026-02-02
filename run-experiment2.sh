@@ -216,6 +216,7 @@ cleanup() {
 
   # mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
 
+  sleep 10
   vagrant halt -f
   log_info "Fim do experimento"
   sleep 10
