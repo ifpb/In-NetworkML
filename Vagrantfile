@@ -73,19 +73,19 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  #config.vm.define :h3 do |h3|
+  config.vm.define :h3 do |h3|
 
-  #  config.vm.provider "virtualbox" do |v|
-  #    v.memory = 8192
-  #    v.cpus = 8
-  #  end
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 8192
+      v.cpus = 8
+    end
 
-  #  h3.vm.hostname = "h3"
-  #  h3.vm.network "private_network", ip: "192.168.56.103", mac: "080088112213",
-  #      virtualbox__intnet: "S1-H1"
-  #  h3.vm.provision "ansible" do |ansible|
-  #    ansible.playbook = "./ansible/host-3.yml"
-  #  end
-  #end
+    h3.vm.hostname = "h3"
+    h3.vm.network "private_network", ip: "192.168.56.103", mac: "080088112213",
+        virtualbox__intnet: "S1-H1"
+    h3.vm.provision "ansible" do |ansible|
+      ansible.playbook = "./ansible/host-3.yml"
+    end
+  end
 
 end
