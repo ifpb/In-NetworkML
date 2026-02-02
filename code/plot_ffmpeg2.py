@@ -6,6 +6,7 @@ import json
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 OUTPUT_PREFIX = "ffmpeg"
 
@@ -148,37 +149,33 @@ def plot_iperf(data):
     plt.savefig(f"{OUTPUT_PREIX}_iperf_throughput_kde.png", dpi=300)
 
 def plot_ffmpeg(data):
-    plt.figure(dpi=300)
 
-    sns.boxplot(
-            data = data,
-            x="frame",
-            y="fps",
-            hue="n_features",
-            )
+    data['speed'] = data['speed'].astype(str).str.replace('x', '', regex=False)
+    data['speed'] = pd.to_numeric(data['speed'], errors='coerce')
 
-    plt.ylabel("Density")
-    plt.xlabel("Throughput (mbps)")
-    plt.legend()
-    plt.grid(alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(f"{OUTPUT_PREIX}_fps.png")
+    cols_to_drop = ['bitrate', 'total_size', 'out_time', 'out_time_ms', "out_time_us"]
+    df_plot = data.drop(columns=cols_to_drop, errors='ignore')
 
-    plt.figure(dpi=300)
+    numeric_cols = df_plot.select_dtypes(include=[np.number]).columns.tolist()
 
-    sns.boxplot(
-            data = data,
-            x="frame",
-            y="speed",
-            hue="n_features",
-            )
+    for i, col in enumerate(numeric_cols):
+        if col == "n_features":
+            continue
+        plt.figure(dpi=300)
 
-    plt.ylabel("Density")
-    plt.xlabel("Throughput (mbps)")
-    plt.legend()
-    plt.grid(alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(f"{OUTPUT_PREIX}_fps.png")
+        sns.boxplot(
+                data = data,
+                x="n_features",
+                y=col,
+                hue="n_features",
+                )
+
+        plt.ylabel(col)
+        plt.xlabel("# of features")
+        plt.legend()
+        plt.grid(alpha=0.3)
+        plt.tight_layout()
+        plt.savefig(f"{OUTPUT_PREFIX}_{col}.png")
 
 
 def main():
@@ -208,9 +205,7 @@ def main():
         swm = pd.read_csv(f"{dir}system_metrics.csv")
         acc = pd.read_csv(f"{dir}dash_accuracy.csv")
         tel = pd.read_csv(f"{dir}telemetry.csv")
-        met = pd.read_csv(
-            f"{dir}video_metrics.csv",
-        )
+        met = pd.read_csv(f"{dir}video_metrics.csv")
 
         swm["n_features"] = i * 2 + 2
         acc["n_features"] = i * 2 + 2
@@ -227,30 +222,30 @@ def main():
         dir += "/"
 
     # 1. Read the raw tshark output
-    tp_df = pd.read_csv(f"{dir}throughput_raw.csv")
+    #tp_df = pd.read_csv(f"{dir}throughput_raw.csv")
 
     # 2. Convert epoch to datetime
-    tp_df["time"] = pd.to_datetime(tp_df["frame.time_epoch"], unit="s")
+    #tp_df["time"] = pd.to_datetime(tp_df["frame.time_epoch"], unit="s")
 
     # 3. Resample to 1-second intervals and sum the bytes
     #    We set 'time' as index strictly for resampling
-    tp_df = tp_df.set_index("time")
-    throughput_resampled = (
-        tp_df["frame.len"].resample("1s").sum().to_frame(name="bytes")
-    )
+    #tp_df = tp_df.set_index("time")
+    #throughput_resampled = (
+        #tp_df["frame.len"].resample("1s").sum().to_frame(name="bytes")
+    #)
 
     # 4. Convert Bytes/sec to Mbps
-    throughput_resampled["mbps"] = (throughput_resampled["bytes"] * 8) / 1_000_000
+    #throughput_resampled["mbps"] = (throughput_resampled["bytes"] * 8) / 1_000_000
 
     # 5. Create a relative time column (0, 1, 2...) for plotting consistency
     #    We reset index to get 'time' back as a column, then calculate delta
-    throughput_resampled = throughput_resampled.reset_index()
-    start_time = throughput_resampled["time"].min()
-    throughput_resampled["runtime_s"] = (
-        throughput_resampled["time"] - start_time
-    ).dt.total_seconds()
+    #throughput_resampled = throughput_resampled.reset_index()
+    #start_time = throughput_resampled["time"].min()
+    #throughput_resampled["runtime_s"] = (
+    #    throughput_resampled["time"] - start_time
+    #).dt.total_seconds()
 
-    df_tp = throughput_resampled.dropna()
+    #df_tp = throughput_resampled.dropna()
 
     df_swm = pd.concat(swm_dfs, ignore_index=True)
     df_acc = pd.concat(acc_dfs, ignore_index=True)
@@ -259,8 +254,13 @@ def main():
 
     df_swm = df_swm.dropna()
     df_acc = df_acc.dropna()
-    df_met = df_met.dropna()
+    #df_met = df_met.dropna()
     df_tel = df_tel.dropna()
+
+    df_met.info()
+    print(df_met.describe())
+
+    print(df_met)
 
     plt.rcParams.update({"font.size": 20})
 
@@ -270,6 +270,7 @@ def main():
     #plot_dash_metrics_fps(df_met)
     plot_queue_delay(df_tel)
     #plot_throughput(df_tp)
+    plot_ffmpeg(df_met)
 
 
 if __name__ == "__main__":

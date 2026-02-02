@@ -217,7 +217,11 @@ cleanup() {
   # mv "${SCRIPT_DIR}/code/dash_accuracy.csv" "${OUTPUT_DIR_CURR}/dash_accuracy.csv"
 
   sleep 10
+
+  mv "${SCRIPT_DIR}/logs/sinusoid_wave.txt" "${OUTPUT_DIR_CURR}/wave.txt"
+
   vagrant halt -f
+  vagrant destroy h1 -f
   log_info "Fim do experimento"
   sleep 10
   exit 0

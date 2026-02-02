@@ -235,7 +235,7 @@ def main():
     met_dfs = []
     tel_dfs = []
 
-    for i, dir in enumerate(args.dirs, 1):
+    for i, dir in enumerate(args.dirs):
         if not dir.endswith("/"):
             dir += "/"
 

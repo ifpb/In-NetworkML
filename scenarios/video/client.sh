@@ -43,7 +43,7 @@ stop_capture() {
 run_client() {
   echo "Starting client"
   while true; do
-    ffmpeg -i "$VIDEO_URL_RTMP" -loglevel info -stats -progress pipe:1 -f null - >${CSV_FILE} 2>/dev/null &
+    ffmpeg -i "$VIDEO_URL_RTMP" -c copy -loglevel info -stats -progress pipe:1 -f null - >${CSV_FILE} 2>/dev/null &
     echo $! >/tmp/ffmpeg.pid
     wait $(cat /tmp/ffmpeg.pid)
     sleep 0.5

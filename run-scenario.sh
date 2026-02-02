@@ -179,9 +179,11 @@ fi
 
 if [[ "$USE_ML" == 1 ]]; then
   OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_ML_${TYPE}${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
+  OUTPUT_DIR_CURR="${SCRIPT_DIR}/metrics/${SCENARIO}_ML_${TYPE}${TREE_DEPTH}_${DURATION_STRING}_${TIMESTAMP}"
 else
   OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
 fi
+
 
 export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
@@ -220,6 +222,16 @@ cleanup() {
   wait $INT_PID 2>/dev/null
   wait $IPERF_PID 2>/dev/null
   wait $SWITCH_PID 2>/dev/null
+
+  sleep 10
+
+#  mv "${SCRIPT_DIR}/logs/sinusoid_wave.txt" "${OUTPUT_DIR_CURR}/wave.txt"
+
+  vagrant halt -f
+  vagrant destroy h1 -f
+  log_info "Fim do experimento"
+  sleep 10
+
   exit 0
 }
 
