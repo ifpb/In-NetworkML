@@ -29,6 +29,8 @@ stop_capture() {
     sudo kill $TCPDUMP_PID
     wait $TCPDUMP_PID 2>/dev/null
     echo "Packets saved to: ${CAP_FILE_PATH}"
+
+    tshark -r ${CAP_FILE_PATH} -T fields -E separator=, -E header=y -e frame.time_epoch -e frame.len >"${PCAP_DIR}/throughput_raw.csv"
   fi
 }
 
