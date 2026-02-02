@@ -260,8 +260,12 @@ def main():
         met_dfs.append(met)
         tel_dfs.append(tel)
 
+    dir = args.dirs[-1]
+    if not dir.endswith("/"):
+        dir += "/"
+
     # 1. Read the raw tshark output
-    tp_df = pd.read_csv(f"{args.dirs[-1]}throughput_raw.csv")
+    tp_df = pd.read_csv(f"{dir}throughput_raw.csv")
 
     # 2. Convert epoch to datetime
     tp_df["time"] = pd.to_datetime(tp_df["frame.time_epoch"], unit="s")
