@@ -38,17 +38,17 @@ def get_switch_results_counter(class_num):
 class Metrics:
     def __init__(self, initialMatrix=None):
         if initialMatrix:
-            if len(initialMatrix) != 4 or any(len(x) != 4 for x in initialMatrix):
-                raise ValueError("Matriz não é 4x4")
+            if len(initialMatrix) != 2 or any(len(x) != 2 for x in initialMatrix):
+                raise ValueError("Matriz não é 2x2")
             self.cmatrix = [list(x) for x in initialMatrix]
         else:
-            self.cmatrix = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+            self.cmatrix = [[0, 0], [0, 0]]
 
     def update(self, y_true, curr_pred):
-        if y_true < 0 or y_true > 3:
-            raise ValueError("y_true precisa ser 0, 1, 2 ou 3")
-        if len(curr_pred) != 4:
-            raise ValueError("curr_pred precisa ser de tamanho 4")
+        if y_true < 0 or y_true > 1:
+            raise ValueError("y_true precisa ser 0 ou 1")
+        if len(curr_pred) != 2:
+            raise ValueError("curr_pred precisa ser de tamanho 2")
 
         self.cmatrix[y_true] = curr_pred.copy()
 
@@ -115,14 +115,10 @@ parser.add_argument("output_dir", help="output dir")
 
 args = parser.parse_args()
 
-if args.class_name == "web":
+if args.class_name == "other":
     class_num = 0
-elif args.class_name == "file_transfer":
-    class_num = 1
-elif args.class_name == "video":
-    class_num = 2
 elif args.class_name == "dash":
-    class_num = 3
+    class_num = 1
 else:
     raise ValueError("Nome de classe invalido")
 
@@ -140,7 +136,7 @@ if not Path(FILE).is_file():
 with open(FILE, "a") as f:
     while True:
         sleep(1)
-        pred = [get_switch_results_counter(x) for x in range(4)]
+        pred = [get_switch_results_counter(x) for x in range(2)]
         if all(x == 0 for x in pred):
             continue
 
