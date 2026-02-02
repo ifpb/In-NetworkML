@@ -48,7 +48,7 @@ def main():
 
     plt.rcParams.update({"font.size": 20})
 
-    plot_sine_wave(swm)
+    plot_sine_wave(swm, 50)
 
 
 if __name__ == "__main__":

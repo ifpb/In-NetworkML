@@ -23,6 +23,7 @@
           - libxtst6
           - chromium
           - tcpdump
+          - tshark
         state: present
 
     - name: Clone Mpegdash Player Repo

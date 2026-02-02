@@ -245,7 +245,7 @@ fi
 START_TIME=$(date +%s)
 
 # Run wave
-ssh -XF "${SCRIPT_DIR}/ssh_config" h3 "./wave/run_wave.sh -l sinusoid 10 10 20 15" 2>/dev/null >/dev/null &
+ssh -XF "${SCRIPT_DIR}/ssh_config" h3 "./wave/run_wave.sh -l sinusoid 20 5 10 30" 2>/dev/null >/dev/null &
 WAVE_PID=$!
 
 if [[ -f "${SCENARIO_DIR}/client.sh" ]]; then

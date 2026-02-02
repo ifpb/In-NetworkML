@@ -22,47 +22,61 @@ def extract_iperf(inputfile):
 
 
 def plot_switch_cpu_total(dataset: pd.DataFrame):
-    plt.figure(dpi=300)
+    plot_configs = [
+            ("boxplot", sns.boxplot),
+            ("boxenplot", sns.boxenplot),
+            ("violinplot", sns.violinplot),
+            ]
 
-    sns.boxplot(
-        dataset,
-        x="n_features",
-        y="cpu_total",
-        hue="n_features",
-        palette="tab10",
-        legend=False,
-    )
+    for name, plot_func in plot_configs:
+        plt.figure(dpi=300)
 
-    plt.ylabel("CPU Usage (%)")
-    plt.xlabel("# of features")
-    plt.tight_layout()
-    plt.grid(alpha=0.3)
-    plt.savefig(f"{OUTPUT_PREFIX}_cpu_usage.png")
+        plot_func(
+            dataset,
+            x="n_features",
+            y="cpu_total",
+            hue="n_features",
+            palette="tab10",
+            legend=False,
+        )
+
+        plt.ylabel("CPU Usage (%)")
+        plt.xlabel("# of features")
+        plt.tight_layout()
+        plt.grid(alpha=0.3)
+        plt.savefig(f"{OUTPUT_PREFIX}_cpu_usage_{name}.png")
 
 
 def plot_switch_mem_used(dataset: pd.DataFrame):
-    plt.figure(dpi=300)
+    plot_configs = [
+            ("boxplot", sns.boxplot),
+            ("boxenplot", sns.boxenplot),
+            ("violinplot", sns.violinplot),
+            ]
 
-    # plt.yscale("log")
+    for name, plot_func in plot_configs:
+        plt.figure(dpi=300)
 
-    dataset["mem_used"] = dataset["mem_used"] / 1024
+        # plt.yscale("log")
 
-    # dataset["mem_used"] = dataset["mem_used"] / 100
+        dataset["mem_used"] = dataset["mem_used"] / 1024
 
-    sns.boxplot(
-        dataset,
-        x="n_features",
-        y="mem_used",
-        hue="n_features",
-        palette="tab10",
-        legend=False,
-    )
+        # dataset["mem_used"] = dataset["mem_used"] / 100
 
-    plt.ylabel("Memory Usage (MB)")
-    plt.xlabel("# of features")
-    plt.tight_layout()
-    plt.grid(alpha=0.3)
-    plt.savefig(f"{OUTPUT_PREFIX}_mem_used.png")
+        plot_func(
+            dataset,
+            x="n_features",
+            y="mem_used",
+            hue="n_features",
+            palette="tab10",
+            legend=False,
+        )
+
+        plt.ylabel("Memory Usage (MB)")
+        plt.xlabel("# of features")
+        plt.tight_layout()
+        plt.grid(alpha=0.3)
+        plt.savefig(f"{OUTPUT_PREFIX}_mem_used_{name}.png")
 
 
 def plot_model_accuracy(dataset: pd.DataFrame):
@@ -95,22 +109,29 @@ def plot_model_accuracy(dataset: pd.DataFrame):
 
 
 def plot_queue_delay(dataset: pd.DataFrame):
-    plt.figure(dpi=300)
+    plot_configs = [
+            ("boxplot", sns.boxplot),
+            ("boxenplot", sns.boxenplot),
+            ("violinplot", sns.violinplot),
+            ]
 
-    sns.boxplot(
-        dataset,
-        x="n_features",
-        y="deq_timedelta",
-        hue="n_features",
-        palette="tab10",
-        legend=False,
-    )
+    for name, plot_func in plot_configs:
+        plt.figure(dpi=300)
 
-    plt.ylabel("Queue Delay")
-    plt.xlabel("# features")
-    plt.tight_layout()
-    plt.grid(alpha=0.3)
-    plt.savefig(f"{OUTPUT_PREFIX}_queue_delay.png")
+        plot_func(
+            dataset,
+            x="n_features",
+            y="deq_timedelta",
+            hue="n_features",
+            palette="tab10",
+            legend=False,
+        )
+
+        plt.ylabel("Queue Delay")
+        plt.xlabel("# features")
+        plt.tight_layout()
+        plt.grid(alpha=0.3)
+        plt.savefig(f"{OUTPUT_PREFIX}_queue_delay_{name}.png")
 
 
 def plot_dash_metrics_fps(dataset: pd.DataFrame):
@@ -160,40 +181,47 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
 
 
 def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
-    plt.figure(dpi=300)
+    plot_configs = [
+            ("boxplot", sns.boxplot),
+            ("boxenplot", sns.boxenplot),
+            ("violinplot", sns.violinplot),
+            ]
 
-    sns.boxplot(
-        dataset,
-        x="n_features",
-        y="bufferLevel",
-        hue="n_features",
-        palette="tab10",
-        legend=False,
-    )
+    for name, plot_func in plot_configs:
+        plt.figure(dpi=300)
 
-    # depths = dataset["n_features"].unique()
+        plot_func(
+            dataset,
+            x="n_features",
+            y="bufferLevel",
+            hue="n_features",
+            palette="tab10",
+            legend=False,
+        )
 
-    # for depth in depths:
-    #     subset = dataset[dataset["n_features"] == depth]
-    #     sns.ecdfplot(
-    #         data=subset,
-    #         x="bufferLevel",
-    #         label=str(depth),
-    #     )
+        # depths = dataset["n_features"].unique()
 
-    # plt.legend(
-    #     # loc="upper center",
-    #     title="N features",
-    #     ncols=2,
-    #     fontsize=14,
-    #     title_fontsize=16,
-    # )
+        # for depth in depths:
+        #     subset = dataset[dataset["n_features"] == depth]
+        #     sns.ecdfplot(
+        #         data=subset,
+        #         x="bufferLevel",
+        #         label=str(depth),
+        #     )
 
-    plt.ylabel("BufferLevel (Seconds)")
-    plt.xlabel("# of features")
-    plt.tight_layout()
-    plt.grid(alpha=0.3)
-    plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel.png")
+        # plt.legend(
+        #     # loc="upper center",
+        #     title="N features",
+        #     ncols=2,
+        #     fontsize=14,
+        #     title_fontsize=16,
+        # )
+
+        plt.ylabel("BufferLevel (Seconds)")
+        plt.xlabel("# of features")
+        plt.tight_layout()
+        plt.grid(alpha=0.3)
+        plt.savefig(f"{OUTPUT_PREFIX}_dash_metrics_bufferlevel_{name}.png")
 
 
 def plot_throughput(dataset):
