@@ -259,7 +259,7 @@ def generate_p4(features):
 
         // register<bit<3>>(6) results_reg;
 
-        counter(4, CounterType.packets) resultCounter;
+        counter(2, CounterType.packets) resultCounter;
 
         action drop() {
             mark_to_drop(standard_metadata);

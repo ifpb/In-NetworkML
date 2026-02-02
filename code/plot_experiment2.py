@@ -87,7 +87,7 @@ def plot_model_accuracy(dataset: pd.DataFrame):
     # )
 
     plt.ylabel("Accuracy")
-    plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+    #plt.yticks([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     plt.xlabel("# of features")
     plt.tight_layout()
     plt.grid(alpha=0.3)
