@@ -23,10 +23,10 @@ def extract_iperf(inputfile):
 
 def plot_switch_cpu_total(dataset: pd.DataFrame):
     plot_configs = [
-            ("boxplot", sns.boxplot),
-            ("boxenplot", sns.boxenplot),
-            ("violinplot", sns.violinplot),
-            ]
+        ("boxplot", sns.boxplot),
+        ("boxenplot", sns.boxenplot),
+        ("violinplot", sns.violinplot),
+    ]
 
     for name, plot_func in plot_configs:
         plt.figure(dpi=300)
@@ -49,10 +49,10 @@ def plot_switch_cpu_total(dataset: pd.DataFrame):
 
 def plot_switch_mem_used(dataset: pd.DataFrame):
     plot_configs = [
-            ("boxplot", sns.boxplot),
-            ("boxenplot", sns.boxenplot),
-            ("violinplot", sns.violinplot),
-            ]
+        ("boxplot", sns.boxplot),
+        ("boxenplot", sns.boxenplot),
+        ("violinplot", sns.violinplot),
+    ]
 
     for name, plot_func in plot_configs:
         plt.figure(dpi=300)
@@ -110,10 +110,10 @@ def plot_model_accuracy(dataset: pd.DataFrame):
 
 def plot_queue_delay(dataset: pd.DataFrame):
     plot_configs = [
-            ("boxplot", sns.boxplot),
-            ("boxenplot", sns.boxenplot),
-            ("violinplot", sns.violinplot),
-            ]
+        ("boxplot", sns.boxplot),
+        ("boxenplot", sns.boxenplot),
+        ("violinplot", sns.violinplot),
+    ]
 
     for name, plot_func in plot_configs:
         plt.figure(dpi=300)
@@ -169,6 +169,7 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
     # )
 
     plt.ylabel("Percentage (%)")
+    plt.yticks([0, 20, 40, 60, 80])
     plt.xlabel("# of features")
     plt.legend(
         title="Frame Rate (FPS)",
@@ -182,10 +183,10 @@ def plot_dash_metrics_fps(dataset: pd.DataFrame):
 
 def plot_dash_metrics_bufferlevel(dataset: pd.DataFrame):
     plot_configs = [
-            ("boxplot", sns.boxplot),
-            ("boxenplot", sns.boxenplot),
-            ("violinplot", sns.violinplot),
-            ]
+        ("boxplot", sns.boxplot),
+        ("boxenplot", sns.boxenplot),
+        ("violinplot", sns.violinplot),
+    ]
 
     for name, plot_func in plot_configs:
         plt.figure(dpi=300)
