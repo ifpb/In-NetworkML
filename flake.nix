@@ -41,8 +41,12 @@
 
             env = {
               VENV_DIR = "./.venv";
-            };
 
+              LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+                pkgs.stdenv.cc.cc.lib
+                pkgs.libz
+              ];
+            };
             shellHook = ''
               if [ ! -d $VENV_DIR ]; then
                 ${python}/bin/python -m venv $VENV_DIR
