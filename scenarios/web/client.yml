@@ -1,6 +1,8 @@
 - name: Configure web client
   hosts: client
   become: yes
+  environment:
+    DURATION: "{{ DURATION }}"
 
   tasks:
     - name: Install curl and tcpdump

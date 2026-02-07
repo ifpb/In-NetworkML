@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
 # Test scenario duration in seconds, default = 60s
-DURATION=60
+if [ -z "${DURATION}" ]; then
+	DURATION=60
+else
+	DURATION=${DURATION}
+fi
+
+echo $DURATION
+exit 0
+
 SERVER_IP="192.168.56.102"
 INTERFACE="eth1"
 CAP_FILE="web_$(date +%s).pcap"
