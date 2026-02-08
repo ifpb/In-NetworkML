@@ -116,7 +116,7 @@ SCENARIO_DIR="${SCENARIOS_DIR}/${SCENARIO}"
 shift 1
 
 if [[ "$1" == "-d" ]]; then
-  treefile="${SCRIPT_DIR}/code/tree/depth/tree.d$2.txt"
+  treefile="${SCRIPT_DIR}/p4/tree/depth/tree.d$2.txt"
   TYPE="D"
   TREE_DEPTH=$2
   shift 2
@@ -125,7 +125,7 @@ if [[ "$1" == "-d" ]]; then
     exit 1
   fi
 elif [[ "$1" == "-f" ]]; then
-  treefile="${SCRIPT_DIR}/code/tree/feature/tree.f$2.txt"
+  treefile="${SCRIPT_DIR}/p4/tree/feature/tree.f$2.txt"
   TYPE="F"
   TREE_DEPTH=$2
   shift 2
@@ -140,7 +140,7 @@ fi
 
 pushd "${SCRIPT_DIR}/code" >/dev/null
 
-python3 mycontroller.py -t ${treefile}
+python3 p4/mycontroller.py -t ${treefile}
 if [[ "$?" -ne 0 ]]; then
   log_error "Tree compilation failed"
   exit 1
@@ -184,7 +184,6 @@ else
   OUTPUT_DIR="/vagrant/metrics/${SCENARIO}_${DURATION_STRING}_${TIMESTAMP}"
 fi
 
-
 export OUTPUT_DIR
 PCAP_DIR="${OUTPUT_DIR}"
 CAP_FILE="packets.pcap"
@@ -193,19 +192,19 @@ CAP_FILE="packets.pcap"
 ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 
 # Start Telemetry and iperf
-${SCRIPT_DIR}/get-telemetry.sh >/dev/null &
+${SCRIPT_DIR}/metric_collection/get-telemetry.sh >/dev/null &
 INT_PID=$!
 
-${SCRIPT_DIR}/run-iperf.sh &
+${SCRIPT_DIR}/metric_collection/run-iperf.sh &
 IPERF_PID=$!
 
 log_info "Rodando script de coleta de métricas de sistema do switch"
-scp -F "${SCRIPT_DIR}/ssh_config" "switch_resource_metrics.sh" s1:/tmp >/dev/null
+scp -F "${SCRIPT_DIR}/ssh_config" "metric_collection/switch_resource_metrics.sh" s1:/tmp >/dev/null
 ssh -F "${SCRIPT_DIR}/ssh_config" s1 "OUTPUT_DIR=${OUTPUT_DIR} /tmp/switch_resource_metrics.sh" &
 SWITCH_PID=$!
 
 if [[ "$USE_ML" == 1 ]]; then
-  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/code/dash_ml_metrics.py dash ${OUTPUT_DIR}" &
+  ssh -F "${SCRIPT_DIR}/ssh_config" s1 "/vagrant/metric_collection/dash_ml_metrics.py dash ${OUTPUT_DIR}" &
 fi
 
 cleanup() {
@@ -225,7 +224,7 @@ cleanup() {
 
   sleep 10
 
-#  mv "${SCRIPT_DIR}/logs/sinusoid_wave.txt" "${OUTPUT_DIR_CURR}/wave.txt"
+  #  mv "${SCRIPT_DIR}/logs/sinusoid_wave.txt" "${OUTPUT_DIR_CURR}/wave.txt"
 
   vagrant halt -f
   vagrant destroy h1 -f

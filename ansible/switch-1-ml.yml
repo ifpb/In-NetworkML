@@ -8,21 +8,21 @@
       command: ifconfig enp0s10 up
       become: yes
     - name: Compile p4 code
-      command: p4c -b bmv2 /vagrant/code/decision_tree.p4 -o /vagrant/code/bmv2
+      command: p4c -b bmv2 /vagrant/p4/decision_tree.p4 -o /vagrant/p4/bmv2
       become: yes
     - name: stop previous Bmv2 Switch
       shell: pkill simple_switch | true
       become: yes
     - name: Start Bmv2 Switch with decision tree
-      shell: simple_switch --device-id 1 --thrift-port 9090 --interface 1@enp0s9 --interface 2@enp0s10  /vagrant/code/bmv2/decision_tree.json &
+      shell: simple_switch --device-id 1 --thrift-port 9090 --interface 1@enp0s9 --interface 2@enp0s10  /vagrant/p4/bmv2/decision_tree.json &
       async: 1000
       poll: 5
       become: yes
     - name: Insert entries in switch table by control plane
-      shell: cat /vagrant/code/table1.txt | simple_switch_CLI
+      shell: cat /vagrant/p4/table1.txt | simple_switch_CLI
       become: yes
     - name: Insert model entries in switch table by control plane
-      shell: cat /vagrant/code/table2.txt | simple_switch_CLI
+      shell: cat /vagrant/p4/table2.txt | simple_switch_CLI
       become: yes
     - name: Turn off GSO, TSO and GRO
       command: ethtool --offload enp0s9 gso off tso off gro off

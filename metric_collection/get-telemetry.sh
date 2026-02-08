@@ -8,10 +8,10 @@ H2_IP="192.168.56.102"
 
 ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo mkdir -p "${OUTPUT_DIR}" 2>/dev/null"
 
-ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo /vagrant/code/receive.py -o ${OUTPUT_DIR}/telemetry.csv" &
+ssh -F "${SCRIPT_DIR}/ssh_config" h2 "sudo /vagrant/metric_collection/receive.py -o ${OUTPUT_DIR}/telemetry.csv" &
 RECEIVER_PID=$!
 
-ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo /vagrant/code/send.py ${H2_IP} 2>/dev/null" &
+ssh -F "${SCRIPT_DIR}/ssh_config" h1 "sudo /vagrant/metric_collection/send.py ${H2_IP} 2>/dev/null" &
 SENDER_PID=$!
 
 cleanup() {
