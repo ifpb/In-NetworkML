@@ -29,8 +29,8 @@ cd In-NetworkML
 2. Create a python3.9 virtual environment
 
 ```bash
-pyenv install 3.9.25
-pyenv global 3.9.25
+pyenv install 3.9.19
+pyenv global 3.9.19
 
 python3 -m venv .venv
 source .venv/bin/activate
