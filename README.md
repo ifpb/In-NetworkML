@@ -1,6 +1,8 @@
 # Between Packets and Predictions: Analyzing the Overhead of In-Network Machine Learning in Programmable Switches
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This repository refers to the article **"Between Packets and Predictions: Analyzing the Overhead of In-Network Machine Learning in Programmable Switches"** as the source code of its methodology.
+
+It shows with details how the virtual network topology is configured, **how a decision tree traffic classifier is trained and implemented into a software-based switch** and how all the required data is collected to fulfill the article's purpose of expoloring the gap left by most articles of this gender, which is to **quantify how impactful this machine learning implementation is for the programmable switch**.
 
 ## Repository structure
 
