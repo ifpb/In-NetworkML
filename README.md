@@ -22,7 +22,7 @@ The repository is structured as follows:
 - Oracle VirtualBox
 - Pyenv
 
-### Instalation
+### Installation
 
 1. Clone the repository
 
