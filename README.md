@@ -24,14 +24,14 @@ The repository is structured as follows:
 
 ### Installation
 
-1. Clone the repository
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/ifpb/In-NetworkML.git
 cd In-NetworkML
 ```
 
-2. Install python3.9
+2. **Install python3.9**
 
 Option 1 (Recommended): Pyenv
 ```bash
@@ -69,7 +69,7 @@ sudo apt install -y python3.9 python3.9-venv
 ```
 
 
-3. Create a python3.9 virtual environment
+3. **Create a python3.9 virtual environment**
 
 ```bash
 pyenv global 3.9.19
@@ -95,7 +95,7 @@ python3.9 -m venv .venv
 source .venv/bin/activate
 ```
 
-4. Install pip dependencies
+4. **Install pip dependencies**
 
 ```bash
 pip install -r requirements.txt
