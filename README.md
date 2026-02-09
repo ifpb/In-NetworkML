@@ -81,20 +81,6 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-```bash
-sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
-
-wget https://www.python.org/ftp/python/3.9.19/Python-3.9.19.tgz
-tar -xf Python-3.9.19.tgz
-cd Python-3.9.19
-./configure --enable-optimizations
-make -j $(nproc)
-sudo make altinstall
-
-python3.9 -m venv .venv
-source .venv/bin/activate
-```
-
 4. **Install pip dependencies**
 
 ```bash
