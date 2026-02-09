@@ -1,0 +1,1 @@
+flow_key,srcip,dstip,sport,dport,proto,version,ihl,tos,length,id,frag,ttl,chksum,seq,ack,window,dataofs,urgptr,reserved,tcp_chk,srcmac,dstmac,typ,ipi,frame_size,classification
