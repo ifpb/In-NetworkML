@@ -10,9 +10,10 @@ The repository is structured as follows:
 
 - ansible - Playbook files for configuring each VM.
 - scenarios - Scenario specific configuration. Each scenario includes an Ansible playbook for configuration, a startup script, and an optional server script.
-- metric_collectoin - Scripts responsible for collecting all metrics used in analysis and model training 
+- metric_collectoin - Scripts responsible for collecting all metrics used in analysis and model training.
+- jupyter - Python notebooks used in the machine learning training.
 - p4 - Pipeline for the P4 implementation of the trained decision tree.
-- plot_scripts - A dedicated directory for all scripts used to plot the article's graphs
+- plot_scripts - A dedicated directory for all scripts used to plot the article's graphs.
 
 ## Running the Experiment
 
